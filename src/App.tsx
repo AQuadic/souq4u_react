@@ -1,6 +1,7 @@
 import './App.css'
 import HomeCategories from './features/categories/components/HomeCategories'
 import MainHero from './features/home/hero/components/MainHero'
+import HomeTryApp from './features/home/TryApp/components/HomeTryApp'
 
 function App() {
 
@@ -8,6 +9,7 @@ function App() {
     <>
     <MainHero />
     <HomeCategories />
+    <HomeTryApp />
     </>
   )
 }

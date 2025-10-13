@@ -1,57 +1,52 @@
-import Image from "next/image";
 import React from "react";
-import { useTranslations } from "next-intl";
 
 const HomeTryApp = () => {
-  const t = useTranslations("HomeTryApp");
+  const title = "Try the Eshhaar app";
+  const description = `Download the app now\nExperience the best features`;
+  const googlePlayAlt = "Google Play Store";
+  const appStoreAlt = "App Store";
+  const featureAlt = "App feature illustration";
 
   return (
     <section className="container flex justify-between items-center max-sm:flex-col gap-6">
       <div>
         <h3 className="text-2xl font-bold sm:text-[40px]">
-          {t("title", { brandName: "Eshhaar" })
-            .split(" ")
-            .map((part, i) =>
-              // keep brandName styled
-              part === "Eshhaar" ? (
-                <span key={i} className="text-main">
-                  {part}{" "}
-                </span>
-              ) : (
-                <React.Fragment key={i}>{part} </React.Fragment>
-              )
-            )}
+          {title.split(" ").map((part, i) =>
+            part === "Eshhaar" ? (
+              <span key={i} className="text-main">{part} </span>
+            ) : (
+              <React.Fragment key={i}>{part} </React.Fragment>
+            )
+          )}
         </h3>
         <p className="max-w-[545px] text-xl sm:text-2xl my-6 sm:my-10 text-main-gray">
-          {t("description")
-            .split("\n")
-            .map((line, idx) => (
-              <React.Fragment key={idx}>
-                {line}
-                {idx < t("description").split("\n").length - 1 && <br />}
-              </React.Fragment>
-            ))}
+          {description.split("\n").map((line, idx) => (
+            <React.Fragment key={idx}>
+              {line}
+              {idx < description.split("\n").length - 1 && <br />}
+            </React.Fragment>
+          ))}
         </p>
         <div className="flex gap-4 max-sm:justify-center">
-          <Image
+          <img
             src="/try-app/google-play.png"
-            alt={t("googlePlayAlt")}
+            alt={googlePlayAlt}
             width={145}
             height={5680}
           />
-          <Image
+          <img
             src="/try-app/app-store.png"
-            alt={t("appStoreAlt")}
+            alt={appStoreAlt}
             width={145}
             height={5680}
           />
         </div>
       </div>
-      <Image
+      <img
         src="/try-app/try-app.png"
         width={520}
         height={435}
-        alt={t("featureAlt")}
+        alt={featureAlt}
       />
     </section>
   );
