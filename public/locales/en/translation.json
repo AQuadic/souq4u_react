@@ -1,0 +1,36 @@
+{
+  "header": {
+    "home": "Home",
+    "products": "Products",
+    "contact": "Contact Us",
+    "about": "About Us",
+    "search": "Search",
+    "searchPlaceholder": "Search products...",
+    "close": "Close",
+    "switchLanguage": "Switch Language",
+    "selectLanguage": "Select Language",
+    "profile": "Profile",
+    "account": "Account",
+    "favorite": "Favorites",
+    "orders": "Orders",
+    "saveAddress": "Saved Addresses",
+    "cart": "Cart",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "footer": {
+    "explore": "Explore",
+    "help": "Help",
+    "subscribe": "Subscribe",
+    "trackOrder": "Track Order",
+    "myAccount": "My Account",
+    "faq": "FAQ",
+    "privacyPolicy": "Privacy Policy",
+    "subscribeDescription": "Subscribe feature coming soon..."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}

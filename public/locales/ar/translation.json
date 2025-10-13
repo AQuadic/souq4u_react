@@ -1,0 +1,36 @@
+{
+  "header": {
+    "home": "الرئيسية",
+    "products": "المنتجات",
+    "contact": "اتصل بنا",
+    "about": "من نحن",
+    "search": "بحث",
+    "searchPlaceholder": "ابحث عن المنتجات...",
+    "close": "إغلاق",
+    "switchLanguage": "تغيير اللغة",
+    "selectLanguage": "اختر اللغة",
+    "profile": "الملف الشخصي",
+    "account": "الحساب",
+    "favorite": "المفضلة",
+    "orders": "الطلبات",
+    "saveAddress": "العناوين المحفوظة",
+    "cart": "السلة",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب"
+  },
+  "footer": {
+    "explore": "استكشف",
+    "help": "المساعدة",
+    "subscribe": "اشترك",
+    "trackOrder": "تتبع الطلب",
+    "myAccount": "حسابي",
+    "faq": "الأسئلة الشائعة",
+    "privacyPolicy": "سياسة الخصوصية",
+    "subscribeDescription": "خاصية الاشتراك قريباً..."
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح"
+  }
+}
