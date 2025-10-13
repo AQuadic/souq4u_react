@@ -15,9 +15,11 @@ const HeroSlide = () => {
           delivered straight to your doorstep with just one click.
         </p>
 
-          <Button className="w-full sm:w-[429px] px-4 py-4 sm:py-6  font-bold text-base sm:text-lg">
+        <a href="/products">
+          <Button className="w-full sm:w-[429px] px-4 py-4 sm:py-6  font-bold text-base sm:text-lg !bg-main">
             Buy Now
           </Button>
+        </a>
       </div>
     </div>
   );
