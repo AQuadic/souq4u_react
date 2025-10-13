@@ -1,0 +1,89 @@
+import React from "react";
+import Pending from "../icons/Pending";
+import Shipping from "../icons/Shipping";
+import Processing from "../icons/Processing";
+import Cancelled from "../icons/Cancelled";
+import { Order } from "../api/getOrdersById";
+import { useTranslations, useLocale } from "next-intl";
+import Link from "next/link";
+import BackArrow from "@/features/products/icons/BackArrow";
+
+type OrderStatusProps = {
+  order: Order;
+};
+
+const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
+  const t = useTranslations("Orders");
+  const locale = useLocale();
+
+  const currentStatus = order.status?.toLowerCase() || "pending";
+
+const statusStyles: Record<
+  string,
+  { icon: React.ReactNode; bg: string; text: string; label: string }
+> = {
+  pending: {
+    icon: <Pending />,
+    bg: "bg-[#8B8B8B2B]",
+    text: "text-[#C0C0C0]",
+    label: t("pending"),
+  },
+  shipping: {
+    icon: <Shipping />,
+    bg: "bg-[#3D9BE924]",
+    text: "text-[#3D9BE9]",
+    label: t("shipping"),
+  },
+  processing: {
+    icon: <Processing />,
+    bg: "bg-[#8B8B8B2B]",
+    text: "text-[#C0C0C0]",
+    label: t("processing"),
+  },
+  cancelled: {
+    icon: <Cancelled />,
+    bg: "bg-[#CA1E0024]",
+    text: "text-[#CA1E00]",
+    label: t("cancelled"),
+  },
+};
+
+  const styles = statusStyles[currentStatus] || statusStyles.pending;
+
+  return (
+    <div>
+      <h2 className="text-[#FDFDFD] text-[32px] font-bold leading-[100%] md:flex hidden">
+        {t("tracking")}
+      </h2>
+
+      <Link href='/profile/orders' className="flex items-center gap-2 md:hidden flex">
+      <BackArrow />
+        <h2 className="text-[#FDFDFD] text-xl font-bold leading-[100%]">
+          {t("tracking")}
+        </h2>
+      </Link>
+      <div
+        className={`w-full h-[72px] rounded-[8px] mt-8 p-4 flex items-center gap-2 ${styles.bg}`}
+      >
+        {styles.icon}
+        <div>
+          <p className={`${styles.text} text-base font-normal leading-[100%]`}>
+            {styles.label}
+          </p>
+
+          <p className="dark:text-[#C0C0C0] text-sm font-normal leading-[100%] mt-2">
+            {order.created_at
+              ? new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                }).format(new Date(order.created_at))
+              : "N/A"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OrderStatus;
