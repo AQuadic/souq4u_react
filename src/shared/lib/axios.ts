@@ -9,7 +9,6 @@ function authRequestInterceptor(config: {
 
   let token: string | undefined;
   let language: string = "en"; // Default to English
-  let isLocalHost = false;
 
   if (isBrowser) {
     // Browser environment - use js-cookie
@@ -17,11 +16,6 @@ function authRequestInterceptor(config: {
 
     // Get language from URL in browser
     language = window.location.pathname.includes("ar") ? "ar" : "en";
-
-    // Check if we're on localhost in browser
-    isLocalHost =
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1";
   } else {
     // SSR environment - extract from request headers if available
     const cookieHeader = config.headers.cookie;
@@ -39,12 +33,6 @@ function authRequestInterceptor(config: {
 
       token = cookies["souq4u-token"];
     }
-
-    // For SSR, check if we're in development/local environment
-    isLocalHost =
-      process.env.NODE_ENV === "development" ||
-      Boolean(process.env.NEXT_PUBLIC_API_URL?.includes("localhost")) ||
-      Boolean(process.env.NEXT_PUBLIC_API_URL?.includes("127.0.0.1"));
   }
 
   config.headers["Accept-Language"] = language;
