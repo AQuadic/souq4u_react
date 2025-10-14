@@ -20,7 +20,7 @@ const ContactSection = () => {
   return (
     <section className="container md:py-12">
       <h2 className="md:flex items-center justify-center hidden text-main text-[32px] font-normal font-anton-sc leading-[100%] text-center">
-        {("title")}
+        {("Contact us")}
       </h2>
       <Link to="/" className="md:hidden flex items-center gap-2">
         {/* <BackArrow /> */}

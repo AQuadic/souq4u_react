@@ -4,7 +4,7 @@ import Layout from "./shared/components/layout";
 import HomeCategories from "./features/categories/components/HomeCategories";
 import MainHero from "./features/home/hero/components/MainHero";
 import HomeTryApp from "./features/home/TryApp/components/HomeTryApp";
-import MainContactForm from "./features/contact/components/MainContactForm";
+import ContactSection from "./features/contact/components/ContactSection";
 import MostViewedSection from "./features/products/components/home-listings/MostViewedSection";
 import BestOffersSection from "./features/products/components/home-listings/BestOffersSection";
 import ProductsGrid from "./features/products/components/product-listing/ProductsGrid";
@@ -34,7 +34,7 @@ function ProductsPage() {
 function ContactPage() {
   return (
     <div className="my:py-[88px] py-6">
-      <MainContactForm />
+      <ContactSection />
     </div>
   );
 }

@@ -96,8 +96,6 @@ const GymContact1 = () => {
   };
 
   return (
-    <section>
-      <h1 className="text-[32px] font-normal text-main text-center">Contact us</h1>
       <form
         onSubmit={handleSubmit}
         className="md:w-[576px] w-full h-full md:bg-white md:dark:bg-[#242529] rounded-3xl p-4"
@@ -196,7 +194,6 @@ const GymContact1 = () => {
           {loading ? ("sending") : ("submit")}
         </button>
       </form>
-    </section>
   );
 };
 
