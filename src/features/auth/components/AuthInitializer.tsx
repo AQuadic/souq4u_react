@@ -1,8 +1,6 @@
-"use client";
-
 import { useEffect, useRef } from "react";
 import { useInitializeAuth, useAuthStore } from "@/features/auth/stores";
-import { usePathname } from "@/i18n/navigation";
+import { useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 
 /**
@@ -12,7 +10,8 @@ import Cookies from "js-cookie";
 export const AuthInitializer = () => {
   const initializeAuth = useInitializeAuth();
   const hasInitialized = useRef(false);
-  const pathname = usePathname();
+  const location = useLocation();
+  const pathname = location.pathname;
 
   useEffect(() => {
     // Only initialize once per session

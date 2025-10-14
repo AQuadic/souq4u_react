@@ -3,28 +3,29 @@ import { X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/shared/components/ui/LanguageSwitcher";
-// import Cart from "@/features/cart/components/icons/Cart";
+import Cart from "@/features/cart/components/icons/Cart";
 import Menu from "./icons/Menu";
-// import { CartSlider } from "@/features/cart/components/CartSlider";
-// import { useCartSlider } from "@/features/cart/hooks/useCartSlider";
-// import { useCartStore } from "@/features/cart/stores";
-
-// import MainAuth from "@/features/auth/components/MainAuth";
+import { CartSlider } from "@/features/cart/components/CartSlider";
+import { useCartSlider } from "@/features/cart/hooks/useCartSlider";
+import { useCartStore } from "@/features/cart/stores";
+import MainAuth from "@/features/auth/components/MainAuth";
 import HeaderSearch from "./HeaderSearch";
-// import {
-//   Accordion,
-//   AccordionContent,
-//   AccordionItem,
-//   AccordionTrigger,
-// } from "../../ui/accordion";
-// import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { NavLinks } from "./NavLinks";
 
 const MobileHeader = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const locale = i18n.language || "en";
   const location = useLocation();
+  const { isOpen: isCartOpen, openCart, closeCart } = useCartSlider();
+  const { user } = useAuth();
+
+  const cart = useCartStore((s) => s.cart);
+  const cartItemsCount =
+    cart?.items && Array.isArray(cart.items)
+      ? cart.items.reduce((sum, it) => sum + (it?.quantity || 0), 0)
+      : 0;
 
   // Helper function to check if the current path matches the link
   const isActivePath = (href: string) => {
@@ -39,6 +40,14 @@ const MobileHeader = () => {
         <img src="/logo.png" width={80} height={40} alt="souq4u" />
       </Link>
       <div className="flex items-center gap-5 relative">
+        {user && (
+          <button className="cursor-pointer relative" onClick={openCart}>
+            <Cart />
+            {cartItemsCount > 0 && (
+              <span className="absolute top-0 left-0 h-3 w-3 rounded-full bg-main z-40 pointer-events-none" />
+            )}
+          </button>
+        )}
         <HeaderSearch />
         <button onClick={() => setIsOpen(true)} className="">
           <Menu />
@@ -77,11 +86,15 @@ const MobileHeader = () => {
                     : "text-gray-700 hover:text-main"
                 }`}
               >
-                {t(link.translationKey) ||
-                  link.name[locale as keyof typeof link.name]}
+                {link.name[locale as keyof typeof link.name]}
               </Link>
             ))}
           </nav>
+
+          {/* Auth Section */}
+          <div className="mb-6">
+            <MainAuth />
+          </div>
 
           {/* Language switcher */}
           <div className="space-y-4 mt-auto pt-6 border-t border-gray-200">
@@ -89,6 +102,9 @@ const MobileHeader = () => {
           </div>
         </div>
       </div>
+
+      {/* Cart Slider */}
+      <CartSlider isOpen={isCartOpen} onClose={closeCart} />
     </header>
   );
 };

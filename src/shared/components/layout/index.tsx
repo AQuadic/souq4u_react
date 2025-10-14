@@ -5,10 +5,12 @@ import HeaderDesktop from "./header/HeaderDesktop";
 import MobileHeader from "./header/MobileHeader";
 import Footer from "./footer/Footer";
 import { CartInitializer } from "@/features/cart";
+import { AuthInitializer } from "@/features/auth";
 
 const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen">
+      <AuthInitializer />
       <CartInitializer />
       {/* Header Banner */}
       <HeaderBanner />
