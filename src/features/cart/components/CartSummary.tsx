@@ -68,7 +68,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
         </Link>
         {/* View Cart Link */}
         <Link
-          href="/cart"
+          to="/cart"
           onClick={handleViewCart}
           className="block w-full border border-[var(--color-main)] text-[var(--color-main)] hover:bg-main/50 hover: font-semibold py-3 px-4 rounded transition-all duration-200 uppercase tracking-wide text-center"
         >
