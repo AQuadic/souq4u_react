@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";

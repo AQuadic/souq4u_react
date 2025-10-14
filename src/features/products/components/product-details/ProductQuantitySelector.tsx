@@ -1,8 +1,6 @@
 import React from "react";
-// import { useTranslations } from "next-intl";
 import Minus from "../../icons/Minus";
 import Plus from "../../icons/Plus";
-import { useConfigStore } from "@/features/config";
 import { getProductTheme } from "@/features/products/utils/theme";
 
 interface ProductQuantitySelectorProps {
@@ -22,11 +20,8 @@ export const ProductQuantitySelector: React.FC<
   maxQuantity = 999,
   disabled = false,
 }) => {
-  // const t = useTranslations("Products");
-
-  // Get store config and theme
-  const config = useConfigStore((state: { config: unknown; }) => state.config);
-  const theme = getProductTheme(config?.store_type);
+  // Get default theme (non-clothes)
+  const theme = getProductTheme();
 
   const handleDecrease = () => {
     const newQuantity = Math.max(quantity - 1, minQuantity);

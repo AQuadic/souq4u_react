@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-// import { useTranslations } from "next-intl";
-import { useConfigStore } from "@/features/config";
 import {
   getProductTheme,
   isClothesStore,
@@ -17,15 +15,13 @@ export const ProductDescription: React.FC<ProductDescriptionProps> = ({
   shortDescription,
   description,
 }) => {
-  // const t = useTranslations("Products");
-  const config = useConfigStore((state: { config: unknown; }) => state.config);
-  const storeType = config?.store_type;
-  const theme = getProductTheme(storeType);
-  const isClothes = isClothesStore(storeType);
+  // Default to non-clothes store
+  const theme = getProductTheme();
+  const isClothes = isClothesStore();
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // For clothes store: show description with expand/collapse
+  // For clothes store: show description with expand/collapse (won't be true by default)
   if (isClothes && theme.description.showCollapsible) {
     return (
       <div className="mt-6">

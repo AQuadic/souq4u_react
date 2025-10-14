@@ -13,7 +13,7 @@ interface CartToastOptions {
 
 export const useCartToast = () => {
   const toast = useToast();
-  const {t} = useTranslation("Cart");
+  const { t } = useTranslation("Cart");
 
   const showAddToCartSuccess = ({
     productName,
@@ -30,7 +30,7 @@ export const useCartToast = () => {
     toast.success(message, {
       action: (
         <Link
-          href="/cart"
+          to="/cart"
           className="text-white underline text-sm font-medium hover:no-underline"
           onClick={() => {
             // Navigate to cart or show cart slider

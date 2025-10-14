@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import {
   ArrowLeft,
   Package,
@@ -14,7 +13,6 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { Order, OrderItem } from "../types";
 import { formatCurrency, formatOrderStatus } from "../utils";
-import { useConfig } from "@/features/config";
 
 interface TrackingResultProps {
   order: Order;
@@ -28,8 +26,6 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
   language = "en",
 }) => {
   const statusInfo = formatOrderStatus(order.status);
-
-  const config = useConfig();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -467,7 +463,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
         </button>
       </div>
       <p className="text-center text-muted-foreground dark:text-white/70 mt-4">
-        if you need help, please contact support.{config?.phones[0]}
+        {language === "ar" ? "إذا كنت بحاجة إلى مساعدة، يرجى الاتصال بالدعم." : "If you need help, please contact support."}
       </p>
     </div>
   );

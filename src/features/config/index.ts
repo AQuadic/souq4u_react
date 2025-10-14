@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 export interface Config {
   store_type?: string;
+  phones?: string[];
   address?: {
     location?: {
       lat?: number;

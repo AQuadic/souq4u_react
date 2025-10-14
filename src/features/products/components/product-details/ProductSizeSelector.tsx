@@ -1,5 +1,4 @@
 import React from "react";
-// import { useLocale, useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -7,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { useConfigStore } from "@/features/config";
 import { getProductTheme } from "@/features/products/utils/theme";
 import { ColorSelector } from "./ColorSelector";
 
@@ -50,13 +48,8 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
   onAttributeChange,
   disabled = false,
 }) => {
-  // const t = useTranslations("Products");
-  // const locale = useLocale();
-
-  // Get store config and theme
-  const config = useConfigStore((state: { config: unknown; }) => state.config);
-  const storeType = config?.store_type;
-  const theme = getProductTheme(storeType);
+  // Get default theme (non-clothes)
+  const theme = getProductTheme();
 
   // Extract all unique attributes across all variants
   const attributeMap = new Map<

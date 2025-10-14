@@ -7,7 +7,7 @@ import type { AddressFormData } from "../types";
 import { SavedAddresses } from "./SavedAddresses";
 import { AddressForm } from "./AddressForm";
 import BackArrow from "@/features/products/icons/BackArrow";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 interface BillingDetailsProps {
@@ -40,7 +40,7 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
   } = useAddresses();
 
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const {t} = useTranslation("BillingDetails");
+  const { t } = useTranslation("BillingDetails");
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -106,7 +106,7 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
 
   return (
     <div className="rounded-lg md:p-6">
-      <Link href="/cart" className="md:hidden flex items-center gap-2 mb-6">
+      <Link to="/cart" className="md:hidden flex items-center gap-2 mb-6">
         <BackArrow />
         <h2 className="text-xl font-semibold text-white">{t("title")}</h2>
       </Link>

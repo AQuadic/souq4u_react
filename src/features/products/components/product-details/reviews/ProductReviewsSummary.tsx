@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import Star from "@/features/products/icons/Star";
 import useProductReviewSummary from "@/features/products/hooks/useProductReviewSummary";
 
@@ -15,8 +15,8 @@ const ProductReviewsSummary: React.FC<Props> = ({
   reviewable_id,
   reviewable_type = "product",
 }) => {
-  const t = useTranslations("Products");
-  const common = useTranslations("Common");
+  const { t } = useTranslation("Products");
+  const { t: common } = useTranslation("Common");
   // Fetch summary counts keyed by rating string
   const { data, isLoading, isError, error } = useProductReviewSummary(
     reviewable_type,
