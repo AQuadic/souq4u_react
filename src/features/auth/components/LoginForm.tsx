@@ -123,7 +123,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
   return (
     <form className="mx-auto w-full max-w-md" onSubmit={handleSubmit}>
       <div className="flex items-center justify-center gap-2 !rounded-[40px]">
-        <Image
+        <img
           src={"/logo.png"}
           alt="logo"
           width={64}

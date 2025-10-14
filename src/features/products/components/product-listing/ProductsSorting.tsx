@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import ProductsFilter from "../../icons/ProductsFilter";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 
 interface ProductsSortingProps {
   view: "grid" | "list";
@@ -29,10 +29,10 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
   view,
   setView,
   setSorting,
-  total,
-  displayed,
+  // total,
+  // displayed,
 }) => {
-  const t = useTranslations("Products");
+  // const t = useTranslations("Products");
   const darkMode = document.documentElement.classList.contains("dark");
 
   const handleSortChange = (value: string) => {
@@ -72,24 +72,24 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
 
           <Select onValueChange={handleSortChange}>
             <SelectTrigger className="w-[180px] h-12 dark:border-[#FDFDFD] border-[#C0C0C0]">
-              <SelectValue placeholder={t("defaultSorting")} />
+              <SelectValue placeholder={("defaultSorting")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="default">{t("defaultSorting")}</SelectItem>
-                <SelectItem value="price-asc">{t("asc")}</SelectItem>
-                <SelectItem value="price-desc">{t("desc")}</SelectItem>
+                <SelectItem value="default">{("defaultSorting")}</SelectItem>
+                <SelectItem value="price-asc">{("asc")}</SelectItem>
+                <SelectItem value="price-desc">{("desc")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
 
-        <p className="md:flex hidden text-lg font-medium leading-[100%]">
-          {t("showingResults", {
+        {/* <p className="md:flex hidden text-lg font-medium leading-[100%]">
+          {("showingResults", {
             displayed: displayed ?? 0,
             total: total ?? 0,
           })}
-        </p>
+        </p> */}
       </div>
 
       <div className="md:flex hidden w-full h-px dark:bg-[#FDFDFD] bg-[#EAEAEA] my-4"></div>

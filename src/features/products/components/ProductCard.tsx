@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 // import { useTranslations } from "next-intl";
-import Link from "next/link";
+// import Link from "next/link";
 import { Product } from "../api/getProduct";
 import TopRated from "../icons/TopRated";
 import Favorite from "../icons/Favorite";
@@ -16,6 +16,7 @@ import {
 import { addFavorite } from "@/features/profile/favorites/api/postFavorites";
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard";
 import { useFavoritesToast } from "@/features/profile/favorites/hooks/useFavoritesToast";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   product: Product;
@@ -121,7 +122,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <Link
-      href={`/products/${product.id}`}
+      to={`/products/${product.id}`}
       className="shadow-md hover:shadow-lg rounded-3xl py-4 w-full sm:w-[276px] h-[480px] flex flex-col border"
     >
       <div className="  dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl p-4 relative  transition-shadow duration-300 ">

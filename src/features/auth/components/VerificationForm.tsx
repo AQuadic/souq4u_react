@@ -35,7 +35,7 @@ export const VerificationForm = ({
   return (
     <section className="w-full max-w-md mx-auto">
       <div className="flex items-center justify-center gap-2 !rounded-[40px]">
-        <Image
+        <img
           src={"/logo.png"}
           alt="logo"
           width={64}
@@ -46,7 +46,7 @@ export const VerificationForm = ({
           Souq<span className="text-main-orange">4</span>U
         </h1>
       </div>
-      <Image
+      <img
         src="/auth/verificationIMG.png"
         alt="verification"
         width={120}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Slider } from "@/shared/components/ui/slider";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import React, { useRef, useEffect, useState } from "react";
 
 interface Props {
@@ -13,13 +13,13 @@ interface Props {
 }
 
 const ProductsPriceFilter: React.FC<Props> = ({
-  minPrice = 0,
-  maxPrice = 10000,
-  actualMinPrice,
-  actualMaxPrice,
+  // minPrice = 0,
+  // maxPrice = 10000,
+  // actualMinPrice,
+  // actualMaxPrice,
   setPriceRange,
 }) => {
-  const t = useTranslations("Products");
+  // const t = useTranslations("Products");
   const [isRtl, setIsRtl] = useState(false);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const ProductsPriceFilter: React.FC<Props> = ({
   return (
     <section className="w-[276px] h-[156px] dark:bg-[#242529] bg-[#FDFDFD] overflow-y-auto mt-6 mx-auto">
       <h1 className="text-2xl font-semibold leading-[100%] p-4 ltr:border-l-4 rtl:border-r-4 border-main">
-        {t("filterByPrice")}
+        {("filterByPrice")}
       </h1>
       <div className="w-full h-px bg-[#FDFDFD]"></div>
       <div className="p-4">
@@ -75,7 +75,7 @@ const ProductsPriceFilter: React.FC<Props> = ({
           />
         </div>
         <p className="text-xs font-medium leading-[100%] mt-4">
-          {t("price")} {localRange[0]} - {localRange[1]} {t("egp")}
+          {("price")} {localRange[0]} - {localRange[1]} {("egp")}
         </p>
       </div>
     </section>

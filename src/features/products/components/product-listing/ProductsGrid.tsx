@@ -6,7 +6,7 @@ import { getProducts, Product } from "../../api/getProduct";
 import { getPriceRange } from "../../api/getPriceRange";
 import ProductCard from "../ProductCard";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import ProductsPriceFilter from "./ProductsPriceFilter";
 import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
 import ProductsSorting from "./ProductsSorting";
@@ -16,7 +16,7 @@ import { useSearchParams } from "next/navigation";
 import ProductsCategoryFilter from "./ProductsCategoryFilter";
 
 const ProductsGrid: React.FC = () => {
-  const t = useTranslations("ProductsGrid");
+  // const t = useTranslations("ProductsGrid");
   const [view, setView] = useState<"grid" | "list">("grid");
 
   const { filters, setCategory, setPriceRange, setSorting } =
@@ -47,9 +47,9 @@ const ProductsGrid: React.FC = () => {
     return (
       <section className="container md:py-[88px] py-8">
         <Breadcrumbs
-          items={[{ label: t("home"), href: "/" }, { label: "Product" }]}
+          items={[{ label: ("home"), href: "/" }, { label: "Product" }]}
         />
-        <p className="text-center text-main mt-8">{t("failedToLoad")}</p>
+        <p className="text-center text-main mt-8">{("failedToLoad")}</p>
       </section>
     );
   }
@@ -61,7 +61,7 @@ const ProductsGrid: React.FC = () => {
       </h1> */}
 
       <Breadcrumbs
-        items={[{ label: t("home"), href: "/" }, { label: t("product") }]}
+        items={[{ label: ("home"), href: "/" }, { label: ("product") }]}
       />
 
       <div className="flex lg:flex-row flex-col gap-8 mt-10">
@@ -90,7 +90,7 @@ const ProductsGrid: React.FC = () => {
               <div className="flex items-center gap-2">
                 <div className="animate-spin h-4 w-4 border-2 border-main border-t-transparent rounded-full"></div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {t("loadingNewProducts")}
+                  {("loadingNewProducts")}
                 </p>
               </div>
             </div>
@@ -143,7 +143,7 @@ const ProductsGrid: React.FC = () => {
 
           {!isLoading && data && data.length === 0 && (
             <p className="text-center dark:text-[#FDFDFD] mt-8">
-              {t("noProducts")}
+              {("noProducts")}
             </p>
           )}
         </div>

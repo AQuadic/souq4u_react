@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ProductQuantitySelector } from "./ProductQuantitySelector";
 import { ProductSizeSelector } from "./ProductSizeSelector";
@@ -63,10 +63,10 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   description,
   storeType,
 }) => {
-  const t = useTranslations("Products");
+  // const t = useTranslations("Products");
 
   // Get store config and theme
-  const config = useConfigStore((state) => state.config);
+  const config = useConfigStore((state: { config: unknown; }) => state.config);
   const theme = getProductTheme(config?.store_type);
 
   // Use storeType prop if provided, otherwise fallback to config
@@ -106,7 +106,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             className="flex items-center justify-center"
           >
             <p className="text-white text-lg font-bold leading-[100%]">
-              {!isInStock ? t("outOfStock") : t("addToCart")}
+              {!isInStock ? ("outOfStock") : ("addToCart")}
             </p>
           </motion.div>
 

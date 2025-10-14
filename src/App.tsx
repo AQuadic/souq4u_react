@@ -5,6 +5,8 @@ import HomeCategories from "./features/categories/components/HomeCategories";
 import MainHero from "./features/home/hero/components/MainHero";
 import HomeTryApp from "./features/home/TryApp/components/HomeTryApp";
 import MainContactForm from "./features/contact/components/MainContactForm";
+import MostViewedSection from "./features/products/components/home-listings/MostViewedSection";
+import BestOffersSection from "./features/products/components/home-listings/BestOffersSection";
 
 // Home Page Component
 function HomePage() {
@@ -13,6 +15,8 @@ function HomePage() {
       <MainHero />
       <HomeCategories />
       <HomeTryApp />
+      <BestOffersSection />
+      <MostViewedSection />
     </>
   );
 }

@@ -92,7 +92,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
             >
               <Link href={`/profile/orders/tracking/${order.order_id}`}>
                 <div className="flex items-center cursor-pointer h-full">
-                  <Image
+                  <img
                     src={
                       order.productable?.image?.responsive_urls?.[0] ??
                       "/placeholder-image.jpg"

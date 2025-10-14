@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 
 interface ProductPricingProps {
   hasDiscount: boolean;
@@ -22,7 +22,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
   isInStock,
   hasUnlimitedStock = false, // eslint-disable-line @typescript-eslint/no-unused-vars
 }) => {
-  const t = useTranslations("Common");
+  // const t = useTranslations("Common");
 
   const formatPrice = (price: number) =>
     price.toLocaleString("en-US", { maximumFractionDigits: 0 });
@@ -39,7 +39,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
               }`}
             >
               {formatPrice(finalPrice)}{" "}
-              <span className="font-normal">{t("currency") || currency}</span>
+              <span className="font-normal">{ currency}</span>
             </h2>
             <div className="flex items-center gap-4">
               <h2
@@ -53,7 +53,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
                   <>
                     {formatPrice(originalPrice)}{" "}
                     <span className="font-normal">
-                      {t("currency") || currency}
+                      { currency}
                     </span>
                   </>
                 )}
@@ -74,17 +74,17 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
             }`}
           >
             {formatPrice(finalPrice)}{" "}
-            <span className="font-normal">{t("currency") || currency}</span>
+            <span className="font-normal">{ currency}</span>
           </h2>
         )}
       </div>
       <div className="mt-6">
         <p className="text-gray-800 dark:text-[#FDFDFD] text-lg font-medium leading-[100%]">
-          {t("availability")}:{" "}
+          {("availability")}:{" "}
           {isInStock ? (
-            <span className="text-[#18B511]">{t("inStock")}</span>
+            <span className="text-[#18B511]">{("inStock")}</span>
           ) : (
-            <span className="text-main">{t("outOfStock")}</span>
+            <span className="text-main">{("outOfStock")}</span>
           )}
         </p>
       </div>

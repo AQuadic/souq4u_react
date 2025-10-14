@@ -89,7 +89,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
       <DialogContent className="sm:max-w-[500px] bg-[#242529] max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#555] scrollbar-track-transparent">
         <DialogHeader>
           <DialogTitle className="mx-auto">
-            <Image
+            <img
               src={currentImage}
               alt={`smile-${rating || 1}`}
               width={80}

@@ -63,7 +63,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
             className="w-full md:h-[174px] h-24 border border-[#C0C0C0] rounded-3xl mt-6 flex justify-between"
           >
             <div className="flex items-center">
-              <Image
+              <img
                 src={productImage}
                 alt={productName}
                 width={142}

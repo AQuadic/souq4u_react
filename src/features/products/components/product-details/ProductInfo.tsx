@@ -15,7 +15,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
   productName,
   shortDescription,
 }) => {
-  const config = useConfigStore((state) => state.config);
+  const config = useConfigStore((state: { config: unknown; }) => state.config);
   const storeType = config?.store_type;
   const isClothes = isClothesStore(storeType);
 

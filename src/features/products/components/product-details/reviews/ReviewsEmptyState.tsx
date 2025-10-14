@@ -6,7 +6,7 @@ const ReviewsEmptyState = () => {
     const t = useTranslations("Products");
     return (
         <section className='flex flex-col items-center'>
-            <Image
+            <img
                 src='/images/profile/two_rates.png'
                 alt='face'
                 width={88}

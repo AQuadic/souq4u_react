@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useLocale, useTranslations } from "next-intl";
+// import { useLocale, useTranslations } from "next-intl";
 import {
   Category,
   getCategories,
@@ -13,8 +13,8 @@ const ProductsCategoryFilter = ({
 }: {
   setCategory: (id?: number) => void;
 }) => {
-  const t = useTranslations("Products");
-  const locale = useLocale();
+  // const t = useTranslations("Products");
+  // const locale = useLocale();
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const {
@@ -35,12 +35,12 @@ const ProductsCategoryFilter = ({
   return (
     <section className="w-[276px] h-auto dark:bg-[#242529] bg-[#FDFDFD] overflow-y-auto mx-auto">
       <h1 className="text-2xl font-semibold leading-[100%] p-4 ltr:border-l-4 rtl:border-r-4  border-main">
-        {t("categories")}
+        {("categories")}
       </h1>
       <div className="w-full h-px bg-[#FDFDFD]"></div>
 
       <div className="p-4 space-y-4">
-        {isLoading && <p className="text-sm text-gray-400">{t("loading")}</p>}
+        {isLoading && <p className="text-sm text-gray-400">{("loading")}</p>}
         {isError && <p className="text-sm text-red-400">{error.message}</p>}
 
         {categories?.map((cat) => {
@@ -56,7 +56,7 @@ const ProductsCategoryFilter = ({
               <div className="flex items-center gap-1">
                 <FilterArow />
                 <p className="text-sm font-medium leading-[100%]">
-                  {locale === "ar" ? cat.name.ar : cat.name.en}
+                  {cat.name.en}
                 </p>
               </div>
               <p className="text-base font-medium leading-[100%]">

@@ -9,7 +9,7 @@ const FavEmptyState = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <Image
+      <img
         src="/noFav.png"
         alt={t("FavoritesEmpty.alt") ?? "fav empty"}
         width={254}

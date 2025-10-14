@@ -5,9 +5,10 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts, Product, GetProductsParams } from "../api/getProduct";
 import ProductCard from "./ProductCard";
-import Link from "next/link";
+// import Link from "next/link";
 import Arrow from "../icons/Arrow";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Link } from "react-router-dom";
 
 export interface ProductListTheme {
   containerClassName?: string;
@@ -225,7 +226,7 @@ const ProductList: React.FC<ProductListProps> = ({
 
       {viewAllLink && (
         <div className="flex items-center justify-center mt-12">
-          <Link href={viewAllLink} className={mergedTheme.buttonClassName}>
+          <Link to={viewAllLink} className={mergedTheme.buttonClassName}>
             {displayButtonText}
             <div className={mergedTheme.buttonIconClassName}>
               <Arrow />

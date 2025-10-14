@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocale, useTranslations } from "next-intl";
+// import { useLocale, useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -50,11 +50,11 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
   onAttributeChange,
   disabled = false,
 }) => {
-  const t = useTranslations("Products");
-  const locale = useLocale();
+  // const t = useTranslations("Products");
+  // const locale = useLocale();
 
   // Get store config and theme
-  const config = useConfigStore((state) => state.config);
+  const config = useConfigStore((state: { config: unknown; }) => state.config);
   const storeType = config?.store_type;
   const theme = getProductTheme(storeType);
 
@@ -80,7 +80,7 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
 
       const attrId = attr.attribute.id;
       const attrName =
-        attr.attribute.name?.[locale] || attr.attribute.name?.en || "";
+        attr.attribute.name?.en || attr.attribute.name?.en || "";
       // normalize type to lowercase for robust comparisons
       const attrType = (attr.attribute.type || "Text").toLowerCase();
       const valueId = attr.value?.id || 0;
@@ -88,7 +88,7 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
       // value may be missing when only special_value (color) is provided,
       // so compute displayValue defensively
       const displayValue =
-        attr.value?.value?.[locale] ||
+        attr.value?.value?.en ||
         attr.value?.value?.en ||
         // some APIs provide a direct display string
         (typeof attr.value?.display_value === "string"
@@ -173,7 +173,7 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
                 className={`w-full ${theme.input.height} ${theme.input.rounded} bg-popover text-popover-foreground border-input`}
               >
                 <SelectValue
-                  placeholder={t("choose") || `Choose ${attribute.name}`}
+                  placeholder={`Choose ${attribute.name}`}
                   className="!placeholder:text-muted-foreground"
                 />
               </SelectTrigger>

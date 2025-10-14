@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import { useConfigStore } from "@/features/config";
 import {
   getProductTheme,
@@ -17,8 +17,8 @@ export const ProductDescription: React.FC<ProductDescriptionProps> = ({
   shortDescription,
   description,
 }) => {
-  const t = useTranslations("Products");
-  const config = useConfigStore((state) => state.config);
+  // const t = useTranslations("Products");
+  const config = useConfigStore((state: { config: unknown; }) => state.config);
   const storeType = config?.store_type;
   const theme = getProductTheme(storeType);
   const isClothes = isClothesStore(storeType);
@@ -50,8 +50,8 @@ export const ProductDescription: React.FC<ProductDescriptionProps> = ({
               className={`mt-2 ${theme.description.seeMoreColor} font-semibold text-sm hover:underline transition-colors`}
             >
               {isExpanded
-                ? t("showLess") || "Show Less"
-                : t("seeMore") || "Show More"}
+                ? "Show Less"
+                : "Show More"}
             </button>
           </div>
         )}

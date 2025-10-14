@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import Image from "next/image";
 import ResFav from "../../icons/ResFav";
 import ResUnFav from "../../icons/ResUnFav";
 import { useConfig } from "@/features/config";
@@ -112,13 +111,13 @@ const MainGallery: React.FC<MainGalleryProps> = ({
                   : "opacity-0 z-0 pointer-events-none"
               }`}
             >
-              <Image
+              <img
                 src={img.url || "/placeholder-product.jpg"}
                 alt={img.alt || productName}
                 width={584}
                 height={590}
                 className="w-full h-full object-contain"
-                priority={isActive}
+                // priority={isActive}
                 loading={eagerLoad ? "eager" : "lazy"}
               />
             </div>
@@ -196,7 +195,7 @@ const Thumbnails: React.FC<ThumbnailsProps> = ({
                 : "border-gray-300 hover:border-gray-400"
             }`}
           >
-            <Image
+            <img
               src={image.url}
               alt={`${productName} - Image ${index + 1}`}
               width={112}
@@ -222,7 +221,7 @@ const Thumbnails: React.FC<ThumbnailsProps> = ({
               : "border-gray-300 hover:border-gray-400"
           }`}
         >
-          <Image
+          <img
             src={image.url}
             alt={`${productName} - Image ${index + 1}`}
             width={112}

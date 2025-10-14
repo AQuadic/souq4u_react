@@ -1,8 +1,9 @@
 import React from "react";
-import Link from "next/link";
-import { useTranslations, useLocale } from "next-intl";
+// import Link from "next/link";
+// import { useTranslations, useLocale } from "next-intl";
 import BackArrow from "../../icons/BackArrow";
 import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
+import { Link } from "react-router-dom";
 
 interface ProductHeaderProps {
   showMobileBreadcrumb?: boolean;
@@ -11,14 +12,14 @@ interface ProductHeaderProps {
 export const ProductHeader: React.FC<ProductHeaderProps> = ({
   showMobileBreadcrumb = true,
 }) => {
-  const tNav = useTranslations("Navigation");
-  const locale = useLocale();
-  const isRtl = locale === "ar";
+  // const tNav = useTranslations("Navigation");
+  // const locale = useLocale();
+  // const isRtl = locale === "ar";
 
   const items = [
-    { label: tNav("home"), href: "/" },
-    { label: tNav("products"), href: "/products" },
-    { label: tNav("productDetails") },
+    { label: ("home"), href: "/" },
+    { label: ("products"), href: "/products" },
+    { label: ("productDetails") },
   ];
 
   return (
@@ -30,10 +31,10 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
 
       {/* Mobile Back Button */}
       {showMobileBreadcrumb && (
-        <Link href="/" className="md:hidden flex items-center gap-2">
-          <BackArrow flip={isRtl} />
+        <Link to="/" className="md:hidden flex items-center gap-2">
+          <BackArrow  />
           <p className="text-[#FDFDFD] text-xl font-semibold leading-[100%]">
-            {tNav("productDetails")}
+            {("productDetails")}
           </p>
         </Link>
       )}

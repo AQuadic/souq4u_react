@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import SingleFav from "../../icons/SingleFav";
 import SingleUnFav from "../../icons/SingleUnFav";
 
@@ -19,7 +18,7 @@ export const ProductImage: React.FC<ProductImageProps> = ({
   return (
     <div className="relative">
       {imageUrl ? (
-        <Image
+        <img
           src={imageUrl}
           alt={productName}
           width={584}
