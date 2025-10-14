@@ -175,3 +175,18 @@ export const cartApi = {
     }
   },
 };
+
+export const getCartSessionId = (): string | undefined => {
+  if (typeof window === "undefined") return undefined;
+
+  let sessionId = localStorage.getItem("cart_session_id") || undefined;
+
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}_${Math.random()
+      .toString(36)
+      .substring(2, 11)}`;
+    localStorage.setItem("cart_session_id", sessionId);
+  }
+
+  return sessionId;
+};
