@@ -9,6 +9,10 @@ export interface Address {
   location?: string;
   lat?: number;
   lng?: number;
+  phone?: string;
+  phone_country?: string;
+  email?: string;
+  user_name?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -23,6 +27,10 @@ export interface CreateAddressRequest {
   location?: string;
   lat?: number;
   lng?: number;
+  phone?: string;
+  phone_country?: string;
+  email?: string;
+  user_name?: string;
 }
 
 export type UpdateAddressRequest = Partial<CreateAddressRequest>;

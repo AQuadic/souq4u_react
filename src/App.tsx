@@ -13,6 +13,7 @@ import MyFavorites from "./features/profile/favorites/MyFavorites";
 import MyOrders from "./features/profile/orders/MyOrders";
 import { ProductDetailsPage } from "./features/products/components";
 import MainCart from "./features/cart/components/MainCart";
+import MainCheckout from "./features/checkout/components/MainCheckout";
 
 // Home Page Component
 function HomePage() {
@@ -68,6 +69,7 @@ function App() {
           <Route path="profile/orders" element={<MyOrders />} />
           <Route path="profile/favorites" element={<MyFavorites />} />
           <Route path="cart" element={<MainCart />} />
+          <Route path="checkout" element={<MainCheckout />} />
           {/* Add more routes as needed */}
         </Route>
       </Routes>

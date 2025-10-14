@@ -1,0 +1,183 @@
+"use client";
+
+import React from "react";
+import { useRouter } from "next/navigation";
+import { type CheckoutResponse } from "../api/postAddress";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/shared/components/ui/dialog";
+import { useTranslation } from "react-i18next";
+
+interface OrderSuccessModalProps {
+  isOpen: boolean;
+  orderData: CheckoutResponse | null;
+  couponCode?: string | null;
+}
+
+export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
+  isOpen,
+  orderData,
+  couponCode,
+}) => {
+  const router = useRouter();
+  const {t} = useTranslation("Common");
+
+  const handleGoHome = () => {
+    // Redirect to home without closing modal (modal will unmount when component unmounts)
+    router.push("/");
+  };
+
+  if (!orderData) return null;
+
+  const { order } = orderData;
+
+  return (
+    <Dialog open={isOpen}>
+      <DialogContent
+        className="dark:bg-[var(--color-cart-bg)] border-[#C0C0C0] max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto"
+        showCloseButton={false}
+      >
+        <DialogHeader>
+          <DialogTitle className="dark:text-white text-xl font-semibold text-center">
+            🎉 {t("orderCreated")}
+          </DialogTitle>
+          <DialogDescription className="text-center dark:text-[#C0C0C0]">
+            {t("orderPlaced")}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4 py-4">
+          {/* Order Info */}
+          <div className="dark:bg-[#1a1a1a] p-4 rounded-lg">
+            <h3 className="dark:text-white font-semibold mb-3">
+              {t("orderDetails")}
+            </h3>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="dark:text-[#C0C0C0]">{t("orderCode")}</span>
+                <span className="dark:text-white font-medium">
+                  #{order.code}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="dark:text-[#C0C0C0]">{t("status")}</span>
+                <span className="text-yellow-400 capitalize font-medium">
+                  {order.status}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="dark:text-[#C0C0C0]">{t("customer")}</span>
+                <span className="dark:text-white">{order.user_name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="dark:text-[#C0C0C0]">{t("phone")}</span>
+                <span className="dark:text-white" dir="ltr">
+                  {order.phone}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Order Items */}
+          <div className="dark:bg-[#1a1a1a] p-4 rounded-lg">
+            <h3 className="dark:text-white font-semibold mb-3">
+              {t("itemsOrdered")}
+            </h3>
+            <div className="space-y-3">
+              {order.orderItems.map((item) => (
+                <div key={item.id} className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <p className="dark:text-white text-sm">
+                      {item.product_name.en}
+                    </p>
+                    <p className="dark:text-[#C0C0C0] text-xs">
+                      {t("Qty")} {item.quantity}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="dark:text-white font-medium">
+                      {item.final_price.toLocaleString()} {t("currency")}
+                    </p>
+                    {item.discount_amount > 0 && (
+                      <p className="text-green-400 text-xs">
+                        -{item.discount_amount.toLocaleString()} {t("currency")}{" "}
+                        {t("saved")}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Order Summary */}
+          <div className="dark:bg-[#1a1a1a] p-4 rounded-lg">
+            <h3 className="dark:text-white font-semibold mb-3">
+              {t("orderSummary")}
+            </h3>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="dark:text-[#C0C0C0]">{t("subtotal")}</span>
+                <span className="dark:text-white">
+                  {order.sub_total.toLocaleString()} {t("currency")}
+                </span>
+              </div>
+              {order.discount_amount > 0 && (
+                <div className="flex justify-between">
+                  <span className="dark:text-[#C0C0C0]">{t("discount")}</span>
+                  <span className="text-green-400">
+                    -{order.discount_amount.toLocaleString()} {t("currency")}
+                  </span>
+                </div>
+              )}
+              {couponCode && (
+                <div className="flex justify-between">
+                  <span className="dark:text-[#C0C0C0]">{t("couponCode")}</span>
+                  <span className="dark:text-white">{couponCode}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="dark:text-[#C0C0C0]">{t("tax")}</span>
+                <span className="dark:text-white">
+                  {order.tax.toLocaleString()} {t("currency")}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="dark:text-[#C0C0C0]">{t("shipping")}</span>
+                <span className="dark:text-white">
+                  {order.shipping.toLocaleString()} {t("currency")}
+                </span>
+              </div>
+              <div className="w-full h-px bg-[#C0C0C0] my-2"></div>
+              <div className="flex justify-between">
+                <span className="text-white font-semibold">{t("total")}</span>
+                <span className="text-white font-bold text-lg">
+                  {order.total.toLocaleString()} {t("currency")}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Success Message
+          <div className="text-center dark:text-[#C0C0C0] text-sm">
+            <p>{t("thankyou")}</p>
+          </div> */}
+        </div>
+
+        <DialogFooter className="gap-3">
+          <button
+            onClick={handleGoHome}
+            className="w-full bg-[var(--color-main)] hover:bg-main/50 text-white font-semibold py-3 px-4 rounded transition-colors duration-200 uppercase tracking-wide cursor-pointer"
+          >
+            {t("goHome")}
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
