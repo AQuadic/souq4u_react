@@ -1,9 +1,8 @@
-import Image from "next/image";
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 const FavEmptyState = () => {
-  const t = useTranslations("Profile");
+  const {t} = useTranslation("Profile");
   const desc = t("FavoritesEmpty.desc");
   const descLines = desc ? desc.split("\n") : [];
 

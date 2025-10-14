@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import {
   Dialog,
   DialogClose,
@@ -15,7 +16,7 @@ import OrStar from "./icons/OrStar";
 import Star from "./icons/Star";
 import { toast } from "react-hot-toast";
 import { sendReview } from "./api/postReviews";
-// import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 type ReviewDialogProps = {
   productName?: string;
@@ -29,7 +30,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
-  // const t = useTranslations("Profile");
+  const {t} = useTranslation("Profile");
 
   const smileImages: Record<number, string> = {
     1: "/images/profile/one__rate.png",
@@ -83,7 +84,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button>{('review')}</button>
+        <button>{t('review')}</button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] bg-[#242529] max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#555] scrollbar-track-transparent">
         <DialogHeader>
@@ -109,7 +110,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             </div>
 
             <p className="text-[#FDFDFD] md:text-lg text-base font-medium leading-[150%] text-center mt-6">
-              {('feedback')}
+              {t('feedback')}
             </p>
           </DialogDescription>
         </DialogHeader>
@@ -119,7 +120,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             htmlFor="comment"
             className="text-[#FDFDFD] text-base font-medium leading-[100%]"
           >
-            {('comment')}
+            {t('comment')}
           </label>
           <textarea
             name="comment"
@@ -137,7 +138,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
               disabled={loading}
               className="w-full h-12 bg-main rounded-[8px] text-[#FFFFFF] text-lg font-medium disabled:opacity-60"
             >
-              {loading ? ('sending') : ('send')}
+              {loading ? t('sending') : t('send')}
             </button>
           </DialogClose>
         </DialogFooter>

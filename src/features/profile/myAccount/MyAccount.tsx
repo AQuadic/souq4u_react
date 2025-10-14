@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useLocale, useTranslations } from "next-intl";
 import {
   PhoneInput,
   PhoneValue,
@@ -11,14 +10,15 @@ import { updateUser } from "@/features/profile/api/updateUser";
 import { useToast } from "@/shared/components/ui/toast";
 import { handleApiError } from "@/shared/utils/errorHandler";
 import { useInitializeAuth, useUser } from "@/features/auth/stores/auth-store";
-import Link from "next/link";
 import BackArrow from "@/features/products/icons/BackArrow";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const MyAccount: React.FC = () => {
-  const locale = useLocale();
-  const t = useTranslations("Profile");
-  const tCommon = useTranslations("Common");
-  const tAuth = useTranslations("Auth");
+  const { i18n, t } = useTranslation("Profile");
+  const locale = i18n.language;
+  // const {tCommon} = useTranslation("Common");
+  // const {tAuth} = useTranslation("Auth");
 
   // Get user data from auth store
   const user = useUser();
@@ -80,7 +80,7 @@ const MyAccount: React.FC = () => {
       const [ns, ...rest] = value.split(".");
       const key = rest.join(".");
       if (ns === "auth") {
-        const translated = tAuth(key);
+        const translated = t(key);
         if (translated) {
           toast.success(translated);
           return;
@@ -99,7 +99,7 @@ const MyAccount: React.FC = () => {
     }
 
     toast.error(
-      t("updateFailed") || tAuth("error") || "Failed to update profile"
+      t("updateFailed") || t("error") || "Failed to update profile"
     );
   };
 
@@ -176,7 +176,7 @@ const MyAccount: React.FC = () => {
         {t("title") || "My Account"}
       </h1>
 
-      <Link href='/profile/account' className="flex items-center gap-2 md:hidden">
+      <Link to='/profile/account' className="flex items-center gap-2 md:hidden">
         <BackArrow />
         <h1 className=" text-[32px] font-bold leading-[100%]">
         {t("title") || "My Account"}
@@ -205,7 +205,7 @@ const MyAccount: React.FC = () => {
             htmlFor="email"
             className=" text-base font-normal leading-[100%]"
           >
-            {tCommon("email")}
+            {t("email")}
           </label>
           <input
             id="email"

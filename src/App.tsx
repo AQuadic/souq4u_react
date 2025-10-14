@@ -8,6 +8,9 @@ import ContactSection from "./features/contact/components/ContactSection";
 import MostViewedSection from "./features/products/components/home-listings/MostViewedSection";
 import BestOffersSection from "./features/products/components/home-listings/BestOffersSection";
 import ProductsGrid from "./features/products/components/product-listing/ProductsGrid";
+import MyAccount from "./features/profile/myAccount/MyAccount";
+import MyFavorites from "./features/profile/favorites/MyFavorites";
+import MyOrders from "./features/profile/orders/MyOrders";
 
 // Home Page Component
 function HomePage() {
@@ -57,6 +60,10 @@ function App() {
           <Route path="products" element={<ProductsPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="about" element={<AboutPage />} />
+          <Route path="profile" element={<MyAccount />} />
+          <Route path="profile/account" element={<MyAccount />} />
+          <Route path="profile/orders" element={<MyOrders />} />
+          <Route path="profile/favorites" element={<MyFavorites />} />
           {/* Add more routes as needed */}
         </Route>
       </Routes>

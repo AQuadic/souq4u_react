@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import LogoutDialog from "./LogoutDialog";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
-// keep keys here so messages can be provided via next-intl files
+// keep keys here so messages can be provided via i18next files
 const links = [
   { href: "/profile/account", key: "Profile.account" },
   { href: "/profile/orders", key: "Profile.orders" },
@@ -15,21 +15,16 @@ const links = [
 ];
 
 export default function Sidebar() {
-  const pathname = usePathname();
-  const locale = useLocale();
-  const t = useTranslations();
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
 
   return (
-    <aside className="lg:block hidden min-w-[276px] h-[544px] bg-[#F7F7F7] py-10 px-6  rounded-lg">
+    <aside className="lg:block hidden min-w-[276px] h-[544px] bg-[#F7F7F7] py-10 px-6 rounded-lg">
       <nav className="flex flex-col gap-10">
         {links.map((link) => {
-          // treat a link as active when the current pathname contains the
-          // link path (covers locale prefixes and nested subroutes, e.g.
-          // `/en/profile/addresses/edit/18` should activate `/profile/addresses`).
-          const current = pathname ?? "";
-          const isActive = current.includes(link.href);
-
-          // resolve label via next-intl using the key defined above
+          const isActive = currentPath.includes(link.href);
           const label = t(link.key ?? "");
 
           if (link.isLogout) {
@@ -46,9 +41,9 @@ export default function Sidebar() {
           return (
             <Link
               key={link.href}
-              href={link.href}
+              to={link.href} // ✅ 'to' instead of 'href'
               className={`transition-colors text-base hover:text-main ${
-                isActive && "text-main font-bold"
+                isActive ? "text-main font-bold" : ""
               }`}
             >
               {label}

@@ -1,15 +1,15 @@
 "use client";
 
-// import Image from "next/image";
+import Image from "next/image";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { getOrders, GetOrdersResponse, Order } from "./api/getOrders";
 import OrdersEmpty from "./OrdersEmpty";
-// import { useTranslations, useLocale } from "next-intl";
-import Link from "next/link";
 import ReviewDialog from "./ReviewDialog";
 import BackArrow from "@/features/products/icons/BackArrow";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const statusStyles: Record<string, { bg: string; text: string }> = {
   pending: { bg: "bg-[#C8C8C812]", text: "text-[#C8C8C8]" },
@@ -28,8 +28,8 @@ const MyOrders: React.FC<MyOrdersProps> = ({
   showHeader = true,
   statusFilter,
 }) => {
-  // const t = useTranslations("Orders");
-  // const locale = useLocale();
+  const { t, i18n } = useTranslation("Orders");
+  const locale = i18n.language;
 
   const { data, isLoading, isError } = useQuery<GetOrdersResponse, Error>({
     queryKey: ["orders"],
@@ -57,16 +57,16 @@ const MyOrders: React.FC<MyOrdersProps> = ({
       {showHeader && (
         <>
           <h2 className="text-[32px] font-bold leading-[100%] mb-4 md:flex hidden">
-            {("orders")}
+            {t("orders")}
           </h2>
 
           <Link
-            href="/profile/account"
+            to="/profile/account"
             className="flex items-center gap-2 mb-4 md:hidden"
           >
             <BackArrow />
             <h2 className="text-[32px] font-bold leading-[100%]">
-              {("orders")}
+              {t("orders")}
             </h2>
           </Link>
         </>
@@ -83,14 +83,14 @@ const MyOrders: React.FC<MyOrdersProps> = ({
             : { bg: "", text: "" };
 
           const productName =
-              order.product_name?.en;
+            locale === "ar" ? order.product_name?.ar : order.product_name?.en;
 
           return (
             <div
               key={order.id}
               className="relative w-full md:h-[172px] h-24 dark:bg-[#242529] shadow-md hover:shadow-lg rounded-2xl px-3 my-4"
             >
-              <Link href={`/profile/orders/tracking/${order.order_id}`}>
+              <Link to={`/profile/orders/tracking/${order.order_id}`}>
                 <div className="flex items-center cursor-pointer h-full">
                   <img
                     src={
@@ -104,13 +104,13 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                   />
                   <div>
                     <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
-                      {("id")} #<span>{order.order_id}</span>
+                      {t("id")} #<span>{order.order_id}</span>
                     </p>
                     <h1 className=" md:text-2xl text-base font-semibold leading-[100%] md:mt-6 mt-4">
                       {productName}
                     </h1>
                     <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%] md:mt-6 mt-3">
-                      {/* {order.created_at
+                      {order.created_at
                         ? new Intl.DateTimeFormat(
                             locale === "ar" ? "ar-EG" : "en-GB",
                             {
@@ -119,7 +119,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                               year: "numeric",
                             }
                           ).format(new Date(order.created_at))
-                        : "N/A"} */}
+                        : "N/A"}
                     </p>
                   </div>
                 </div>

@@ -1,8 +1,5 @@
-"use client";
-
 import React, { useState } from "react";
-import { useTranslations, useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom"; // ✅ replaces useRouter
 import { useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 
@@ -10,6 +7,7 @@ import { useAuthActions } from "@/features/auth/stores/auth-store";
 import { useCartStore } from "@/features/cart/stores";
 import { useAddressStore } from "@/features/address/stores";
 import { useToast } from "@/shared/components/ui/toast/toast-store";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   label?: string;
@@ -32,10 +30,10 @@ export default function LogoutDialog(props: Readonly<Props>) {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const t = useTranslations("Auth.logoutDialog");
-  const locale = useLocale() as "en" | "ar" | undefined;
+  const { i18n, t } = useTranslation("Auth.logoutDialog");
+  const locale = i18n.language as "en" | "ar" | undefined;
 
-  const router = useRouter();
+  const navigate = useNavigate(); // ✅ replaces useRouter
   const queryClient = useQueryClient();
 
   // actions from stores
@@ -48,68 +46,47 @@ export default function LogoutDialog(props: Readonly<Props>) {
 
   const handleLogout = async () => {
     try {
-      // Clear client-side state: auth, cart, addresses, toasts, react-query cache
       console.log("Logging out: clearing client state and redirecting to home");
 
-      // Clear cookies that may store tokens or session ids
+      // Clear cookies
       try {
         Cookies.remove("o-branchy-token", { path: "/" });
-        Cookies.remove("o-branchy-token");
-        // common cart/session cookie names (best-effort)
         Cookies.remove("o-branchy-cart-session", { path: "/" });
-        Cookies.remove("o-branchy-cart-session");
       } catch (e) {
-        console.warn("Failed to remove some cookies during logout", e);
+        console.warn("Failed to remove cookies", e);
       }
 
-      // Clear zustand stores - prefer explicit clearAuth, fallback to logout
-      if (typeof clearAuth === "function") {
-        try {
-          clearAuth();
-        } catch (err) {
-          console.warn("clearAuth failed during logout:", err);
-        }
-      } else if (typeof logout === "function") {
-        try {
-          logout();
-        } catch (err) {
-          console.warn("logout failed during logout:", err);
-        }
-      }
-
+      // Clear Zustand stores
       try {
+        if (typeof clearAuth === "function") clearAuth();
+        else if (typeof logout === "function") logout();
         clearCart();
-      } catch (e) {
-        console.warn("Failed to clear cart", e);
-      }
-
-      try {
         clearAddresses();
       } catch (e) {
-        console.warn("Failed to clear addresses", e);
+        console.warn("Failed to clear store data", e);
       }
 
-      // clear react query cache and cancel running queries
+      // Clear React Query cache
       try {
         queryClient.cancelQueries();
         queryClient.clear();
       } catch (e) {
-        console.warn("Failed to clear react-query client", e);
+        console.warn("Failed to clear query cache", e);
       }
 
-      // clear toasts
+      // Clear toasts
       try {
         toast.clear();
       } catch (e) {
         console.warn("Failed to clear toasts", e);
       }
 
-      // close dialog
+      // Close dialog
       setIsOpen(false);
       onOpenChange?.(false);
 
-      // navigate to home (replace so user can't go back to protected pages)
-      router.replace("/");
+      // ✅ Navigate to home in React
+      navigate("/", { replace: true });
     } catch (err) {
       console.error("Logout error:", err);
     }
@@ -120,7 +97,6 @@ export default function LogoutDialog(props: Readonly<Props>) {
   const isRTL = (lang ?? locale) === "ar";
 
   return (
-    // Do not force a local 'dark' class here — rely on global theme (html/body) so dialog follows app theme
     <div className={`${isRTL ? "rtl" : "ltr"}`}>
       {/* Dialog Trigger */}
       {typeof open === "undefined" && (
@@ -130,7 +106,7 @@ export default function LogoutDialog(props: Readonly<Props>) {
             setIsOpen(true);
           }}
           className={`transition-colors text-base text-left rtl:text-right cursor-pointer ${
-            isActive && "text-main font-bold"
+            isActive ? "text-main font-bold" : ""
           }`}
         >
           {resolvedLabel}
