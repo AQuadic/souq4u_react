@@ -12,6 +12,7 @@ import MyAccount from "./features/profile/myAccount/MyAccount";
 import MyFavorites from "./features/profile/favorites/MyFavorites";
 import MyOrders from "./features/profile/orders/MyOrders";
 import { ProductDetailsPage } from "./features/products/components";
+import MainCart from "./features/cart/components/MainCart";
 
 // Home Page Component
 function HomePage() {
@@ -66,6 +67,7 @@ function App() {
           <Route path="profile/account" element={<MyAccount />} />
           <Route path="profile/orders" element={<MyOrders />} />
           <Route path="profile/favorites" element={<MyFavorites />} />
+          <Route path="cart" element={<MainCart />} />
           {/* Add more routes as needed */}
         </Route>
       </Routes>
