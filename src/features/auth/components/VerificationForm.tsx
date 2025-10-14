@@ -1,7 +1,6 @@
-import Image from "next/image";
 import React from "react";
 import { ResendResponse } from "@/features/auth/api/resend";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 // import { Link } from "@/i18n/navigation";
 
 interface LoginData {
@@ -25,7 +24,7 @@ export const VerificationForm = ({
   onResendVerification,
   isPolling = false,
 }: VerificationFormProps) => {
-  const t = useTranslations("Auth");
+  const {t} = useTranslation("Auth");
   // const locale = useLocale();
   // Extract OTP last 6 digits from the message
 

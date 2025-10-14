@@ -2,9 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "../api/getCategories";
+import { useTranslation } from "react-i18next";
 
 const HomeCategories = () => {
-
+  const { t } = useTranslation("Home");
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => await getCategories(),
@@ -12,7 +13,7 @@ const HomeCategories = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h3 className="font-bold text-2xl sm:text-3xl mb-6">{("categories")}</h3>
+      <h3 className="font-bold text-2xl sm:text-3xl mb-6">{t("categories")}</h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 place-items-center">
         {categories?.map((category) => (
           <button

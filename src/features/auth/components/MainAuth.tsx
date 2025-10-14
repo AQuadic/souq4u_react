@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { useRouter } from "@/i18n/navigation";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +12,6 @@ import { VerificationForm } from "@/features/auth/components/VerificationForm";
 // removed react-hot-toast; use internal toast store
 import Profile from "@/shared/components/layout/header/icons/Profile";
 // Removed LogoutDialog import - logout will happen immediately without a confirmation dialog
-import { useTranslations } from "next-intl";
 import { resendVerification, ResendResponse } from "@/features/auth/api/resend";
 import { checkOtp } from "@/features/auth/api/checkOtp";
 import { postLogin } from "../api/postLogin";
@@ -39,11 +39,11 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
   const shouldContinuePollingRef = useRef<boolean>(false);
 
   // Auth state and actions
-  const router = useRouter();
+  const navigate = useNavigate();
   const loginUser = useLogin();
   const isAuthenticated = useIsAuthenticated();
   const toast = useToast();
-  const t = useTranslations("Auth");
+  const {t }= useTranslation("Auth");
 
   // Handle profile click - either open dialog or navigate to profile
   const handleProfileClick = useCallback(() => {
@@ -51,7 +51,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
     onProfileClick?.();
     if (isAuthenticated) {
       // If the user is authenticated, go to their profile page
-      router.push("/profile");
+      navigate("/profile");
 
       // ensure any dialog is closed
       setIsDialogOpen(false);
@@ -59,7 +59,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
       // If not authenticated, open the login dialog
       setIsDialogOpen(true);
     }
-  }, [isAuthenticated, onProfileClick, router]);
+  }, [isAuthenticated, onProfileClick, navigate]);
 
   // Function to stop polling
   const stopPolling = useCallback(() => {

@@ -5,10 +5,9 @@ import {
 } from "@/shared/components/compound/PhoneInput";
 import React, { useState } from "react";
 
-import { Link } from "@/i18n/navigation";
 import { useToast } from "@/shared/components/ui/toast/toast-store";
-import { useTranslations, useLocale } from "next-intl";
-import Image from "next/image";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 // Define proper error types
 interface ApiError {
@@ -39,8 +38,9 @@ interface LoginFormProps {
 const LoginForm = ({ onSubmit }: LoginFormProps) => {
   const [phone, setPhone] = useState<PhoneValue>({ code: "20", number: "" });
   const [loading, setLoading] = useState(false);
-  const t = useTranslations("Auth");
-  const locale = useLocale();
+  const {t} = useTranslation("Auth");
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
   const toast = useToast();
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
@@ -163,7 +163,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
       </button>
 
       <Link
-        href="/"
+        to="/"
         className="w-full h-12 md:h-14  border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg  leading-[100%] transition-colors hover:bg-main/10"
       >
         {t("continueAsGuest")}
