@@ -1,6 +1,8 @@
 // import { Button } from "@/shared/components/ui/button";
 // import { Link } from "@/i18n/navigation";
+import { Button } from "@/shared/components/ui/button";
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface HeroSlideProps {
   slide: {
@@ -33,12 +35,12 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ slide }) => {
           Shop easily and quickly with a wide range of high-quality products,
           delivered straight to your doorstep with just one click.
         </p>
-
-        <Link href="/products">
+          */}
+        <Link to={slide.url}>
           <Button className="w-full sm:w-[429px] px-4 py-4 sm:py-6  font-bold text-base sm:text-lg">
             Buy Now
           </Button>
-        </Link> */}
+        </Link>
       </div>
     </div>
   );
