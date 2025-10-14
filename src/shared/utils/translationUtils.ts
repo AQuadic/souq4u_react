@@ -1,4 +1,4 @@
-// import { useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 // Type definitions for multilingual data
 export interface MultilingualText {
@@ -52,7 +52,8 @@ export function useTranslatedText(
   data: MultilingualText | string | null | undefined,
   fallback: string = ""
 ): string {
-  // const locale = useLocale();
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
 
   if (!data) return fallback;
 
@@ -61,7 +62,7 @@ export function useTranslatedText(
 
   // If data is an object with language keys, return the appropriate one
   if (typeof data === "object" && data !== null) {
-    return  data["en"] || data["ar"] || fallback;
+    return data[locale] || data["en"] || data["ar"] || fallback;
   }
 
   return fallback;

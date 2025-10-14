@@ -6,7 +6,7 @@ import { getProducts, Product } from "../../api/getProduct";
 import { getPriceRange } from "../../api/getPriceRange";
 import ProductCard from "../ProductCard";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-// import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import ProductsPriceFilter from "./ProductsPriceFilter";
 import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
 import ProductsSorting from "./ProductsSorting";
@@ -16,7 +16,7 @@ import { useProductFilters } from "../../hooks/useProductFilters";
 import ProductsCategoryFilter from "./ProductsCategoryFilter";
 
 const ProductsGrid: React.FC = () => {
-  // const t = useTranslations("ProductsGrid");
+  const { t } = useTranslation();
   const [view, setView] = useState<"grid" | "list">("grid");
 
   const { filters, setCategory, setPriceRange, setSorting } =
@@ -47,9 +47,14 @@ const ProductsGrid: React.FC = () => {
     return (
       <section className="container md:py-[88px] py-8">
         <Breadcrumbs
-          items={[{ label: ("home"), href: "/" }, { label: "Product" }]}
+          items={[
+            { label: t("Navigation.home"), href: "/" },
+            { label: t("Products.title") },
+          ]}
         />
-        <p className="text-center text-main mt-8">{("failedToLoad")}</p>
+        <p className="text-center text-main mt-8">
+          {t("ProductsGrid.failedToLoad")}
+        </p>
       </section>
     );
   }
@@ -57,11 +62,14 @@ const ProductsGrid: React.FC = () => {
   return (
     <section className="container md:py-[88px] py-8">
       {/* <h1 className="text-main md:text-[32px] text-2xl font-normal leading-[100%] text-center uppercase font-anton-sc">
-        {t("title")}
+        {t("ProductsGrid.title")}
       </h1> */}
 
       <Breadcrumbs
-        items={[{ label: ("home"), href: "/" }, { label: ("product") }]}
+        items={[
+          { label: t("Navigation.home"), href: "/" },
+          { label: t("Products.title") },
+        ]}
       />
 
       <div className="flex lg:flex-row flex-col gap-8 mt-10">
@@ -90,7 +98,7 @@ const ProductsGrid: React.FC = () => {
               <div className="flex items-center gap-2">
                 <div className="animate-spin h-4 w-4 border-2 border-main border-t-transparent rounded-full"></div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {("loadingNewProducts")}
+                  {t("ProductsGrid.loadingNewProducts")}
                 </p>
               </div>
             </div>
@@ -143,7 +151,7 @@ const ProductsGrid: React.FC = () => {
 
           {!isLoading && data && data.length === 0 && (
             <p className="text-center dark:text-[#FDFDFD] mt-8">
-              {("noProducts")}
+              {t("ProductsGrid.noProducts")}
             </p>
           )}
         </div>

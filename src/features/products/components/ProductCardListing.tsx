@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-// import { Link } from "react-router-dom";
 import { Product } from "../api/getProduct";
 import Favorite from "../icons/Favorite";
 import Unfavorite from "../icons/Unfavorite";
@@ -11,6 +10,7 @@ import {
   useTranslatedText,
   MultilingualText,
 } from "@/shared/utils/translationUtils";
+import { useTranslation } from "react-i18next";
 import { addFavorite } from "@/features/profile/favorites/api/postFavorites";
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard";
 import { useFavoritesToast } from "@/features/profile/favorites/hooks/useFavoritesToast";
@@ -35,10 +35,13 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
     product.name as MultilingualText | string | undefined,
     "Product Name"
   );
+  const { t } = useTranslation();
 
-  // const t = useTranslations("Common");
-  // const p = useTranslations("Products");
-  // const locale = useLocale();
+  // Prepare translated category name safely
+  const categoryName = product.category?.name as
+    | MultilingualText
+    | string
+    | undefined;
   const discountPercentage = product.variants?.[0]?.discount_percentage ?? 0;
 
   // Check if product is out of stock by inspecting all variants.
@@ -111,7 +114,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
           </button>
 
           <div className="w-[150px] text-[#FFFFFF] h-14 bg-main rounded-[8px] text-lg font-bold flex items-center justify-center absolute ltr:right-6 rtl:left-6 top-40">
-            {("readMore")}
+            {t("Common.readMore")}
           </div>
         </div>
 
@@ -120,7 +123,9 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
             <img
               src={product.images[0].url}
               alt={productName}
-              className={`object-contain ${isOutOfStock ? "opacity-50" : ""} w-full max-w-[276px] h-[204px]`}
+              className={`object-contain ${
+                isOutOfStock ? "opacity-50" : ""
+              } w-full max-w-[276px] h-[204px]`}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
@@ -145,7 +150,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
           {isOutOfStock && (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[70%] bg-black/80 rounded-lg px-4 py-2 flex items-center justify-center">
               <div className="text-white text-base font-bold text-center">
-                {("outOfStock")}
+                {t("Common.outOfStock")}
               </div>
             </div>
           )}
@@ -153,7 +158,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
 
         <div className="">
           <h2 className="text-base font-normal leading-[100%] mb-4">
-            {product.category?.name.ar}
+            {useTranslatedText(categoryName, "Category Name")}
           </h2>
           <h2 className=" text-base font-bold leading-[150%]">
             {productName.slice(0, 16)}
@@ -173,14 +178,14 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
           <div className="mt-10 flex items-center gap-2  justify-between">
             <h2 className="text-main text-base font-bold leading-4">
               {product.variants?.[0]?.final_price ?? 0}{" "}
-              <span className="font-normal">{("currency")}</span>
+              <span className="font-normal">{t("Common.currency")}</span>
             </h2>
 
             {product.variants?.[0]?.has_discount && discountPercentage > 0 && (
               <div className="flex items-center gap-2">
                 <h2 className=" text-xs font-normal leading-3 line-through">
                   {product.variants?.[0]?.price ?? 0}{" "}
-                  <span className="font-normal">{("currency")}</span>
+                  <span className="font-normal">{t("Common.currency")}</span>
                 </h2>
 
                 <div className="w-[59px] h-5 border border-[#3D9BE9] rounded-[8px] flex items-center justify-center">

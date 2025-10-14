@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Facebook from "./icons/Facebook";
 import X from "./icons/X";
@@ -24,25 +25,7 @@ const socialIcons = [
 ];
 
 const Footer = () => {
-  // const [subscribeValue, setSubscribeValue] = useState({
-  //   value: "",
-  // });
-  // const [loading, setLoading] = useState(false);
-  // const [subscribeError, setSubscribeError] = useState("");
-
-  // const handleSubscribeClick = () => {
-  //   if (!subscribeValue.value.trim()) {
-  //     setSubscribeError("Email is required");
-  //     return;
-  //   }
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //     setSubscribeValue({ value: "" });
-  //     setSubscribeError("");
-  //     alert("Subscribed successfully!");
-  //   }, 1000);
-  // };
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -86,26 +69,26 @@ const Footer = () => {
           {/* Section 2 - Explore */}
           <div>
             <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
-              Explore
+              {t("Footer.explore")}
             </h2>
             <div className="flex flex-col gap-4">
               <Link
                 to="/"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
-                Home
+                {t("Navigation.home")}
               </Link>
               <Link
                 to="/products"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
-                Products
+                {t("Navigation.products")}
               </Link>
               <Link
                 to="/contact"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
-                Contact Us
+                {t("Contact.title")}
               </Link>
             </div>
           </div>
@@ -113,64 +96,43 @@ const Footer = () => {
           {/* Section 3 - Help */}
           <div>
             <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
-              Help
+              {t("Footer.help")}
             </h2>
             <div className="flex flex-col gap-4">
-              <Link
+              {/* <Link
                 to="/track-order"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
-                Track Order
-              </Link>
+                {t("Footer.trackOrder")}
+              </Link> */}
               <Link
                 to="/profile/account"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
-                My Account
+                {t("Footer.myAccount")}
               </Link>
-              <Link
+              {/* <Link
                 to="/faq"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
-                FAQ
+                {t("Footer.faq")}
               </Link>
               <Link
                 to="/privacy"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
-                Privacy Policy
-              </Link>
+                {t("Footer.privacyPolicy")}
+              </Link> */}
             </div>
           </div>
 
-          {/* Section 4 - Newsletter - Hidden until subscribe functionality is implemented */}
+          {/* Section 4 - Newsletter */}
           <div>
             <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
-              Subscribe
+              {t("Footer.subscribe")}
             </h2>
             <div className="flex flex-col gap-4 max-w-[323px] mx-auto lg:mx-0">
-              {/* <SubscribeInput
-                type="email"
-                value={subscribeValue}
-                onChange={(v) => {
-                  setSubscribeValue(v);
-                  if (subscribeError) setSubscribeError("");
-                }}
-                placeholder="Enter your email"
-                error={subscribeError}
-                disabled={loading}
-                language="en"
-              />
-              <button
-                onClick={handleSubscribeClick}
-                disabled={loading}
-                className="w-full h-12 bg-main hover:bg-main/90 rounded-[8px] text-[#FDFDFD] text-base lg:text-lg font-bold leading-[100%] transition-colors duration-200 disabled:opacity-60"
-              >
-                {loading ? "Subscribing..." : "Subscribe"}
-              </button> */}
-              <p className="text-sm text-gray-500">
-                Subscribe feature coming soon...
-              </p>
+              <p className="text-sm text-gray-500">Coming soon...</p>
             </div>
           </div>
         </div>

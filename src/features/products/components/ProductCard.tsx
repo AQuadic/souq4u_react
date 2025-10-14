@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-// import { useTranslations } from "next-intl";
-// import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Product } from "../api/getProduct";
 import TopRated from "../icons/TopRated";
 import Favorite from "../icons/Favorite";
@@ -29,6 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onToggleFavorite,
   showTopRated = true,
 }) => {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuthGuard();
   const favoritesToast = useFavoritesToast();
   const [favorite, setFavorite] = useState(product.is_favorite);
@@ -43,9 +43,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     product.short_description as MultilingualText | string | undefined,
     ""
   );
-
-  // const t = useTranslations("Common");
-  // const p = useTranslations("Products");
 
   const discountPercentage = product.variants?.[0]?.discount_percentage ?? 0;
 
@@ -131,7 +128,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <div className="flex items-center gap-2">
               <TopRated />
               <p className=" lg:text-xs text-[8px] font-normal leading-3">
-                {("topRated")}
+                {t("Products.topRated")}
               </p>
             </div>
           )}
@@ -149,11 +146,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="relative lg:w-[246px] w-[86px] lg:h-[150px] h-[126px] flex items-center justify-center mx-auto lg:mt-8 mt-4">
           {product.images?.[0]?.url ? (
             <img
-  src={product.images[0].url}
-  alt={productName}
-  className={`object-contain ${isOutOfStock ? "opacity-50" : ""} w-[244px] h-[207px]`}
-/>
-
+              src={product.images[0].url}
+              alt={productName}
+              className={`object-contain ${
+                isOutOfStock ? "opacity-50" : ""
+              } w-[244px] h-[207px]`}
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <svg
@@ -177,7 +175,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {isOutOfStock && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 lg:w-[70%] w-full bg-black/80 rounded-lg lg:px-4 py-2 flex items-center justify-center">
               <div className="text-white lg:text-base text-xs font-bold text-center">
-                {("outOfStock")}
+                {t("Common.outOfStock")}
               </div>
             </div>
           )}
@@ -206,14 +204,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <div className="mt-[18px] flex lg:flex-row flex-col lg:items-center gap-2  justify-between ">
             <h2 className="text-main text-base font-bold leading-4">
               {formatPrice(product.variants?.[0]?.final_price ?? 0)}{" "}
-              <span className="font-normal">{("currency")}</span>
+              <span className="font-normal">{t("Common.currency")}</span>
             </h2>
 
             {product.variants?.[0]?.has_discount && discountPercentage > 0 && (
               <div className="flex items-center gap-2">
                 <h2 className=" text-xs font-normal leading-3 line-through">
                   {formatPrice(product.variants?.[0]?.price ?? 0)}{" "}
-                  <span className="font-normal">{("currency")}</span>
+                  <span className="font-normal">{t("Common.currency")}</span>
                 </h2>
 
                 <div className="w-[59px] h-5 border border-[#3D9BE9] rounded-[8px] flex items-center justify-center">

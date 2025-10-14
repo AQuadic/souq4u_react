@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import GridViewIcon from "../../icons/GridViewIcons";
 import ListViewIcon from "../../icons/ListViewIcon";
 import {
@@ -12,7 +13,6 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import ProductsFilter from "../../icons/ProductsFilter";
-// import { useTranslations } from "next-intl";
 
 interface ProductsSortingProps {
   view: "grid" | "list";
@@ -32,7 +32,7 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
   // total,
   // displayed,
 }) => {
-  // const t = useTranslations("Products");
+  const { t } = useTranslation();
   const darkMode = document.documentElement.classList.contains("dark");
 
   const handleSortChange = (value: string) => {
@@ -72,13 +72,19 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
 
           <Select onValueChange={handleSortChange}>
             <SelectTrigger className="w-[180px] h-12 dark:border-[#FDFDFD] border-[#C0C0C0]">
-              <SelectValue placeholder={("defaultSorting")} />
+              <SelectValue placeholder={t("ProductsGrid.defaultSorting")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="default">{("defaultSorting")}</SelectItem>
-                <SelectItem value="price-asc">{("asc")}</SelectItem>
-                <SelectItem value="price-desc">{("desc")}</SelectItem>
+                <SelectItem value="default">
+                  {t("ProductsGrid.defaultSorting")}
+                </SelectItem>
+                <SelectItem value="price-asc">
+                  {t("ProductsGrid.asc")}
+                </SelectItem>
+                <SelectItem value="price-desc">
+                  {t("ProductsGrid.desc")}
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

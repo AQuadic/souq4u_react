@@ -12,8 +12,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export const CartPage: React.FC = () => {
-  const {t} = useTranslation("Cart");
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const {
     cart,
@@ -103,15 +102,15 @@ export const CartPage: React.FC = () => {
         <div className="mb-8">
           <Breadcrumbs
             items={[
-              { label: t("breadcrumbHome") || t("goHome"), href: "/" },
-              { label: t("breadcrumbCart") },
+              { label: t("Cart.breadcrumbHome"), href: "/" },
+              { label: t("Cart.breadcrumbCart") },
             ]}
           />
         </div>
 
         {/* Main Content */}
         <h1 className="text-gray-900 dark:text-white text-2xl font-bold mb-8">
-          {t("title")}
+          {t("Cart.title")}
         </h1>
 
         {(() => {
@@ -119,7 +118,7 @@ export const CartPage: React.FC = () => {
             return (
               <div className="text-center py-12">
                 <div className="text-gray-700/60 dark:text-white/60 text-lg">
-                  {t("loading")}
+                  {t("Common.loading")}
                 </div>
               </div>
             );
@@ -136,16 +135,16 @@ export const CartPage: React.FC = () => {
                   className="mb-12"
                 />
                 <div className="text-gray-900 dark:text-white text-2xl font-semibold font-poppins mb-4">
-                  {t("emptyCart")}
+                  {t("Cart.emptyCart")}
                 </div>
                 <p className="text-gray-600 dark:text-gray-400 text-lg font-medium leading-[150%] mb-8">
-                  {t("cartEmptyDesc")}
+                  {t("Cart.cartEmptyDesc")}
                 </p>
                 <Link
-                  href="/products"
+                  to="/products"
                   className="bg-[var(--color-main)] hover:bg-main/50 text-white px-6 py-3 rounded transition-colors"
                 >
-                  {t("continueShopping")}
+                  {t("Cart.continueShopping")}
                 </Link>
               </div>
             );

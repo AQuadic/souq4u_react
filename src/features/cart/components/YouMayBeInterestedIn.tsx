@@ -19,8 +19,8 @@ export const YouMayBeInterestedIn: React.FC<YouMayBeInterestedInProps> = ({
   title,
   maxItems = 4,
 }) => {
-  const {t} = useTranslation("Cart");
-  const displayTitle = title || t("youMayBeInterestedIn");
+  const { t } = useTranslation();
+  const displayTitle = title || t("Cart.youMayBeInterestedIn");
 
   return (
     <div className="mt-12">

@@ -1,27 +1,32 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const HomeTryApp = () => {
-  const title = "Try the Eshhaar app";
-  const description = `Download the app now\nExperience the best features`;
-  const googlePlayAlt = "Google Play Store";
-  const appStoreAlt = "App Store";
-  const featureAlt = "App feature illustration";
+  const { t } = useTranslation();
+  const brandName = "Eshhaar";
+  const title = t("HomeTryApp.title", { brandName: brandName });
+  const description = t("HomeTryApp.description");
+  const googlePlayAlt = t("HomeTryApp.googlePlayAlt");
+  const appStoreAlt = t("HomeTryApp.appStoreAlt");
+  const featureAlt = t("HomeTryApp.featureAlt");
 
   return (
     <section className="container flex justify-between items-center max-sm:flex-col gap-6">
       <div>
         <h3 className="text-2xl font-bold sm:text-[40px]">
           {title.split(" ").map((part, i) =>
-            part === "Eshhaar" ? (
-              <span key={i} className="text-main">{part} </span>
+            part.includes(brandName) || part === brandName ? (
+              <span key={`brand-${i}`} className="text-main">
+                {part}{" "}
+              </span>
             ) : (
-              <React.Fragment key={i}>{part} </React.Fragment>
+              <React.Fragment key={`text-${i}`}>{part} </React.Fragment>
             )
           )}
         </h3>
         <p className="max-w-[545px] text-xl sm:text-2xl my-6 sm:my-10 text-main-gray">
           {description.split("\n").map((line, idx) => (
-            <React.Fragment key={idx}>
+            <React.Fragment key={`desc-line-${line.substring(0, 10)}-${idx}`}>
               {line}
               {idx < description.split("\n").length - 1 && <br />}
             </React.Fragment>
@@ -32,13 +37,13 @@ const HomeTryApp = () => {
             src="/try-app/google-play.png"
             alt={googlePlayAlt}
             width={145}
-            height={5680}
+            height={56}
           />
           <img
             src="/try-app/app-store.png"
             alt={appStoreAlt}
             width={145}
-            height={5680}
+            height={56}
           />
         </div>
       </div>

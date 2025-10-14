@@ -1,6 +1,5 @@
 import React from "react";
-// import { Link } from "react-router-dom";
-// import { useTranslations, useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 import BackArrow from "../../icons/BackArrow";
 import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
 import { Link } from "react-router-dom";
@@ -12,14 +11,12 @@ interface ProductHeaderProps {
 export const ProductHeader: React.FC<ProductHeaderProps> = ({
   showMobileBreadcrumb = true,
 }) => {
-  // const tNav = useTranslations("Navigation");
-  // const locale = useLocale();
-  // const isRtl = locale === "ar";
+  const { t } = useTranslation();
 
   const items = [
-    { label: ("home"), href: "/" },
-    { label: ("products"), href: "/products" },
-    { label: ("productDetails") },
+    { label: t("Navigation.home"), href: "/" },
+    { label: t("Products.title"), href: "/products" },
+    { label: t("Products.productDetails") },
   ];
 
   return (
@@ -32,9 +29,9 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
       {/* Mobile Back Button */}
       {showMobileBreadcrumb && (
         <Link to="/" className="md:hidden flex items-center gap-2">
-          <BackArrow  />
+          <BackArrow />
           <p className="text-[#FDFDFD] text-xl font-semibold leading-[100%]">
-            {("productDetails")}
+            {t("Products.productDetails")}
           </p>
         </Link>
       )}

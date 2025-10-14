@@ -7,7 +7,7 @@ import { CartItem } from "./CartSummaryCard";
 import { CartSummary } from "./CartSummary";
 import { useCartOperations } from "@/features/cart/hooks";
 import { useLocation } from "react-router-dom";
-// import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface CartSliderProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ interface CartSliderProps {
 }
 
 export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
-  // const tCart = useTranslation("Cart");
+  const { t } = useTranslation();
   const { cart, updateItemQuantity, removeItem } = useCartOperations();
   const location = useLocation();
   const isOnCartPage = location.pathname.includes("/cart");
@@ -31,7 +31,7 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
 
     return (
       <div className="flex items-center justify-center h-full">
-        <p className="text-gray-400 text-center">{("emptyCart")}</p>
+        <p className="text-gray-400 text-center">{t("Cart.emptyCart")}</p>
       </div>
     );
   };
@@ -81,7 +81,7 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-white/10">
               <h2 className="text-gray-900 dark:text-white text-lg font-semibold uppercase tracking-wider">
-                {("title")}
+                {t("Cart.title")}
               </h2>
               <button
                 onClick={onClose}

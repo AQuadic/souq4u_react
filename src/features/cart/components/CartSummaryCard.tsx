@@ -4,8 +4,9 @@ import React from "react";
 import { useTranslatedText } from "@/shared/utils/translationUtils";
 import type { MultilingualText } from "@/shared/utils/translationUtils";
 import { Minus, Plus, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { CartItem as CartItemType } from "@/features/cart/types";
-// import { useTranslation } from "react-i18next";
+// ...existing code...
 
 export interface CartItemProps {
   item: CartItemType;
@@ -18,8 +19,7 @@ export const CartItem: React.FC<CartItemProps> = ({
   onUpdateQuantity,
   onRemove,
 }) => {
-  // const t = useTranslation("Common");
-  // const tCart = useTranslation("Cart");
+  const { t } = useTranslation();
   const name = useTranslatedText(item.name, "");
   // derive size attribute value (could be multilingual object)
   const sizeAttr = item.variant.attributes.find((a) => {
@@ -81,7 +81,7 @@ export const CartItem: React.FC<CartItemProps> = ({
         {/* Size */}
         <div className="mb-2">
           <span className="text-gray-600 dark:text-gray-400 text-xs">
-            {('size')} {sizeText || "N/A"}
+            {t("Address.size") || t("Common.size")} {sizeText || "N/A"}
           </span>
         </div>
 
@@ -89,25 +89,21 @@ export const CartItem: React.FC<CartItemProps> = ({
         <div className="mb-3">
           <div className="flex items-center gap-2">
             <span className="text-[var(--color-main)] font-semibold">
-              {item.variant.final_price.toLocaleString()} {("currency")}
+              {item.variant.final_price.toLocaleString()} {t("Common.currency")}
             </span>
-            {item.variant.has_discount && item.variant.discount_percentage > 0 && (
-              <span className="text-gray-500 dark:text-gray-400 line-through text-sm">
-                {item.variant.price.toLocaleString()} {("currency")}
-              </span>
-            )}
+            {item.variant.has_discount &&
+              item.variant.discount_percentage > 0 && (
+                <span className="text-gray-500 dark:text-gray-400 line-through text-sm">
+                  {item.variant.price.toLocaleString()} {t("Common.currency")}
+                </span>
+              )}
           </div>
-          {item.variant.has_discount && item.variant.discount_percentage > 0 && (
-            <div className="text-green-600 dark:text-green-400 text-xs">
-              {/* {tCart("saveOffer", {
-                amount: (
-                  item.variant.price - item.variant.final_price
-                ).toLocaleString(),
-                currency: t("currency"),
-                percent: item.variant.discount_percentage.toFixed(0),
-              })} */}
-            </div>
-          )}
+          {item.variant.has_discount &&
+            item.variant.discount_percentage > 0 && (
+              <div className="text-green-600 dark:text-green-400 text-xs">
+                {/* Discount info handled elsewhere or via toast */}
+              </div>
+            )}
         </div>
 
         {/* Quantity Controls */}

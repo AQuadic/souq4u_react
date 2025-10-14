@@ -103,7 +103,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={`flex items-center justify-between w-full px-4 py-3 ${themeClasses.button}`}
-          aria-label={t("switchLanguage")}
+          aria-label={t("Header.switchLanguage")}
         >
           <div className="flex items-center gap-3">
             <Globe className="w-5 h-5" />
@@ -149,8 +149,8 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-2 px-3 py-2 ${themeClasses.button} cursor-pointer`}
-        aria-label={t("header.switchLanguage")}
-        title={t("header.switchLanguage")}
+        aria-label={t("Header.switchLanguage")}
+        title={t("Header.switchLanguage")}
       >
         {mode === "icon" && <Globe className="w-5 h-5" />}
 
@@ -186,7 +186,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           >
             <div className="py-2">
               <div className={themeClasses.header}>
-                {t("header.selectLanguage")}
+                {t("Header.selectLanguage")}
               </div>
 
               {availableLanguages.map((locale) => {

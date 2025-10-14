@@ -68,7 +68,6 @@ function App() {
           <Route path="profile/orders" element={<MyOrders />} />
           <Route path="profile/favorites" element={<MyFavorites />} />
           <Route path="cart" element={<MainCart />} />
-          {/* Add more routes as needed */}
         </Route>
       </Routes>
     </BrowserRouter>

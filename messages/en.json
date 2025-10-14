@@ -113,7 +113,6 @@
     "sortByOldest": "Oldest",
     "priceRange": "Price Range",
     "category": "Category",
-    "categories": "Categories",
     "allCategories": "All Categories",
     "filters": "Filters",
     "clearFilters": "Clear Filters",
@@ -124,13 +123,7 @@
     "newestFirst": "Newest First",
     "oldestFirst": "Oldest First",
     "apply": "Apply",
-    "reset": "Reset",
-    "filterByPrice": "Filter By Price",
-    "price": "Price",
-    "egp": "EGP",
-    "defaultSorting": "Default Sorting",
-    "asc": "Price: Low to High",
-    "desc": "Price: High to Low"
+    "reset": "Reset"
   },
   "Cart": {
     "title": "Shopping Cart",
@@ -381,14 +374,14 @@
     "FavoritesEmpty": {
       "alt": "favorites empty image",
       "title": "No Favorites",
-      "desc": "You can add an item to your favorites by clicking the \"Star\" icon."
+      "desc": "You can add an item to your favorites by clicking the “Star” icon."
     },
     "AddAddress": {
       "header": "Add Address",
       "back": "Back"
     },
     "review": "Review",
-    "feedback": "\"Your feedback matters! Share your rating with us.\"",
+    "feedback": "“Your feedback matters! Share your rating with us.”",
     "comment": "Comment",
     "send": "Send",
     "sending": "Sending..."
