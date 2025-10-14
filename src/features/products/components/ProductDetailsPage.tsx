@@ -394,7 +394,8 @@ const ProductDetailsPage: React.FC = () => {
             showTopRated={true}
             theme={{
               gridClassName: "xl:grid-cols-4 grid-cols-2",
-              titleClassName: "text-main md:text-[32px] text-2xl font-normal leading-[100%] uppercase font-anton-sc",
+              titleClassName:
+                "text-main md:text-[32px] text-2xl font-normal leading-[100%] uppercase font-anton-sc",
             }}
           />
 

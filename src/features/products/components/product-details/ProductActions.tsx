@@ -99,7 +99,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             className="flex items-center justify-center"
           >
             <p className="text-white text-lg font-bold leading-[100%]">
-              {!isInStock ? ("outOfStock") : ("addToCart")}
+              {!isInStock ? "outOfStock" : "addToCart"}
             </p>
           </motion.div>
 

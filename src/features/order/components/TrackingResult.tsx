@@ -463,7 +463,9 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
         </button>
       </div>
       <p className="text-center text-muted-foreground dark:text-white/70 mt-4">
-        {language === "ar" ? "إذا كنت بحاجة إلى مساعدة، يرجى الاتصال بالدعم." : "If you need help, please contact support."}
+        {language === "ar"
+          ? "إذا كنت بحاجة إلى مساعدة، يرجى الاتصال بالدعم."
+          : "If you need help, please contact support."}
       </p>
     </div>
   );

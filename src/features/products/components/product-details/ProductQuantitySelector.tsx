@@ -41,7 +41,7 @@ export const ProductQuantitySelector: React.FC<
         onClick={handleDecrease}
         disabled={disabled || quantity <= minQuantity}
         className="p-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-foreground hover:text-accent-foreground"
-        aria-label={("decreaseQuantity")}
+        aria-label={"decreaseQuantity"}
       >
         <Minus />
       </button>
@@ -52,7 +52,7 @@ export const ProductQuantitySelector: React.FC<
         onClick={handleIncrease}
         disabled={disabled || quantity >= maxQuantity}
         className="p-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-foreground hover:text-accent-foreground"
-        aria-label={("increaseQuantity")}
+        aria-label={"increaseQuantity"}
       >
         <Plus />
       </button>

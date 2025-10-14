@@ -45,9 +45,7 @@ export const ProductDescription: React.FC<ProductDescriptionProps> = ({
               onClick={() => setIsExpanded(!isExpanded)}
               className={`mt-2 ${theme.description.seeMoreColor} font-semibold text-sm hover:underline transition-colors`}
             >
-              {isExpanded
-                ? "Show Less"
-                : "Show More"}
+              {isExpanded ? "Show Less" : "Show More"}
             </button>
           </div>
         )}

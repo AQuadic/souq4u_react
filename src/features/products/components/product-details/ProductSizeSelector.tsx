@@ -72,8 +72,7 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
       if (!attr.attribute?.id) return;
 
       const attrId = attr.attribute.id;
-      const attrName =
-        attr.attribute.name?.en || attr.attribute.name?.en || "";
+      const attrName = attr.attribute.name?.en || attr.attribute.name?.en || "";
       // normalize type to lowercase for robust comparisons
       const attrType = (attr.attribute.type || "Text").toLowerCase();
       const valueId = attr.value?.id || 0;
