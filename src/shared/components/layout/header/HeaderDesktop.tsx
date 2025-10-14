@@ -74,7 +74,7 @@ const HeaderDesktop = () => {
           </div>
         </div>
 
-        {/* <CartSlider isOpen={isCartOpen} onClose={closeCart} /> */}
+        <CartSlider isOpen={isCartOpen} onClose={closeCart} />
       </div>
     </header>
   );

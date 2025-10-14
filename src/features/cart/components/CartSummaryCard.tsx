@@ -59,7 +59,7 @@ export const CartItem: React.FC<CartItemProps> = ({
           src={item.image?.url || "/placeholder-product.jpg"}
           alt={name}
           // fill
-          className="object-cover rounded"
+          className="object-cover rounded w-16 h-16"
           sizes="64px"
         />
       </div>
