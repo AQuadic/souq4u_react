@@ -86,7 +86,7 @@ export const CartCard: React.FC<CartCardProps> = ({
             src={item.image}
             alt={name}
             // fill
-            className="object-cover rounded"
+            className="object-cover rounded w-[96px] h-[96px]"
             sizes="96px"
           />
         </div>
