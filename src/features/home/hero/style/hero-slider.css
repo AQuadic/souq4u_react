@@ -1,0 +1,23 @@
+/* Remove default dot styles */
+.slick-dots {
+  bottom: -35px;
+}
+
+.custom-dots li {
+  margin: -16px 6px;
+}
+
+/* Base dot */
+.custom-dots li .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #d1d5db; /* gray-300 */
+  transition: all 0.3s ease;
+}
+
+/* Active dot */
+.custom-dots li.slick-active .dot {
+  background-color: var(--color-main);
+  transform: scale(1.2);
+}

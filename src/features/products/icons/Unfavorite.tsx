@@ -1,0 +1,12 @@
+import React from 'react'
+
+const Unfavorite = () => {
+    return (
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="20" fill="#FDFDFD"/>
+            <path d="M20.62 28.8116C20.28 28.9316 19.72 28.9316 19.38 28.8116C16.48 27.8216 10 23.6916 10 16.6916C10 13.6016 12.49 11.1016 15.56 11.1016C17.38 11.1016 18.99 11.9816 20 13.3416C21.01 11.9816 22.63 11.1016 24.44 11.1016C27.51 11.1016 30 13.6016 30 16.6916C30 23.6916 23.52 27.8216 20.62 28.8116Z" stroke="#5D5D5D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+}
+
+export default Unfavorite
