@@ -4,6 +4,7 @@ import Layout from "./shared/components/layout";
 import HomeCategories from "./features/categories/components/HomeCategories";
 import MainHero from "./features/home/hero/components/MainHero";
 import HomeTryApp from "./features/home/TryApp/components/HomeTryApp";
+import MainContactForm from "./features/contact/components/MainContactForm";
 
 // Home Page Component
 function HomePage() {
@@ -28,9 +29,8 @@ function ProductsPage() {
 
 function ContactPage() {
   return (
-    <div className="container py-20 text-center">
-      <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
-      <p className="text-gray-600">Contact page coming soon...</p>
+    <div className="my:py-[88px] py-6">
+      <MainContactForm />
     </div>
   );
 }
