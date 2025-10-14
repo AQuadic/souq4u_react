@@ -5,7 +5,8 @@ import { getCategories } from "../api/getCategories";
 import { useTranslation } from "react-i18next";
 
 const HomeCategories = () => {
-  const { t } = useTranslation("Home");
+  const { t, i18n } = useTranslation("Home");
+  const locale = i18n.language || "en";
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => await getCategories(),
@@ -24,14 +25,14 @@ const HomeCategories = () => {
             <div className="w-[122px] h-[122px] rounded-full overflow-hidden bg-gray-100 shadow-md transition-transform duration-300 group-hover:scale-105">
               <img
                 src={"/categories/category-placeholder.jpg"}
-                // alt={category.name[locale as "en" | "ar"]}
+                alt={category.name[locale as "en" | "ar"] || category.name.en}
                 width={122}
                 height={122}
                 className="object-cover w-full h-full"
               />
             </div>
             <p className="mt-3 text-center text-sm sm:text-base font-medium text-gray-800">
-              {category.name.ar}
+              {category.name[locale as "en" | "ar"] || category.name.en}
             </p>
           </button>
         ))}

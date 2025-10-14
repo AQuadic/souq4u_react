@@ -2,11 +2,8 @@
 
 import React, { useState } from "react";
 import type { Address } from "../types";
-import { useDeleteAddress } from "../hooks";
 import { useAuthStore } from "@/features/auth/stores/auth-store";
-// import Edit from "@/features/profile/addresses/icons/Edit";
-// import Delete from "@/features/profile/addresses/icons/Delete";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import DeleteAddressDialog from "./DeleteAddressDialog";
 import { useAddressStore } from "../stores";
 import { useTranslation } from "react-i18next";
@@ -23,24 +20,19 @@ interface AddressCardProps {
   address: Address;
   isSelected: boolean;
   onSelect: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
 }
 
 const AddressCard: React.FC<AddressCardProps> = ({
   address,
   isSelected,
   onSelect,
-  onEdit,
-  onDelete,
 }) => {
-  const [showActions, setShowActions] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState<number | null>(null);
-    const { addresses, isLoading, error, fetchAddresses, removeAddress } =
-      useAddressStore();
-  
+  const { addresses, removeAddress } = useAddressStore();
+  const { t } = useTranslation("saveAddress");
+
   const handleDelete = async (id: number) => {
     // This function will be invoked after user confirms in dialog
     try {
@@ -50,15 +42,15 @@ const AddressCard: React.FC<AddressCardProps> = ({
       console.error("Failed to delete address", err);
     }
   };
+
   return (
-    <div
+    <button
+      type="button"
       className={`
-        relative border rounded-lg p-4 cursor-pointer transition-all
+        w-full text-left relative border rounded-lg p-4 cursor-pointer transition-all
         ${isSelected ? "border-main bg-[var(--color-main)]/10" : "border"}
       `}
       onClick={onSelect}
-      onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => setShowActions(false)}
     >
       {/* Selection indicator */}
       <div className="flex items-end justify-between">
@@ -83,47 +75,47 @@ const AddressCard: React.FC<AddressCardProps> = ({
 
           {address.zipcode && (
             <p className="dark:text-gray-400 text-xs mt-1">
-              Zipcode: {address.zipcode}
+              {t("zipcode")}: {address.zipcode}
             </p>
           )}
         </div>
 
         <div className="flex items-center gap-4">
           <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setAddressToDelete(address.id);
-                setIsDeleteDialogOpen(true);
-              }}
-              aria-label="delete"
-            >
-              {/* <Delete /> */}
-              delete
-            </button>
+            onClick={(e) => {
+              e.stopPropagation();
+              setAddressToDelete(address.id);
+              setIsDeleteDialogOpen(true);
+            }}
+            aria-label={t("delete")}
+            className="text-sm text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+          >
+            {t("delete")}
+          </button>
           <Link
-              href={`/profile/addresses/edit/${address.id}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* <Edit /> */}
-              edit
-            </Link>
+            to={`/profile/addresses/edit/${address.id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-sm text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            {t("edit")}
+          </Link>
         </div>
       </div>
 
       <DeleteAddressDialog
-          open={isDeleteDialogOpen}
-          onOpenChange={(open) => setIsDeleteDialogOpen(open)}
-          addressTitle={
-            addresses.find((a) => a.id === addressToDelete)?.title ?? ""
+        open={isDeleteDialogOpen}
+        onOpenChange={(open) => setIsDeleteDialogOpen(open)}
+        addressTitle={
+          addresses.find((a) => a.id === addressToDelete)?.title ?? ""
+        }
+        onConfirm={async () => {
+          if (addressToDelete != null) {
+            await handleDelete(addressToDelete);
+            setAddressToDelete(null);
           }
-          onConfirm={async () => {
-            if (addressToDelete != null) {
-              await handleDelete(addressToDelete);
-              setAddressToDelete(null);
-            }
-          }}
-        />
-    </div>
+        }}
+      />
+    </button>
   );
 };
 
@@ -134,24 +126,8 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
   onAddNewAddress,
   isCheckout = false,
 }) => {
-  const deleteAddressMutation = useDeleteAddress();
   const { isAuthenticated } = useAuthStore();
-
-  const handleEdit = (address: Address) => {
-    // TODO: Implement edit functionality - for now, just show the form
-    console.log("Edit address:", address);
-  };
-
-  const handleDelete = async (address: Address) => {
-    if (window.confirm(`Are you sure you want to delete "${address.title}"?`)) {
-      try {
-        await deleteAddressMutation.mutateAsync(address.id);
-      } catch (error) {
-        console.error("Failed to delete address:", error);
-      }
-    }
-  };
-  const {t} = useTranslation("saveAddress");
+  const { t } = useTranslation("saveAddress");
 
   return (
     <div className="space-y-4">
@@ -159,7 +135,6 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
         <h3 className="text-lg font-medium dark:text-white">
           {t("selectAddress")}
         </h3>
-        
       </div>
 
       <div className="space-y-3">
@@ -169,20 +144,18 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
             address={address}
             isSelected={selectedAddressId === address.id}
             onSelect={() => onAddressSelect(address.id)}
-            onEdit={() => handleEdit(address)}
-            onDelete={() => handleDelete(address)}
           />
         ))}
       </div>
 
       {(!isCheckout || isAuthenticated) && (
-          <button
-            onClick={onAddNewAddress}
-            className="w-[249px] h-14 rounded-[8px] bg-main text-white text-sm font-medium transition-colors capitalize"
-          >
-            {t("addNewAddress")}
-          </button>
-        )}
+        <button
+          onClick={onAddNewAddress}
+          className="w-[249px] h-14 rounded-[8px] bg-main text-white text-sm font-medium transition-colors capitalize"
+        >
+          {t("addNewAddress")}
+        </button>
+      )}
 
       {addresses.length === 0 && (!isCheckout || isAuthenticated) && (
         <div className="text-center py-8">

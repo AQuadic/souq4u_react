@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { useCartStore } from "@/features/cart/stores";
 import { getTranslatedText } from "@/shared/utils/translationUtils";
@@ -13,13 +11,15 @@ export const CheckoutCartSummary: React.FC<CheckoutCartSummaryProps> = ({
   className = "",
 }) => {
   const { cart } = useCartStore();
-  const {t, i18n} = useTranslation("Common");
+  const { t, i18n } = useTranslation("Common");
   const locale = i18n.language;
 
   if (!cart?.items?.length) {
     return (
       <div className={`rounded-lg p-6 ${className}`}>
-        <h2 className="text-xl font-semibold text-white mb-4">{t('yourOrder')}</h2>
+        <h2 className="text-xl font-semibold text-white mb-4">
+          {t("yourOrder")}
+        </h2>
         <p className="text-gray-400">No items in cart</p>
       </div>
     );
@@ -27,18 +27,17 @@ export const CheckoutCartSummary: React.FC<CheckoutCartSummaryProps> = ({
 
   return (
     <div className={`rounded-lg md:p-6 ${className}`}>
-      <h2 className="text-xl font-semibold mb-6">{t('yourOrder')}</h2>
+      <h2 className="text-xl font-semibold mb-6">{t("yourOrder")}</h2>
 
       <div className="space-y-4">
         {cart.items.map((item) => (
           <div key={item.id} className="flex gap-4 p-4 border rounded-lg">
             {/* Product Image */}
-            <div className="relative w-16 h-16 flex-shrink-0">
+            <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden">
               <img
                 src={item.image?.url || "/placeholder-product.jpg"}
                 alt={getTranslatedText(item.name, locale, "")}
-                // fill
-                className="object-cover rounded-md"
+                className="w-full h-full object-cover rounded-md"
               />
             </div>
 
@@ -52,21 +51,33 @@ export const CheckoutCartSummary: React.FC<CheckoutCartSummaryProps> = ({
               {item.variant?.attributes &&
                 item.variant.attributes.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-2">
-                    {item.variant.attributes.map((attr) => (
-                      <span
-                        key={`${attr.id}-${attr.attribute.id}-${attr.value.id}`}
-                        className="bg-main/60 text-white px-2 py-1 rounded text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-2"
-                      >
-                        {`${getTranslatedText(attr.attribute.name, locale)}: ${getTranslatedText(attr.value.value, locale)}`}
-                      </span>
-                    ))}
+                    {item.variant.attributes.map((attr) => {
+                      const attrName = getTranslatedText(
+                        attr.attribute.name,
+                        locale,
+                        ""
+                      );
+                      const attrValue = getTranslatedText(
+                        attr.value.value,
+                        locale,
+                        ""
+                      );
+                      return (
+                        <span
+                          key={`${attr.id}-${attr.attribute.id}-${attr.value.id}`}
+                          className="bg-[var(--color-main)]/20 dark:text-white text-gray-700 px-2 py-1 rounded text-xs font-medium whitespace-nowrap"
+                        >
+                          {attrName}: {attrValue}
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
 
               {/* Quantity and Price */}
               <div className="flex items-center justify-between">
                 <span className="dark:text-gray-400 text-sm">
-                  {t('Qty')}: {item.quantity}
+                  {t("Qty")}: {item.quantity}
                 </span>
                 <div className="text-right">
                   {item.variant?.has_discount && (

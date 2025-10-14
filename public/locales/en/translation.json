@@ -214,6 +214,7 @@
     "taxes": "Taxes",
     "discount": "Discount",
     "total": "Total",
+    "shipping": "Shipping",
     "checkout": "Place Order",
     "processing": "Processing...",
     "currency": "EGP",
@@ -251,7 +252,10 @@
   },
   "saveAddress": {
     "selectAddress": "Select Address",
-    "addNewAddress": "Add New Address"
+    "addNewAddress": "Add New Address",
+    "edit": "Edit",
+    "delete": "Delete",
+    "zipcode": "Zipcode"
   },
   "Address": {
     "deleteDialog": {
@@ -330,7 +334,7 @@
     "selectLanguage": "Select Language"
   },
   "HomeTryApp": {
-    "title": "Try the {brandName} App Now!",
+    "title": "Try the Eshhaar App Now!",
     "description": "Now, Buy And Sell All You Have\nWith Our Mobile Application.",
     "googlePlayAlt": "google play",
     "appStoreAlt": "app store",

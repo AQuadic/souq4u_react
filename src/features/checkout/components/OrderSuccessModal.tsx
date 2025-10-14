@@ -1,7 +1,5 @@
-"use client";
-
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { type CheckoutResponse } from "../api/postAddress";
 import {
   Dialog,
@@ -24,12 +22,13 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
   orderData,
   couponCode,
 }) => {
-  const router = useRouter();
-  const {t} = useTranslation("Common");
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation("Common");
+  const locale = i18n.language || "en";
 
   const handleGoHome = () => {
     // Redirect to home without closing modal (modal will unmount when component unmounts)
-    router.push("/");
+    navigate("/");
   };
 
   if (!orderData) return null;
@@ -93,7 +92,8 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
                 <div key={item.id} className="flex justify-between items-start">
                   <div className="flex-1">
                     <p className="dark:text-white text-sm">
-                      {item.product_name.en}
+                      {item.product_name[locale as "en" | "ar"] ||
+                        item.product_name.en}
                     </p>
                     <p className="dark:text-[#C0C0C0] text-xs">
                       {t("Qty")} {item.quantity}

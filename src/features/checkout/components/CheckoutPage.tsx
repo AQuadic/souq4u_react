@@ -1,7 +1,5 @@
-"use client";
-
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { PaymentSelector, type PaymentMethod } from "./PaymentSelector";
 import { CheckoutSummary } from "./CheckoutSummary";
 import { CheckoutCartSummary } from "./CheckoutCartSummary";
@@ -14,22 +12,21 @@ import { OrderSuccessModal } from "./OrderSuccessModal";
 import {
   getCouponFromSession,
   clearCouponFromSession,
+  getCartSessionId,
 } from "@/features/cart/api";
 import toast from "react-hot-toast";
 import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
 import { useCartStore } from "@/features/cart/stores";
-import { getCartSessionId } from "@/features/cart/api";
 import { handleApiError } from "@/shared/utils/errorHandler";
 import { BillingDetails } from "@/features/address/components";
 import type { AddressFormData } from "@/features/address";
 import { useAuthStore } from "@/features/auth/stores/auth-store";
-import { useCartWithShipping } from "@/features/cart/hooks";
-import { useCartOperations } from "@/features/cart/hooks"; // Import the cart operations hook
+import { useCartWithShipping, useCartOperations } from "@/features/cart/hooks";
 import { useTranslation } from "react-i18next";
 
 export const CheckoutPage: React.FC = () => {
-  const {t} = useTranslation("Checkout");
-  const router = useRouter();
+  const { t } = useTranslation("Checkout");
+  const navigate = useNavigate();
   const { cart, clearCart } = useCartStore();
   const { isAuthenticated } = useAuthStore();
 
@@ -76,7 +73,7 @@ export const CheckoutPage: React.FC = () => {
     if (!cart?.items?.length) {
       console.log("Cart is empty, redirecting to cart page");
       toast.error(t("cartEmpty"));
-      router.replace("/cart");
+      navigate("/cart", { replace: true });
       return;
     }
 
@@ -87,11 +84,11 @@ export const CheckoutPage: React.FC = () => {
     if (totalItems === 0) {
       console.log("Total items is 0, redirecting to cart page");
       toast.error(t("cartEmpty"));
-      router.replace("/cart");
+      navigate("/cart", { replace: true });
     }
   }, [
     cart,
-    router,
+    navigate,
     checkoutCompleted,
     showSuccessModal,
     isProcessingCheckout,
@@ -185,7 +182,7 @@ export const CheckoutPage: React.FC = () => {
 
       if (!cart?.items?.length) {
         toast.error("Your cart is empty. Redirecting to cart page.");
-        router.replace("/cart");
+        navigate("/cart", { replace: true });
         return;
       }
 
@@ -207,7 +204,7 @@ export const CheckoutPage: React.FC = () => {
       );
       if (totalItems === 0) {
         toast.error("Your cart is empty. Redirecting to cart page.");
-        router.replace("/cart");
+        navigate("/cart", { replace: true });
         return;
       }
 
@@ -272,7 +269,7 @@ export const CheckoutPage: React.FC = () => {
       isAuthenticated,
       paymentMethod,
       appliedCoupon,
-      router,
+      navigate,
       handleSuccessfulCheckout,
     ]
   );
@@ -285,7 +282,7 @@ export const CheckoutPage: React.FC = () => {
   const validateCheckout = useCallback(() => {
     if (!cart?.items?.length) {
       toast.error("Your cart is empty. Redirecting to cart page.");
-      router.replace("/cart");
+      navigate("/cart", { replace: true });
       return false;
     }
 
@@ -316,12 +313,12 @@ export const CheckoutPage: React.FC = () => {
     );
     if (totalItems === 0) {
       toast.error("Your cart is empty. Redirecting to cart page.");
-      router.replace("/cart");
+      navigate("/cart", { replace: true });
       return false;
     }
 
     return true;
-  }, [cart, selectedAddressId, addressFormData, router]);
+  }, [cart, selectedAddressId, addressFormData, navigate]);
 
   const getOrCreateSessionId = () => {
     let sessionId = getCartSessionId();

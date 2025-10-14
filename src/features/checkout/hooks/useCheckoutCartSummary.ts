@@ -1,5 +1,3 @@
-"use client";
-
 import { useCartStore } from "@/features/cart/stores";
 import { getTranslatedText } from "@/shared/utils/translationUtils";
 import type { MultilingualText } from "@/shared/utils/translationUtils";

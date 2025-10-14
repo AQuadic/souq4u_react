@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 
 const HomeTryApp = () => {
   const { t } = useTranslation();
-  const brandName = "Eshhaar";
-  const title = t("HomeTryApp.title", { brandName: brandName });
+  const title = t("HomeTryApp.title");
   const description = t("HomeTryApp.description");
   const googlePlayAlt = t("HomeTryApp.googlePlayAlt");
   const appStoreAlt = t("HomeTryApp.appStoreAlt");
@@ -15,7 +14,7 @@ const HomeTryApp = () => {
       <div>
         <h3 className="text-2xl font-bold sm:text-[40px]">
           {title.split(" ").map((part, i) =>
-            part.includes(brandName) || part === brandName ? (
+            part === "Eshhaar" ? (
               <span key={`brand-${i}`} className="text-main">
                 {part}{" "}
               </span>

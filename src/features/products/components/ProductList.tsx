@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-// import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts, Product, GetProductsParams } from "../api/getProduct";
 import ProductCard from "./ProductCard";
-// import { Link } from "react-router-dom";
 import Arrow from "../icons/Arrow";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Link } from "react-router-dom";
@@ -114,7 +113,7 @@ const ProductList: React.FC<ProductListProps> = ({
   loadingComponent,
   errorComponent,
 }) => {
-  // const t = useTranslations("Products");
+  const { t } = useTranslation("Products");
 
   const mergedTheme: Required<ProductListTheme> = {
     ...defaultTheme,
@@ -157,8 +156,9 @@ const ProductList: React.FC<ProductListProps> = ({
     processedProducts = processedProducts.slice(0, maxItems);
   }
 
-  const displayTitle = title || (titleKey);
-  const displayButtonText = viewAllText || (viewAllTextKey);
+  const displayTitle = title || (titleKey ? t(titleKey) : "");
+  const displayButtonText =
+    viewAllText || (viewAllTextKey ? t(viewAllTextKey) : "");
 
   if (isLoading) {
     if (loadingComponent) return <>{loadingComponent}</>;
@@ -191,7 +191,7 @@ const ProductList: React.FC<ProductListProps> = ({
         <h1 className={`${mergedTheme.titleClassName} ${titleAlignClass}`}>
           {displayTitle}
         </h1>
-        <p className={mergedTheme.errorClassName}>{("failedToLoad")}</p>
+        <p className={mergedTheme.errorClassName}>{t("failedToLoad")}</p>
       </WrapWithSection>
     );
   }

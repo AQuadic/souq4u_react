@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -14,7 +12,7 @@ export const PaymentSelector: React.FC<PaymentSelectorProps> = ({
   selectedMethod = "cash",
   onMethodChange,
 }) => {
-  const {t} = useTranslation("Checkout");
+  const { t } = useTranslation("Checkout");
   // Ensure we default to `cash` even if an upstream prop suggests `online`.
   const initial: PaymentMethod =
     selectedMethod === "online" ? "cash" : selectedMethod;
