@@ -60,7 +60,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
       <div className="space-y-3">
         {/* Checkout Link */}
         <Link
-          href="/checkout"
+          to="/checkout"
           onClick={handleCheckout}
           className="block w-full text-white bg-[var(--color-main)] hover:bg-main/50  font-semibold py-3 px-4 rounded transition-colors duration-200 uppercase tracking-wide text-center"
         >
