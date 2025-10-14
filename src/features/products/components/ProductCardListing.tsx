@@ -120,9 +120,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
             <img
               src={product.images[0].url}
               alt={productName}
-              // fill
-              sizes="(max-width: 276px) 100vw, 276px"
-              className={`object-contain ${isOutOfStock ? "opacity-50" : ""}`}
+              className={`object-contain ${isOutOfStock ? "opacity-50" : ""} w-full max-w-[276px] h-[204px]`}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
