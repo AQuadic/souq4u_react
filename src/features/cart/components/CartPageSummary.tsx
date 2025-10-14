@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 interface CartPageSummaryProps {
   totalItems?: number;
@@ -240,7 +240,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
 
       {/* Checkout Button */}
       <Link
-        href="/checkout"
+        to="/checkout"
         className="block w-full bg-[var(--color-main)] hover:bg-main/50 text-white font-semibold py-3 px-4 rounded transition-colors duration-200 uppercase tracking-wide text-center"
       >
         {t("checkout")}

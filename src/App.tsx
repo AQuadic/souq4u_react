@@ -11,6 +11,7 @@ import ProductsGrid from "./features/products/components/product-listing/Product
 import MyAccount from "./features/profile/myAccount/MyAccount";
 import MyFavorites from "./features/profile/favorites/MyFavorites";
 import MyOrders from "./features/profile/orders/MyOrders";
+import { ProductDetailsPage } from "./features/products/components";
 
 // Home Page Component
 function HomePage() {
@@ -58,6 +59,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="products" element={<ProductsPage />} />
+          <Route path="products/:id" element={<ProductDetailsPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="profile" element={<MyAccount />} />

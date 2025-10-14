@@ -7,7 +7,7 @@ import ProductCard from "@/features/products/components/ProductCard";
 import { getFavorites } from "../favorites/api/getFavorites";
 import { Product } from "@/features/products/api/getProduct";
 import FavEmptyState from "./FavEmptyState";
-// import Link from "next/link";
+// import { Link } from "react-router-dom";
 import BackArrow from "@/features/products/icons/BackArrow";
 import { Link } from "react-router-dom";
 

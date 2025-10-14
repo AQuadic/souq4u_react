@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import {
   getProduct,
   Product,
@@ -31,19 +31,16 @@ import ProductList from "./ProductList";
 import RecentlyViewedProducts from "./RecentlyViewedProducts";
 import { useRecentlyViewedStore } from "../stores/recently-viewed-store";
 import { useConfigStore } from "@/features/config";
+import { useTranslation } from "react-i18next";
 
 type MultiTextOrString = MultilingualText | string | undefined;
-
-interface ProductDetailsPageProps {
-  params: Promise<{ id: string }>;
-}
 
 interface SelectedAttributes {
   [attributeId: number]: string;
 }
 
-const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ params }) => {
-  const { id: productId } = React.use(params);
+const ProductDetailsPage: React.FC = () => {
+  const { id: productId } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
   const [selectedAttributes, setSelectedAttributes] =
     useState<SelectedAttributes>({});
@@ -203,7 +200,7 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ params }) => {
   const isAuthenticated = useIsAuthenticated();
   const cart = useCartStore((s) => s.cart);
   const cartToast = useCartToast();
-  const t = useTranslations("Cart");
+  const { t } = useTranslation("Cart");
 
   const [isRtl, setIsRtl] = useState(false);
   useEffect(() => {
@@ -378,7 +375,6 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ params }) => {
             shortDescription={shortDescription}
           />
 
-          {/* For non-clothes stores, show description above price */}
           {config?.store_type !== "Clothes" && (
             <ProductDescription
               shortDescription={shortDescription}

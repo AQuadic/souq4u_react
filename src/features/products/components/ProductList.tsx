@@ -5,7 +5,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts, Product, GetProductsParams } from "../api/getProduct";
 import ProductCard from "./ProductCard";
-// import Link from "next/link";
+// import { Link } from "react-router-dom";
 import Arrow from "../icons/Arrow";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Link } from "react-router-dom";

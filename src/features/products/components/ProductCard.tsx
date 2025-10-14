@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 // import { useTranslations } from "next-intl";
-// import Link from "next/link";
+// import { Link } from "react-router-dom";
 import { Product } from "../api/getProduct";
 import TopRated from "../icons/TopRated";
 import Favorite from "../icons/Favorite";

@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { getProduct, Product } from "../api/getProduct";
 import ProductCard from "./ProductCard";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useRecentlyViewedStore } from "../stores/recently-viewed-store";
+import { useTranslation } from "react-i18next";
 
 interface RecentlyViewedProductsProps {
   currentProductId?: number;
@@ -40,7 +40,7 @@ const RecentlyViewedProducts: React.FC<RecentlyViewedProductsProps> = ({
   currentProductId,
   titleAlign = "left",
 }) => {
-  const t = useTranslations("Products");
+  const {t} = useTranslation("Products");
   const productIds = useRecentlyViewedStore((state) => state.productIds);
 
   // Filter out the current product if it's in the list

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-// import Link from "next/link";
+// import { Link } from "react-router-dom";
 import { Product } from "../api/getProduct";
 import Favorite from "../icons/Favorite";
 import Unfavorite from "../icons/Unfavorite";

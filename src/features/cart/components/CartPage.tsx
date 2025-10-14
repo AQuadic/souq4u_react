@@ -8,7 +8,7 @@ import { CartCard, type CartCardData } from "./CartCard";
 import { CartPageSummary } from "./CartPageSummary";
 import { YouMayBeInterestedIn } from "./YouMayBeInterestedIn";
 import { useCartOperations } from "@/features/cart/hooks";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export const CartPage: React.FC = () => {

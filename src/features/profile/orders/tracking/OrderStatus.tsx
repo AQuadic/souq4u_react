@@ -5,7 +5,7 @@ import Processing from "../icons/Processing";
 import Cancelled from "../icons/Cancelled";
 import { Order } from "../api/getOrdersById";
 import { useTranslations, useLocale } from "next-intl";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import BackArrow from "@/features/products/icons/BackArrow";
 
 type OrderStatusProps = {

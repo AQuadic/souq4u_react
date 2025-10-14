@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useToast } from "@/shared/components/ui/toast";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 interface CartToastOptions {

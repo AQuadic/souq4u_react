@@ -1,5 +1,5 @@
 import React from "react";
-// import Link from "next/link";
+// import { Link } from "react-router-dom";
 // import { useTranslations, useLocale } from "next-intl";
 import BackArrow from "../../icons/BackArrow";
 import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
