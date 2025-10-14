@@ -174,8 +174,6 @@ const Footer = () => {
             </div>
           </div>
         </div>
-
-        <div className="w-full h-px bg-[#A9A9A9] my-8"></div>
       </footer>
     </div>
   );
