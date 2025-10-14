@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
+// import Image from "next/image";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { getOrders, GetOrdersResponse, Order } from "./api/getOrders";
 import OrdersEmpty from "./OrdersEmpty";
-import { useTranslations, useLocale } from "next-intl";
+// import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import ReviewDialog from "./ReviewDialog";
 import BackArrow from "@/features/products/icons/BackArrow";
@@ -28,8 +28,8 @@ const MyOrders: React.FC<MyOrdersProps> = ({
   showHeader = true,
   statusFilter,
 }) => {
-  const t = useTranslations("Orders");
-  const locale = useLocale();
+  // const t = useTranslations("Orders");
+  // const locale = useLocale();
 
   const { data, isLoading, isError } = useQuery<GetOrdersResponse, Error>({
     queryKey: ["orders"],
@@ -57,7 +57,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
       {showHeader && (
         <>
           <h2 className="text-[32px] font-bold leading-[100%] mb-4 md:flex hidden">
-            {t("orders")}
+            {("orders")}
           </h2>
 
           <Link
@@ -66,7 +66,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
           >
             <BackArrow />
             <h2 className="text-[32px] font-bold leading-[100%]">
-              {t("orders")}
+              {("orders")}
             </h2>
           </Link>
         </>
@@ -83,7 +83,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
             : { bg: "", text: "" };
 
           const productName =
-            locale === "ar" ? order.product_name?.ar : order.product_name?.en;
+              order.product_name?.en;
 
           return (
             <div
@@ -104,13 +104,13 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                   />
                   <div>
                     <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
-                      {t("id")} #<span>{order.order_id}</span>
+                      {("id")} #<span>{order.order_id}</span>
                     </p>
                     <h1 className=" md:text-2xl text-base font-semibold leading-[100%] md:mt-6 mt-4">
                       {productName}
                     </h1>
                     <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%] md:mt-6 mt-3">
-                      {order.created_at
+                      {/* {order.created_at
                         ? new Intl.DateTimeFormat(
                             locale === "ar" ? "ar-EG" : "en-GB",
                             {
@@ -119,7 +119,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                               year: "numeric",
                             }
                           ).format(new Date(order.created_at))
-                        : "N/A"}
+                        : "N/A"} */}
                     </p>
                   </div>
                 </div>

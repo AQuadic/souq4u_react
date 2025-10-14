@@ -1,19 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Order } from "../api/getOrdersById";
 import { cancelOrder } from "../api/cancelOrder";
-import { useTranslations, useLocale } from "next-intl";
+// import { useTranslations, useLocale } from "next-intl";
 
 type OrderDetailsProps = {
   order: Order;
 };
 
 const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
-  const t = useTranslations("Orders");
-  const locale = useLocale();
+  // const t = useTranslations("Orders");
+  // const locale = useLocale();
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
   const handleCancel = async (orderId: number) => {
@@ -46,12 +45,12 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
   return (
     <section className="mt-6">
       <h2 className="dark:text-[#FDFDFD] text-2xl font-semibold leading-[100%]">
-        {t("itemSummary")}
+        {("itemSummary")}
       </h2>
 
       {order.orderItems.map((item) => {
         const productName =
-          locale === "ar" ? item.product_name?.ar : item.product_name?.en;
+            item.product_name?.en;
 
         const productImage =
           item.variant?.images?.[0]?.url || "/images/products/productIMG.png";
@@ -78,7 +77,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                   {productName}
                 </h2>
                 <p className="text-main md:text-2xl text-base font-bold md:mt-6 mt-2">
-                  {price} <span className="font-normal">{t("egp")}</span>
+                  {price} <span className="font-normal">{("egp")}</span>
                 </p>
               </div>
             </div>

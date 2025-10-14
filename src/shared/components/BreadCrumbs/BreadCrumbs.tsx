@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Link } from "@/i18n/navigation";
+import { Link } from "react-router-dom";
 
 export interface BreadcrumbItem {
   label: React.ReactNode;
@@ -19,7 +19,7 @@ export const Breadcrumbs: React.FC<{ items: BreadcrumbItem[] }> = ({
           return (
             <li key={key} className="flex items-center">
               {it.href ? (
-                <Link href={it.href} className="hover:text-main">
+                <Link to={it.href} className="hover:text-main">
                   {it.label}
                 </Link>
               ) : (

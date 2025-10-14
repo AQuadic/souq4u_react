@@ -1,38 +1,38 @@
 import React from 'react'
-import MasterCard from '../icons/MasterCard'
-import Wallet from '../icons/Wallet'
+// import MasterCard from '../icons/MasterCard'
+// import Wallet from '../icons/Wallet'
 import { Order } from '../api/getOrdersById'
-import { useTranslations } from 'next-intl';
+// import { useTranslations } from 'next-intl';
 
 type OrderSummaryProps = {
   order: Order;
 };
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({ order }) => {
-    const t = useTranslations("Orders");
+    // const t = useTranslations("Orders");
     return (
         <section className='w-full h-full dark:bg-[#242529] bg-[#FDFDFD] my-6 rounded-[8px] p-6'>
-            <h2 className='dark:text-[#FDFDFD] md:text-2xl text-base font-semibold leading-[100%]'>{t('orderSummary')}</h2>
+            <h2 className='dark:text-[#FDFDFD] md:text-2xl text-base font-semibold leading-[100%]'>{('orderSummary')}</h2>
             <div className='mt-4 dark:text-[#FDFDFD] font-normal leading-[100%] flex items-center justify-between'>
             <p className='text-sm'>
-                {t('totalItems')} ({order.orderItems.length} {t('item')}):
+                {('totalItems')} ({order.orderItems.length} {('item')}):
             </p>
             <p className='text-xs'>
-                {order.sub_total} <span className='text-[8px]'>{t('egp')}</span>
-            </p>
-            </div>
-
-            <div className='mt-4 dark:text-[#FDFDFD] font-normal leading-[100%] flex items-center justify-between'>
-                <p className='text-sm'>{t('shippingCost')}</p>
-            <p className='text-xs'>
-                {order.shipping} <span className='text-[8px]'>{t('egp')}</span>
+                {order.sub_total} <span className='text-[8px]'>{('egp')}</span>
             </p>
             </div>
 
             <div className='mt-4 dark:text-[#FDFDFD] font-normal leading-[100%] flex items-center justify-between'>
-            <p className='text-sm'>{t('taxes')}</p>
+                <p className='text-sm'>{('shippingCost')}</p>
             <p className='text-xs'>
-                {order.tax} <span className='text-[8px]'>{t('egp')}</span>
+                {order.shipping} <span className='text-[8px]'>{('egp')}</span>
+            </p>
+            </div>
+
+            <div className='mt-4 dark:text-[#FDFDFD] font-normal leading-[100%] flex items-center justify-between'>
+            <p className='text-sm'>{('taxes')}</p>
+            <p className='text-xs'>
+                {order.tax} <span className='text-[8px]'>{('egp')}</span>
             </p>
             </div>
 
@@ -40,7 +40,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ order }) => {
             <div className='mt-4 dark:text-[#FDFDFD] font-normal leading-[100%] flex items-center justify-between'>
                 <p className='text-sm'>Discount:</p>
                 <p className='text-xs'>
-                {order.discount_amount} <span className='text-[8px]'>{t('egp')}</span>
+                {order.discount_amount} <span className='text-[8px]'>{('egp')}</span>
                 </p>
             </div>
             )}
@@ -48,9 +48,9 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ order }) => {
             <div className='w-full h-px bg-[#CCCCCC] my-4'></div>
 
             <div className='mt-4 dark:text-[#FDFDFD] md:text-2xl text-base font-normal leading-[100%] flex items-center justify-between'>
-                <p >{t('total')}</p>
+                <p >{('total')}</p>
                 <p className='text-main font-bold'>
-                    {order.total} <span className='text-xs'>{t('egp')}</span>
+                    {order.total} <span className='text-xs'>{('egp')}</span>
                 </p>
             </div>
 

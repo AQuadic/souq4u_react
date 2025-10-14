@@ -7,6 +7,7 @@ import HomeTryApp from "./features/home/TryApp/components/HomeTryApp";
 import MainContactForm from "./features/contact/components/MainContactForm";
 import MostViewedSection from "./features/products/components/home-listings/MostViewedSection";
 import BestOffersSection from "./features/products/components/home-listings/BestOffersSection";
+import ProductsGrid from "./features/products/components/product-listing/ProductsGrid";
 
 // Home Page Component
 function HomePage() {
@@ -24,9 +25,8 @@ function HomePage() {
 // Placeholder components for other routes
 function ProductsPage() {
   return (
-    <div className="container py-20 text-center">
-      <h1 className="text-4xl font-bold mb-4">Products Page</h1>
-      <p className="text-gray-600">Products page coming soon...</p>
+    <div>
+      <ProductsGrid />
     </div>
   );
 }

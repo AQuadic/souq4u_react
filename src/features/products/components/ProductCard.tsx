@@ -149,12 +149,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="relative lg:w-[246px] w-[86px] lg:h-[150px] h-[126px] flex items-center justify-center mx-auto lg:mt-8 mt-4">
           {product.images?.[0]?.url ? (
             <img
-              src={product.images[0].url}
-              alt={productName}
-              // fill
-              sizes="(max-width: 1024px) 126px, 276px"
-              className={`object-contain ${isOutOfStock ? "opacity-50" : ""}`}
-            />
+  src={product.images[0].url}
+  alt={productName}
+  className={`object-contain ${isOutOfStock ? "opacity-50" : ""} w-[244px] h-[207px]`}
+/>
+
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <svg

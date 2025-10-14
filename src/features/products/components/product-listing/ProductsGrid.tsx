@@ -12,7 +12,7 @@ import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
 import ProductsSorting from "./ProductsSorting";
 import ProductCardListing from "../ProductCardListing";
 import { useProductFilters } from "../../hooks/useProductFilters";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import ProductsCategoryFilter from "./ProductsCategoryFilter";
 
 const ProductsGrid: React.FC = () => {
@@ -22,8 +22,8 @@ const ProductsGrid: React.FC = () => {
   const { filters, setCategory, setPriceRange, setSorting } =
     useProductFilters();
 
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams?.get("search") ?? undefined;
+  // const searchParams = useSearchParams();
+  // const searchQuery = searchParams?.get("search") ?? undefined;
 
   // Fetch price range from API
   const { data: priceRangeData } = useQuery<{
@@ -36,7 +36,7 @@ const ProductsGrid: React.FC = () => {
   });
 
   const { data, isLoading, isFetching, error } = useQuery<Product[], Error>({
-    queryKey: ["products", filters, searchQuery],
+    queryKey: ["products", filters],
     queryFn: () => getProducts(), // Temporarily removed all params
     staleTime: 5000,
   });

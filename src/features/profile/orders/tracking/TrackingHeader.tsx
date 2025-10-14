@@ -1,14 +1,14 @@
 import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
 import React from "react";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 
 const TrackingHeader = () => {
-  const t = useTranslations("Profile.Breadcrumbs");
+  // const t = useTranslations("Profile.Breadcrumbs");
 
   const items = [
-    { label: t("account"), href: "/" },
-    { label: t("orders"), href: "/profile/orders" },
-    { label: t("tracking") },
+    { label: ("account"), href: "/" },
+    { label: ("orders"), href: "/profile/orders" },
+    { label: ("tracking") },
   ];
 
   return (
