@@ -96,25 +96,25 @@ const isArabic = locale === "ar";
           {hasNotifications ? (
             <>
               <div className="flex items-center justify-between p-4">
-                <DropdownMenuLabel className="text-2xl font-semibold">
-                  {t("notifications")}
+                <DropdownMenuLabel className="text-black text-2xl font-semibold">
+                  {t("Notifications.notifications")}
                 </DropdownMenuLabel>
                 <Link to='/notifications' className="text-main text-lg font-medium cursor-pointer">
-                  {t("seeAll")}
+                  {t("Notifications.seeAll")}
                 </Link>
               </div>
 
               {todayNotifications.length > 0 && (
                 <div>
-                  <h4 className="px-5 pb-2 text-base font-semibold uppercase tracking-wide">
-                    {t("new")}
+                  <h4 className="text-black px-5 pb-2 text-base font-semibold uppercase tracking-wide">
+                    {t("Notifications.new")}
                   </h4>
                   {todayNotifications.map((n: NotificationType) => (
                     <DropdownMenuItem
                       key={n.id}
                       onClick={() => handleNotificationClick(n)}
                       onSelect={(e) => e.preventDefault()}
-                      className="flex items-center gap-3 py-3 px-5 bg-[#242529] border-b border-[#3A3A3A] cursor-pointer hover:bg-[#2b2c2f]"
+                      className="flex items-center gap-3 py-3 px-5 border-b border-[#3A3A3A] cursor-pointer hover:bg-[#2b2c2f]"
                     >
                       <div className="relative px-2">
                         <img
@@ -125,14 +125,14 @@ const isArabic = locale === "ar";
                           className="rounded-full"
                         />
                         {!n.read_at && (
-                          <span className="absolute top-5 left-0 h-2 w-2 rounded-full bg-main" />
+                          <span className="absolute top-2 left-0 h-2 w-2 rounded-full bg-main" />
                         )}
                       </div>
 
                       <div className="flex-1 flex items-center justify-between gap-2">
                         <p
                           className={`text-xs font-medium leading-[150%] truncate ${
-                            n.read_at ? "text-gray-300" : "text-white"
+                            n.read_at ? "text-gray-300" : "text-black"
                           }`}
                         >
                           {isArabic ? n.body?.ar : n.body?.en}
