@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import ProductList from "../ProductList";
+import { useTranslation } from "react-i18next";
 
 /**
  * MostViewedSection Component - Displays most viewed products
@@ -9,14 +10,15 @@ import ProductList from "../ProductList";
  * Note: If backend supports a "views" field, update sort_by accordingly
  */
 const MostViewedSection = () => {
+  const { t } = useTranslation();
   return (
     <ProductList
-      titleKey="mostViewed"
+      titleKey={t("Products.mostViewed")}
       titleAlign="center"
       maxItems={8}
       queryParams={{}} // Temporarily removed all params
       viewAllLink="/products"
-      viewAllTextKey="viewAllProducts"
+      viewAllTextKey={t("Products.viewAllProducts")}
     />
   );
 };
