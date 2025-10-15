@@ -429,8 +429,8 @@ export const CheckoutPage: React.FC = () => {
         <div className="mb-8 md:flex hidden">
           <Breadcrumbs
             items={[
-              { label: t("breadcrumbHome"), href: "/" },
-              { label: t("breadcrumbCheckout") },
+              { label: t("Checkout.breadcrumbHome"), href: "/" },
+              { label: t("Checkout.breadcrumbCheckout") },
             ]}
           />
         </div>

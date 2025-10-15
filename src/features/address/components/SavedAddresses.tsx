@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import DeleteAddressDialog from "./DeleteAddressDialog";
 import { useAddressStore } from "../stores";
 import { useTranslation } from "react-i18next";
+import Delete from "@/features/profile/addresses/icons/Delete";
+import Edit from "@/features/profile/addresses/icons/Edit";
 
 interface SavedAddressesProps {
   addresses: Address[];
@@ -75,7 +77,7 @@ const AddressCard: React.FC<AddressCardProps> = ({
 
           {address.zipcode && (
             <p className="dark:text-gray-400 text-xs mt-1">
-              {t("zipcode")}: {address.zipcode}
+              {t("saveAddress.zipcode")}: {address.zipcode}
             </p>
           )}
         </div>
@@ -90,14 +92,14 @@ const AddressCard: React.FC<AddressCardProps> = ({
             aria-label={t("delete")}
             className="text-sm text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
           >
-            {t("delete")}
+            <Delete />
           </button>
           <Link
             to={`/profile/addresses/edit/${address.id}`}
             onClick={(e) => e.stopPropagation()}
             className="text-sm text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
           >
-            {t("edit")}
+            <Edit />
           </Link>
         </div>
       </div>
@@ -133,7 +135,7 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium dark:text-white">
-          {t("selectAddress")}
+          {t("saveAddress.selectAddress")}
         </h3>
       </div>
 
@@ -153,7 +155,7 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
           onClick={onAddNewAddress}
           className="w-[249px] h-14 rounded-[8px] bg-main text-white text-sm font-medium transition-colors capitalize"
         >
-          {t("addNewAddress")}
+          {t("saveAddress.addNewAddress")}
         </button>
       )}
 

@@ -96,7 +96,7 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
   if (isLoading) {
     return (
       <div className="rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-white mb-6">{t("title")}</h2>
+        <h2 className="text-xl font-semibold text-white mb-6">{t("Checkout.title")}</h2>
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
         </div>
@@ -108,11 +108,11 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
     <div className="rounded-lg md:p-6">
       <Link to="/cart" className="md:hidden flex items-center gap-2 mb-6">
         <BackArrow />
-        <h2 className="text-xl font-semibold text-white">{t("title")}</h2>
+        <h2 className="text-xl font-semibold text-white">{t("Checkout.title")}</h2>
       </Link>
 
       <h2 className="md:flex hidden text-xl font-semibold text-white mb-6">
-        {t("title")}
+        {t("Checkout.title")}
       </h2>
       {!showAddressForm && addresses.length > 0 ? (
         <SavedAddresses

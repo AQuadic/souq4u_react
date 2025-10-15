@@ -78,7 +78,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
   return (
     <div className="bg-white dark:bg-[var(--color-cart-bg)] text-slate-900 dark:text-slate-100 p-6 rounded-lg sticky top-6">
       <h2 className="text-slate-900 dark:text-white text-xl font-semibold mb-6">
-        {t("summary")}
+        {t("Checkout.summary")}
       </h2>
       {/* Promocode - mobile only: placed directly under title on small screens */}
       <div className="block md:hidden mb-6">
@@ -86,7 +86,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
           htmlFor="promocode-input"
           className="block text-gray-900 dark:text-white text-sm font-semibold mb-2"
         >
-          {p("addPromocode")}
+          {p("Cart.addPromocode")}
         </label>
 
         {appliedCoupon ? (
@@ -109,7 +109,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               }}
               className="text-gray-700/60 dark:text-white/60 hover:text-gray-900 dark:hover:text-white text-xs px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
             >
-              {p("remove")}
+              {p("Cart.remove")}
             </button>
           </div>
         ) : (
@@ -119,7 +119,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               type="text"
               value={promocode}
               onChange={(e) => setPromocode(e.target.value)}
-              placeholder={p("promocodePlaceholder")}
+              placeholder={p("Cart.promocodePlaceholder")}
               className="flex-1 bg-transparent border border-gray-200 dark:border-white/20 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-[var(--color-main)] transition-colors text-sm"
             />
             {promocode.trim() && (
@@ -131,7 +131,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                 {isCouponLoading && (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 )}
-                {p("apply")}
+                {p("Cart.apply")}
               </button>
             )}
           </form>
@@ -143,7 +143,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
       <div className="space-y-4 mb-6">
         <div className="flex justify-between items-center">
           <span className="text-sm text-slate-600 dark:text-slate-200">
-            {t("totalItem")}
+            {t("Cart.totalItem")}
           </span>
           <span className="font-medium text-slate-900 dark:text-white">
             {totalItems}
@@ -152,10 +152,10 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
 
         <div className="flex justify-between items-center">
           <span className="text-sm text-slate-600 dark:text-slate-200">
-            {t("subtotal")}
+            {t("Cart.subtotal")}
           </span>
           <span className="font-medium text-slate-900 dark:text-white">
-            {subtotal.toLocaleString()} {common("currency")}
+            {subtotal.toLocaleString()} {common("Common.currency")}
           </span>
         </div>
 
@@ -163,10 +163,10 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
 
         <div className="flex justify-between items-center">
           <span className="text-sm text-slate-600 dark:text-slate-200">
-            {t("totalProducts")}
+            {t("Cart.totalProducts")}
           </span>
           <span className="font-medium text-slate-900 dark:text-white">
-            {totalProducts.toLocaleString()} {common("currency")}
+            {totalProducts.toLocaleString()} {common("Common.currency")}
           </span>
         </div>
 
@@ -176,7 +176,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               {t("taxes")}
             </span>
             <span className="font-medium text-slate-900 dark:text-white">
-              {taxes.toLocaleString()} {common("currency")}
+              {taxes.toLocaleString()} {common("Common.currency")}
             </span>
           </div>
         )}
@@ -187,7 +187,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               {t("discount")}
             </span>
             <span className="font-medium text-green-600 dark:text-green-400">
-              -{discount.toLocaleString()} {common("currency")}
+              -{discount.toLocaleString()} {common("Common.currency")}
             </span>
           </div>
         )}
@@ -198,7 +198,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               {t("shipping")}
             </span>
             <span className="font-medium text-slate-900 dark:text-white">
-              {shipping.toLocaleString()} {common("currency")}
+              {shipping.toLocaleString()} {common("Common.currency")}
             </span>
           </div>
         )}
@@ -208,9 +208,9 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
       <div className="hidden md:block mb-6">
         <label
           htmlFor="promocode-input"
-          className="block text-white text-sm font-medium mb-2"
+          className="block text-sm font-medium mb-2"
         >
-          {p("addPromocode")}
+          {p("Cart.addPromocode")}
         </label>
 
         {appliedCoupon ? (
@@ -233,7 +233,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               }}
               className="text-gray-700/60 dark:text-white/60 hover:text-gray-900 dark:hover:text-white text-xs px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
             >
-              {p("remove")}
+              {p("Cart.remove")}
             </button>
           </div>
         ) : (
@@ -243,7 +243,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               type="text"
               value={promocode}
               onChange={(e) => setPromocode(e.target.value)}
-              placeholder={p("promocodePlaceholder")}
+              placeholder={p("Cart.promocodePlaceholder")}
               className="flex-1 bg-transparent border border-gray-200 dark:border-white/20 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-[var(--color-main)] transition-colors text-sm"
             />
             {promocode.trim() && (
@@ -255,7 +255,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                 {isCouponLoading && (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 )}
-                {p("apply")}
+                {p("Cart.apply")}
               </button>
             )}
           </form>
@@ -267,13 +267,13 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         <div className="w-full h-px bg-slate-200 dark:bg-[#C0C0C0] my-6"></div>
         <div className="flex justify-between items-center">
           <span className="text-lg font-semibold text-slate-900 dark:text-white">
-            {t("total")}
+            {t("Cart.total")}
           </span>
           <div className="text-right">
             <span className="text-xl font-bold text-slate-900 dark:text-white">
               {total.toLocaleString()}{" "}
               <span className="text-sm font-normal text-slate-700 dark:text-slate-200">
-                {common("currency")}
+                {common("Common.currency")}
               </span>
             </span>
           </div>
@@ -287,7 +287,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         disabled={loading}
         className="w-full bg-[var(--color-main)] hover:bg-main/50 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded transition-colors duration-200 uppercase tracking-wide cursor-pointer"
       >
-        {loading ? t("processing") : t("checkout")}
+        {loading ? t("Checkout.processing") : t("Checkout.checkout")}
       </button>
     </div>
   );

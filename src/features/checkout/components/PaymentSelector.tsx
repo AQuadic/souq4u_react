@@ -41,21 +41,21 @@ export const PaymentSelector: React.FC<PaymentSelectorProps> = ({
   const paymentOptions: PaymentOption[] = [
     {
       id: "online",
-      label: t("onlinePay"),
-      description: t("onlinePayDescription"),
+      label: t("Checkout.onlinePay"),
+      description: t("Checkout.onlinePayDescription"),
       disabled: true,
     },
     {
       id: "cash",
-      label: t("cash"),
-      description: t("cashDescription"),
+      label: t("Checkout.cash"),
+      description: t("Checkout.cashDescription"),
     },
   ];
 
   return (
     <div className="md:p-6 rounded-lg">
       <h2 className="text-gray-900 dark:text-white text-xl font-semibold mb-6">
-        {t("paymentTitle")}
+        {t("Checkout.paymentTitle")}
       </h2>
 
       <div className="space-y-3">
@@ -98,7 +98,7 @@ export const PaymentSelector: React.FC<PaymentSelectorProps> = ({
                       <span className="shrink-0">{option.label}</span>
                       {isDisabled && (
                         <span className="ml-2 inline-block text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-400/20 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-400/40 px-2 py-0.5 rounded">
-                          {t("comingSoon")}
+                          {t("Checkout.comingSoon")}
                         </span>
                       )}
                     </div>

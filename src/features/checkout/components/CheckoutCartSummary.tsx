@@ -27,7 +27,7 @@ export const CheckoutCartSummary: React.FC<CheckoutCartSummaryProps> = ({
 
   return (
     <div className={`rounded-lg md:p-6 ${className}`}>
-      <h2 className="text-xl font-semibold mb-6">{t("yourOrder")}</h2>
+      <h2 className="text-xl font-semibold mb-6">{t("Common.yourOrder")}</h2>
 
       <div className="space-y-4">
         {cart.items.map((item) => (
@@ -77,13 +77,13 @@ export const CheckoutCartSummary: React.FC<CheckoutCartSummaryProps> = ({
               {/* Quantity and Price */}
               <div className="flex items-center justify-between">
                 <span className="dark:text-gray-400 text-sm">
-                  {t("Qty")}: {item.quantity}
+                  {t("Common.Qty")}: {item.quantity}
                 </span>
                 <div className="text-right">
                   {item.variant?.has_discount && (
                     <div className="text-xs text-gray-400 line-through">
                       {(item.variant.price * item.quantity).toLocaleString()}{" "}
-                      {t("currency")}
+                      {t("Common.currency")}
                     </div>
                   )}
                   <div className="font-semibold">
@@ -91,7 +91,7 @@ export const CheckoutCartSummary: React.FC<CheckoutCartSummaryProps> = ({
                       (item.variant?.final_price || item.variant?.price || 0) *
                       item.quantity
                     ).toLocaleString()}{" "}
-                    {t("currency")}
+                    {t("Common.currency")}
                   </div>
                 </div>
               </div>
