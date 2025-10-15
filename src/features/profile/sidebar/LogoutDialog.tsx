@@ -128,14 +128,14 @@ export default function LogoutDialog(props: Readonly<Props>) {
               {/* Header */}
               <div className="px-6 pt-6">
                 <h2 className="text-center leading-[150%] text-gray-900 dark:text-gray-100 text-2xl font-medium">
-                  {t("title")}
+                  {t("Auth.logoutDialog.title")}
                 </h2>
               </div>
 
               {/* Content */}
               <div className="px-6 mt-4 text-center">
                 <p className="text-sm text-gray-700 dark:text-gray-300">
-                  {t("description")}
+                  {t("Auth.logoutDialog.description")}
                 </p>
               </div>
 
@@ -143,17 +143,17 @@ export default function LogoutDialog(props: Readonly<Props>) {
               <div className="flex justify-center gap-4 px-6 py-6">
                 <button
                   onClick={handleLogout}
-                  aria-label={t("yes")}
+                  aria-label={t("Auth.logoutDialog.yes")}
                   className="w-[140px] h-12 rounded-[8px] bg-red-600 hover:bg-main text-white text-base font-medium cursor-pointer transition-colors"
                 >
-                  {t("yes")}
+                  {t("Auth.logoutDialog.yes")}
                 </button>
                 <button
                   onClick={() => setDialogOpen(false)}
-                  aria-label={t("no")}
+                  aria-label={t("Auth.logoutDialog.no")}
                   className="w-[140px] h-12 rounded-[8px] border border-gray-300 dark:border-gray-700 text-base font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
                 >
-                  {t("no")}
+                  {t("Auth.logoutDialog.no")}
                 </button>
               </div>
             </div>
