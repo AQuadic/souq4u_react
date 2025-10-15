@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import Smile from "../../icons/Smile";
 // import { useTranslations } from "next-intl";
 
 interface ProductPricingProps {
@@ -22,7 +24,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
   isInStock,
   hasUnlimitedStock = false, // eslint-disable-line @typescript-eslint/no-unused-vars
 }) => {
-  // const t = useTranslations("Common");
+  const {t} = useTranslation();
 
   const formatPrice = (price: number) =>
     price.toLocaleString("en-US", { maximumFractionDigits: 0 });
@@ -80,23 +82,23 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
       </div>
       <div className="mt-6">
         <p className="text-gray-800 dark:text-[#FDFDFD] text-lg font-medium leading-[100%]">
-          {("availability")}:{" "}
+          {t("Common.availability")}:{" "}
           {isInStock ? (
-            <span className="text-[#18B511]">{("inStock")}</span>
+            <span className="text-[#18B511]">{t("Common.inStock")}</span>
           ) : (
-            <span className="text-main">{("outOfStock")}</span>
+            <span className="text-main">{t("Common.outOfStock")}</span>
           )}
         </p>
       </div>
       {/* Only show stock count if product is actually in stock */}
-      {/*{isInStock && stockCount > 0 && (*/}
-      {/*  <div className="mt-7 flex items-center gap-2">*/}
-      {/*    <Smile />*/}
-      {/*    <p className="text-[#18B511] text-lg font-normal leading-[100%]">*/}
-      {/*      <span>{stockCount}</span> in stock*/}
-      {/*    </p>*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {isInStock && stockCount > 0 && (
+        <div className="mt-7 flex items-center gap-2">
+          <Smile />
+          <p className="text-[#18B511] text-lg font-normal leading-[100%]">
+            <span>{stockCount}</span> {t("Common.inStock")}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

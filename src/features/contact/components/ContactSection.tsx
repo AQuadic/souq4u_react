@@ -6,6 +6,7 @@ import React from "react";
 import MainContactForm from "./MainContactForm";
 import { Link } from "react-router-dom";
 import MapWithSkeleton from "@/shared/components/ui/MapWithSkeleton";
+import { useTranslation } from "react-i18next";
 
 const ContactSection = () => {
   // const config = useConfig();
@@ -13,19 +14,19 @@ const ContactSection = () => {
   // const lngRaw = config?.address?.location?.lng ?? null;
   // const lat = latRaw ? Number(latRaw) : null;
   // const lng = lngRaw ? Number(lngRaw) : null;
-  // const t = useTranslations("Contact");
+  const [t] = useTranslation();
 
   // const storeType = config?.store_type;
 
   return (
     <section className="container md:py-12">
       <h2 className="md:flex items-center justify-center hidden text-main text-[32px] font-normal font-anton-sc leading-[100%] text-center">
-        {("Contact us")}
+        {t("Contact.title")}
       </h2>
       <Link to="/" className="md:hidden flex items-center gap-2">
         {/* <BackArrow /> */}
         <h2 className="text-[#FDFDFD] text-xl font-semibold leading-[100%]">
-          {("title")}
+          {t("Contact.title")}
         </h2>
       </Link>
       <div className="md:mt-12 flex lg:flex-row flex-col-reverse items-center justify-between gap-4">
