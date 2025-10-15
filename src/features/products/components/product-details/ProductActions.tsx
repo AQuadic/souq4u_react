@@ -6,6 +6,7 @@ import { ProductQuantitySelector } from "./ProductQuantitySelector";
 import { ProductSizeSelector } from "./ProductSizeSelector";
 import GuideImage from "./GuideImage";
 import { getProductTheme } from "@/features/products/utils/theme";
+import { useTranslation } from "react-i18next";
 
 interface ProductVariant {
   id: number;
@@ -64,7 +65,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
 
   // Get store theme (defaulting to non-clothes theme)
   const theme = getProductTheme(storeType);
-
+  const { t } = useTranslation();
   return (
     <div>
       {guideImage && <GuideImage guideImage={guideImage} />}
@@ -99,7 +100,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             className="flex items-center justify-center"
           >
             <p className="text-white text-lg font-bold leading-[100%]">
-              {!isInStock ? "outOfStock" : "addToCart"}
+              {!isInStock ? t("outOfStock") : t("Products.addToCart") }
             </p>
           </motion.div>
 
