@@ -17,6 +17,7 @@ import MainCheckout from "./features/checkout/components/MainCheckout";
 import ProfileLayout from "./features/profile/Layout";
 import SaveAddress from "./features/profile/addresses/components/SaveAddress";
 import AddAddressPage from "./features/profile/addresses/add/page";
+import NotificationsPage from "./features/notifications/NotificationsPage";
 
 // Home Page Component
 function HomePage() {
@@ -79,6 +80,7 @@ function App() {
           
           <Route path="cart" element={<MainCart />} />
           <Route path="checkout" element={<MainCheckout />} />
+          <Route path="notifications" element={<NotificationsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
