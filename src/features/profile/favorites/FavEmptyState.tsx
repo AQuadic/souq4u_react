@@ -2,20 +2,20 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const FavEmptyState = () => {
-  const {t} = useTranslation("Profile");
-  const desc = t("FavoritesEmpty.desc");
+  const {t} = useTranslation("FavoritesEmpty");
+  const desc = t("Profile.FavoritesEmpty.desc");
   const descLines = desc ? desc.split("\n") : [];
 
   return (
     <div className="flex flex-col items-center justify-center">
       <img
         src="/noFav.png"
-        alt={t("FavoritesEmpty.alt") ?? "fav empty"}
+        alt={t("Profile.FavoritesEmpty.alt") ?? "fav empty"}
         width={254}
         height={254}
       />
       <h2 className=" text-2xl font-semibold mt-8">
-        {t("FavoritesEmpty.title")}
+        {t("Profile.FavoritesEmpty.title")}
       </h2>
       <p className="text-[#C0C0C0] text-lg font-medium font-poppins mt-4 text-center">
         {descLines.length > 0

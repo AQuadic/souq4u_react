@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-// import { useTranslations } from "next-intl";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ProductCard from "@/features/products/components/ProductCard";
 import { getFavorites } from "../favorites/api/getFavorites";
 import { Product } from "@/features/products/api/getProduct";
 import FavEmptyState from "./FavEmptyState";
-// import { Link } from "react-router-dom";
 import BackArrow from "@/features/products/icons/BackArrow";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export interface ApiFavoriteItem {
   id: number;
@@ -41,7 +40,7 @@ const MyFavorites = () => {
     queryFn: getFavorites,
   });
 
-  // const t = useTranslations("Profile");
+  const {t} = useTranslation("Profile");
 
   // Keep a local copy of favorites so we can remove items from the UI immediately
   useEffect(() => {
@@ -70,7 +69,7 @@ const MyFavorites = () => {
   if (!sourceFavs || sourceFavs.length === 0) {
     return (
       <div>
-        <h2 className="text-[32px] font-bold mb-6">{("favorites")}</h2>
+        <h2 className="text-[32px] font-bold mb-6">{t("Profile.favorites")}</h2>
         <FavEmptyState />
       </div>
     );
@@ -119,11 +118,11 @@ const MyFavorites = () => {
 
   return (
     <section>
-      <h2 className="text-[32px] font-bold mb-6 md:flex hidden">{("favorites")}</h2>
+      <h2 className="text-[32px] font-bold mb-6 md:flex hidden">{t("Profile.favorites")}</h2>
 
       <Link to='/profile/account' className="mb-6 md:hidden flex items-center gap-2">
         <BackArrow />
-        <h2 className="text-[32px] font-bold">{("favorites")}</h2>
+        <h2 className="text-[32px] font-bold">{t("Profile.favorites")}</h2>
       </Link>
 
       <div className="flex flex-wrap gap-4">
