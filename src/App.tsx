@@ -14,6 +14,7 @@ import MyOrders from "./features/profile/orders/MyOrders";
 import { ProductDetailsPage } from "./features/products/components";
 import MainCart from "./features/cart/components/MainCart";
 import MainCheckout from "./features/checkout/components/MainCheckout";
+import ProfileLayout from "./features/profile/Layout";
 
 // Home Page Component
 function HomePage() {
@@ -21,9 +22,9 @@ function HomePage() {
     <>
       <MainHero />
       <HomeCategories />
-      <HomeTryApp />
       <BestOffersSection />
       <MostViewedSection />
+      <HomeTryApp />
     </>
   );
 }
@@ -64,13 +65,15 @@ function App() {
           <Route path="products/:id" element={<ProductDetailsPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="about" element={<AboutPage />} />
-          <Route path="profile" element={<MyAccount />} />
-          <Route path="profile/account" element={<MyAccount />} />
-          <Route path="profile/orders" element={<MyOrders />} />
-          <Route path="profile/favorites" element={<MyFavorites />} />
+          <Route path="profile" element={<ProfileLayout />}>
+            <Route index element={<MyAccount />} />
+            <Route path="account" element={<MyAccount />} />
+            <Route path="orders" element={<MyOrders />} />
+            <Route path="favorites" element={<MyFavorites />} />
+          </Route>
+          
           <Route path="cart" element={<MainCart />} />
           <Route path="checkout" element={<MainCheckout />} />
-          {/* Add more routes as needed */}
         </Route>
       </Routes>
     </BrowserRouter>
