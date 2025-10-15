@@ -1,19 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Order } from "../api/getOrdersById";
 import { cancelOrder } from "../api/cancelOrder";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 type OrderDetailsProps = {
   order: Order;
 };
 
 const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
-  const t = useTranslations("Orders");
-  const locale = useLocale();
+  const { t, i18n } = useTranslation("Orders");
+  const locale = i18n.language;
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
   const handleCancel = async (orderId: number) => {

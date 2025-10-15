@@ -1,9 +1,9 @@
 import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 const TrackingHeader = () => {
-  const t = useTranslations("Profile.Breadcrumbs");
+  const { t } = useTranslation("Profile.Breadcrumbs");
 
   const items = [
     { label: t("account"), href: "/" },

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useConfigStore } from "@/features/config";
 import { isClothesStore } from "@/features/products/utils/theme";
 
 interface ProductInfoProps {
@@ -15,9 +14,8 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
   productName,
   shortDescription,
 }) => {
-  const config = useConfigStore((state: { config: unknown; }) => state.config);
-  const storeType = config?.store_type;
-  const isClothes = isClothesStore(storeType);
+  // Default to non-clothes store
+  const isClothes = isClothesStore();
 
   return (
     <div>

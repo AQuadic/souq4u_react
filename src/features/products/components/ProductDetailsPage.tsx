@@ -30,7 +30,6 @@ import { ProductForCart } from "@/features/cart/types";
 import ProductList from "./ProductList";
 import RecentlyViewedProducts from "./RecentlyViewedProducts";
 import { useRecentlyViewedStore } from "../stores/recently-viewed-store";
-import { useConfigStore } from "@/features/config";
 import { useTranslation } from "react-i18next";
 
 type MultiTextOrString = MultilingualText | string | undefined;
@@ -49,7 +48,6 @@ const ProductDetailsPage: React.FC = () => {
   >();
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const config = useConfigStore((state) => state.config);
   const addProductId = useRecentlyViewedStore((state) => state.addProductId);
 
   const {
@@ -58,7 +56,8 @@ const ProductDetailsPage: React.FC = () => {
     error,
   } = useQuery<Product>({
     queryKey: ["product", productId],
-    queryFn: () => getProduct(productId),
+    queryFn: () => getProduct(productId!),
+    enabled: !!productId,
   });
 
   // Track product view
@@ -89,70 +88,28 @@ const ProductDetailsPage: React.FC = () => {
         ? (product.name as { en: string; ar: string }).en
         : product?.name || "Product";
 
-    // For clothes stores, prioritize variant images
-    if (config?.store_type === "Clothes") {
-      if (selectedVariant?.images && Array.isArray(selectedVariant.images)) {
-        selectedVariant.images.forEach(
-          (image: { id?: number; url?: string }, index: number) => {
-            if (image?.url) {
-              const isDuplicate = images.some(
-                (existing) => existing.url === image.url
-              );
-              if (!isDuplicate) {
-                images.push({
-                  id: image.id || index + 2000,
-                  url: image.url,
-                  alt: `${productNameStr} - Variant Image ${index + 1}`,
-                });
-              }
+    // Use product images (default behavior)
+    if (product?.images && Array.isArray(product.images)) {
+      product.images.forEach(
+        (image: { id?: number; url?: string }, index: number) => {
+          if (image?.url) {
+            const isDuplicate = images.some(
+              (existing) => existing.url === image.url
+            );
+            if (!isDuplicate) {
+              images.push({
+                id: image.id || index + 1000,
+                url: image.url,
+                alt: `${productNameStr} - Image ${index + 1}`,
+              });
             }
           }
-        );
-      }
-    } else {
-      // For non-clothes stores, use product images first, then variant images
-      if (product?.images && Array.isArray(product.images)) {
-        product.images.forEach(
-          (image: { id?: number; url?: string }, index: number) => {
-            if (image?.url) {
-              const isDuplicate = images.some(
-                (existing) => existing.url === image.url
-              );
-              if (!isDuplicate) {
-                images.push({
-                  id: image.id || index + 1000,
-                  url: image.url,
-                  alt: `${productNameStr} - Product Image ${index + 1}`,
-                });
-              }
-            }
-          }
-        );
-      }
-
-      // Then add variant images if available
-      if (selectedVariant?.images && Array.isArray(selectedVariant.images)) {
-        selectedVariant.images.forEach(
-          (image: { id?: number; url?: string }, index: number) => {
-            if (image?.url) {
-              const isDuplicate = images.some(
-                (existing) => existing.url === image.url
-              );
-              if (!isDuplicate) {
-                images.push({
-                  id: image.id || index + 2000,
-                  url: image.url,
-                  alt: `${productNameStr} - Variant Image ${index + 1}`,
-                });
-              }
-            }
-          }
-        );
-      }
+        }
+      );
     }
 
     return images;
-  }, [product, selectedVariant, config?.store_type]);
+  }, [product]);
 
   useEffect(() => {
     if (!product?.variants?.length) return;
@@ -375,12 +332,10 @@ const ProductDetailsPage: React.FC = () => {
             shortDescription={shortDescription}
           />
 
-          {config?.store_type !== "Clothes" && (
-            <ProductDescription
-              shortDescription={shortDescription}
-              description={description}
-            />
-          )}
+          <ProductDescription
+            shortDescription={shortDescription}
+            description={description}
+          />
 
           <ProductPricing
             hasDiscount={selectedVariant?.has_discount ?? false}
@@ -416,7 +371,7 @@ const ProductDetailsPage: React.FC = () => {
             guideImage={product.guide_image}
             shortDescription={shortDescription}
             description={description}
-            storeType={config?.store_type}
+            storeType={undefined}
           />
         </div>
       </div>
@@ -424,11 +379,7 @@ const ProductDetailsPage: React.FC = () => {
       {!!product?.id && (
         <>
           <ProductList
-            titleKey={
-              config?.store_type === "Clothes"
-                ? "youMayAlsoLike"
-                : "recommendedForYou"
-            }
+            titleKey="recommendedForYou"
             titleAlign={isRtl ? "right" : "left"}
             queryParams={{
               category_id: product?.category?.id ?? product?.category_id ?? 0,
@@ -444,18 +395,14 @@ const ProductDetailsPage: React.FC = () => {
             theme={{
               gridClassName: "xl:grid-cols-4 grid-cols-2",
               titleClassName:
-                config?.store_type === "Clothes"
-                  ? "text-main md:text-[32px] text-2xl font-bold leading-[100%] font-poppins"
-                  : "text-main md:text-[32px] text-2xl font-normal leading-[100%] uppercase font-anton-sc",
+                "text-main md:text-[32px] text-2xl font-normal leading-[100%] uppercase font-anton-sc",
             }}
           />
 
-          {config?.store_type === "Clothes" && (
-            <RecentlyViewedProducts
-              currentProductId={product.id}
-              titleAlign={isRtl ? "right" : "left"}
-            />
-          )}
+          <RecentlyViewedProducts
+            currentProductId={product.id}
+            titleAlign={isRtl ? "right" : "left"}
+          />
         </>
       )}
     </div>

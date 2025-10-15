@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import ProductReviewsSummary from "./ProductReviewsSummary";
 import ProductReviewsListing from "./ProductReviewsListing";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const MainProductReviews: React.FC<Props> = ({ productId }) => {
-  const t = useTranslations("Products");
+  const { t } = useTranslation("Products");
   const { data } = useQuery({
     queryKey: ["productReviews", productId],
     queryFn: () => getReviews("product", productId),
@@ -37,9 +37,7 @@ const MainProductReviews: React.FC<Props> = ({ productId }) => {
 
   // If we have loaded and there are no reviews, show an empty state instead of the whole component
   if (reviews && reviews.length === 0) {
-    return (
-      <ReviewsEmptyState />
-    );
+    return <ReviewsEmptyState />;
   }
 
   return (

@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import TrackingResult from "./TrackingResult";
 import TrackingForm from "./TrackingForm";
-import styles from "./MainTracking.module.css";
 import { useTrackOrderByEmail, useTrackOrderByPhone } from "../hooks";
 import { useToast } from "@/shared/components/ui/toast/toast-store";
 import { formatPhoneForApi } from "../utils";
@@ -12,9 +11,9 @@ import { Order } from "../types";
 import { useTranslation } from "react-i18next";
 
 const MainTracking = () => {
-  const { i18n} = useTranslation("Profile");
+  const { i18n } = useTranslation("Profile");
   const locale = i18n.language;
-  const language = locale === "ar" ? "ar" : "en"; 
+  const language = locale === "ar" ? "ar" : "en";
 
   const [step, setStep] = useState<"form" | "result">("form");
   const [trackingData, setTrackingData] = useState<{
@@ -61,11 +60,16 @@ const MainTracking = () => {
         language === "ar"
           ? `تم العثور على الطلب! - تم تتبع الطلب رقم ${activeQuery.data.order.code} بنجاح.`
           : `Order Found! - Order #${activeQuery.data.order.code} has been successfully tracked.`,
-        undefined,
-        4000
+        { duration: 4000 }
       );
     }
-  }, [activeQuery?.isSuccess, activeQuery?.data, hasShownSuccessToast, toast, language]);
+  }, [
+    activeQuery?.isSuccess,
+    activeQuery?.data,
+    hasShownSuccessToast,
+    toast,
+    language,
+  ]);
 
   React.useEffect(() => {
     if (activeQuery?.isError && !hasShownErrorToast) {
@@ -103,12 +107,18 @@ const MainTracking = () => {
       }
 
       setHasShownErrorToast(true);
-      toast.error(errorMessage, undefined, 6000);
+      toast.error(errorMessage, { duration: 6000 });
 
       // Reset tracking data to allow retry
       setTrackingData(null);
     }
-  }, [activeQuery?.isError, activeQuery?.error, hasShownErrorToast, toast, language]);
+  }, [
+    activeQuery?.isError,
+    activeQuery?.error,
+    hasShownErrorToast,
+    toast,
+    language,
+  ]);
 
   const handleFormSubmit = (data: {
     orderCode: string;
@@ -129,7 +139,7 @@ const MainTracking = () => {
 
   if (step === "result" && orderData) {
     return (
-      <div className={styles.container}>
+      <div className="p-4 rounded-lg min-h-[400px]">
         <TrackingResult
           order={orderData}
           onBack={handleBackToForm}
@@ -140,7 +150,7 @@ const MainTracking = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="p-4 rounded-lg min-h-[400px]">
       <TrackingForm
         onSubmit={handleFormSubmit}
         isLoading={isLoading}

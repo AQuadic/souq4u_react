@@ -7,7 +7,6 @@ import type { AddressFormData } from "../types";
 import { SavedAddresses } from "./SavedAddresses";
 import { AddressForm } from "./AddressForm";
 import BackArrow from "@/features/products/icons/BackArrow";
-import { ClothesAddressForm } from "./ClothesAddressForm";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -41,7 +40,7 @@ export const ClothesBillingDetails: React.FC<BillingDetailsProps> = ({
   } = useAddresses();
 
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const {t} = useTranslation("BillingDetails");
+  const { t } = useTranslation("BillingDetails");
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -82,7 +81,7 @@ export const ClothesBillingDetails: React.FC<BillingDetailsProps> = ({
     return (
       <div className="rounded-lg px-6">
         <h2 className="text-[32px] font-bold mb-6">{t("deliveryInfo")}</h2>
-        <ClothesAddressForm
+        <AddressForm
           onSubmit={handleFormSubmit}
           showSaveOption={false}
           onImmediateCheckout={onImmediateCheckout}

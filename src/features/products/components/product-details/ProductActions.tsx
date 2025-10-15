@@ -1,13 +1,10 @@
 "use client";
 
 import React from "react";
-// import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ProductQuantitySelector } from "./ProductQuantitySelector";
 import { ProductSizeSelector } from "./ProductSizeSelector";
-import { ProductDescription } from "./ProductDescription";
 import GuideImage from "./GuideImage";
-import { useConfigStore } from "@/features/config";
 import { getProductTheme } from "@/features/products/utils/theme";
 
 interface ProductVariant {
@@ -65,12 +62,8 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
 }) => {
   // const t = useTranslations("Products");
 
-  // Get store config and theme
-  const config = useConfigStore((state: { config: unknown; }) => state.config);
-  const theme = getProductTheme(config?.store_type);
-
-  // Use storeType prop if provided, otherwise fallback to config
-  const currentStoreType = storeType || config?.store_type;
+  // Get store theme (defaulting to non-clothes theme)
+  const theme = getProductTheme(storeType);
 
   return (
     <div>
@@ -106,7 +99,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             className="flex items-center justify-center"
           >
             <p className="text-white text-lg font-bold leading-[100%]">
-              {!isInStock ? ("outOfStock") : ("addToCart")}
+              {!isInStock ? "outOfStock" : "addToCart"}
             </p>
           </motion.div>
 
@@ -122,14 +115,6 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
           )}
         </motion.button>
       </div>
-
-      {/* Description below add to cart button - only for clothes stores */}
-      {currentStoreType === "Clothes" && (
-        <ProductDescription
-          shortDescription={shortDescription}
-          description={description}
-        />
-      )}
     </div>
   );
 };

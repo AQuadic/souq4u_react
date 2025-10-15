@@ -4,7 +4,7 @@ import Shipping from "../icons/Shipping";
 import Processing from "../icons/Processing";
 import Cancelled from "../icons/Cancelled";
 import { Order } from "../api/getOrdersById";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import BackArrow from "@/features/products/icons/BackArrow";
 
@@ -13,40 +13,40 @@ type OrderStatusProps = {
 };
 
 const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
-  const t = useTranslations("Orders");
-  const locale = useLocale();
+  const { t, i18n } = useTranslation("Orders");
+  const locale = i18n.language;
 
   const currentStatus = order.status?.toLowerCase() || "pending";
 
-const statusStyles: Record<
-  string,
-  { icon: React.ReactNode; bg: string; text: string; label: string }
-> = {
-  pending: {
-    icon: <Pending />,
-    bg: "bg-[#8B8B8B2B]",
-    text: "text-[#C0C0C0]",
-    label: t("pending"),
-  },
-  shipping: {
-    icon: <Shipping />,
-    bg: "bg-[#3D9BE924]",
-    text: "text-[#3D9BE9]",
-    label: t("shipping"),
-  },
-  processing: {
-    icon: <Processing />,
-    bg: "bg-[#8B8B8B2B]",
-    text: "text-[#C0C0C0]",
-    label: t("processing"),
-  },
-  cancelled: {
-    icon: <Cancelled />,
-    bg: "bg-[#CA1E0024]",
-    text: "text-[#CA1E00]",
-    label: t("cancelled"),
-  },
-};
+  const statusStyles: Record<
+    string,
+    { icon: React.ReactNode; bg: string; text: string; label: string }
+  > = {
+    pending: {
+      icon: <Pending />,
+      bg: "bg-[#8B8B8B2B]",
+      text: "text-[#C0C0C0]",
+      label: t("pending"),
+    },
+    shipping: {
+      icon: <Shipping />,
+      bg: "bg-[#3D9BE924]",
+      text: "text-[#3D9BE9]",
+      label: t("shipping"),
+    },
+    processing: {
+      icon: <Processing />,
+      bg: "bg-[#8B8B8B2B]",
+      text: "text-[#C0C0C0]",
+      label: t("processing"),
+    },
+    cancelled: {
+      icon: <Cancelled />,
+      bg: "bg-[#CA1E0024]",
+      text: "text-[#CA1E00]",
+      label: t("cancelled"),
+    },
+  };
 
   const styles = statusStyles[currentStatus] || statusStyles.pending;
 
@@ -56,8 +56,8 @@ const statusStyles: Record<
         {t("tracking")}
       </h2>
 
-      <Link href='/profile/orders' className="flex items-center gap-2 md:hidden flex">
-      <BackArrow />
+      <Link to="/profile/orders" className="flex items-center gap-2 md:hidden">
+        <BackArrow />
         <h2 className="text-[#FDFDFD] text-xl font-bold leading-[100%]">
           {t("tracking")}
         </h2>

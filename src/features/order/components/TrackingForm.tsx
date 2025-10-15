@@ -27,7 +27,7 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
   language,
 }) => {
   const { i18n } = useTranslation("Profile");
-    const locale = i18n.language;
+  const locale = i18n.language;
   const currentLang = language ?? (locale === "ar" ? "ar" : "en");
 
   const [orderCode, setOrderCode] = useState("");
@@ -53,9 +53,7 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
     // Validate order code
     if (!orderCode.trim()) {
       newErrors.orderCode =
-        currentLang === "ar"
-          ? "رمز الطلب مطلوب"
-          : "Order code is required";
+        currentLang === "ar" ? "رمز الطلب مطلوب" : "Order code is required";
     } else if (orderCode.trim().length < 3) {
       newErrors.orderCode =
         currentLang === "ar"
@@ -121,9 +119,7 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
               value={orderCode}
               onChange={(e) => setOrderCode(e.target.value)}
               placeholder={
-                currentLang === "ar"
-                  ? "أدخل رمز طلبك"
-                  : "Enter your order code"
+                currentLang === "ar" ? "أدخل رمز طلبك" : "Enter your order code"
               }
               className={cn(
                 "h-12 border-2 rounded-full",
@@ -162,32 +158,26 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
 
           <ContactInput
             value={contactValue}
-            onChange={(newValue) => {
+            onChange={(newValue: ContactInputValue) => {
               setContactValue(newValue);
               // Clear error when user changes input
               if (errors.contactInfo) {
                 setErrors((prev) => ({ ...prev, contactInfo: undefined }));
               }
             }}
-            placeholder={{
-              email:
-                currentLang === "ar"
-                  ? "أدخل عنوان بريدك الإلكتروني"
-                  : "Enter your email address",
-              phone:
-                currentLang === "ar"
-                  ? "أدخل رقم هاتفك"
-                  : "Enter your phone number",
-              default:
-                currentLang === "ar"
-                  ? "أدخل البريد الإلكتروني أو رقم الهاتف"
-                  : "Enter email or phone number",
-            }}
+            emailPlaceholder={
+              currentLang === "ar"
+                ? "أدخل عنوان بريدك الإلكتروني"
+                : "Enter your email address"
+            }
+            phonePlaceholder={
+              currentLang === "ar"
+                ? "أدخل رقم هاتفك"
+                : "Enter your phone number"
+            }
             error={errors.contactInfo}
             disabled={isLoading}
             language={currentLang}
-            showIcon={true}
-            showTypeIndicator={true}
           />
         </div>
 

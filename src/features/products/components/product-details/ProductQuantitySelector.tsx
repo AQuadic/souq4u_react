@@ -1,8 +1,6 @@
 import React from "react";
-// import { useTranslations } from "next-intl";
 import Minus from "../../icons/Minus";
 import Plus from "../../icons/Plus";
-import { useConfigStore } from "@/features/config";
 import { getProductTheme } from "@/features/products/utils/theme";
 
 interface ProductQuantitySelectorProps {
@@ -22,11 +20,8 @@ export const ProductQuantitySelector: React.FC<
   maxQuantity = 999,
   disabled = false,
 }) => {
-  // const t = useTranslations("Products");
-
-  // Get store config and theme
-  const config = useConfigStore((state: { config: unknown; }) => state.config);
-  const theme = getProductTheme(config?.store_type);
+  // Get default theme (non-clothes)
+  const theme = getProductTheme();
 
   const handleDecrease = () => {
     const newQuantity = Math.max(quantity - 1, minQuantity);
@@ -46,7 +41,7 @@ export const ProductQuantitySelector: React.FC<
         onClick={handleDecrease}
         disabled={disabled || quantity <= minQuantity}
         className="p-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-foreground hover:text-accent-foreground"
-        aria-label={("decreaseQuantity")}
+        aria-label={"decreaseQuantity"}
       >
         <Minus />
       </button>
@@ -57,7 +52,7 @@ export const ProductQuantitySelector: React.FC<
         onClick={handleIncrease}
         disabled={disabled || quantity >= maxQuantity}
         className="p-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-foreground hover:text-accent-foreground"
-        aria-label={("increaseQuantity")}
+        aria-label={"increaseQuantity"}
       >
         <Plus />
       </button>

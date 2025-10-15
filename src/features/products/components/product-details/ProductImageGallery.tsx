@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import ResFav from "../../icons/ResFav";
 import ResUnFav from "../../icons/ResUnFav";
-import { useConfig } from "@/features/config";
 
 // Simple arrow components to replace heroicons
 const ChevronLeftIcon = ({ className }: { className?: string }) => (
@@ -241,8 +240,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   isFavorite,
   onToggleFavorite,
 }) => {
-  const config = useConfig();
-  const showSideThumbnails = config?.store_type === "Clothes";
+  // Default to non-clothes (no side thumbnails)
+  const showSideThumbnails = false;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -265,7 +264,6 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
 
   // Debug logging
   console.log("ProductImageGallery:", {
-    storeType: config?.store_type,
     showSideThumbnails,
     imagesCount: images.length,
     displayImagesCount: displayImages.length,

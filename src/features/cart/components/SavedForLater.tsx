@@ -11,7 +11,7 @@ import { Product } from "@/features/products/api/getProduct";
 import { useTranslation } from "react-i18next";
 
 const SavedForLater = () => {
-  const {t} = useTranslation("Cart");
+  const { t } = useTranslation("Cart");
 
   const { data, isLoading, isError } = useQuery<ApiFavoriteItem[]>({
     queryKey: ["favorites"],
@@ -40,28 +40,25 @@ const SavedForLater = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {favorites.map((fav: ApiFavoriteItem) => {
-          const f = fav.favoritable;
+          const f = fav.favorable;
 
           // Build a minimal Product object from the favorite response.
           const normalizedProduct: Product = {
             id: f.id,
             name: f.name,
             short_description: f.short_description,
-            images:
-              f.images && f.images.length > 0
-                ? [
-                    {
-                      id: f.images[0].id ?? fav.id,
-                      uuid: f.images[0].uuid ?? "",
-                      size: f.images[0].size ?? 0,
-                      url: f.images[0].url,
-                      responsive_urls: f.images[0].responsive_urls || [
-                        f.images[0].url,
-                      ],
-                      is_active: f.images[0].is_active ?? 1,
-                    },
-                  ]
-                : [],
+            images: f.image?.url
+              ? [
+                  {
+                    id: fav.id,
+                    uuid: "",
+                    size: 0,
+                    url: f.image.url,
+                    responsive_urls: [f.image.url],
+                    is_active: 1,
+                  },
+                ]
+              : [],
             is_active: 1,
             created_at: "",
             updated_at: "",
