@@ -173,13 +173,13 @@ const MyAccount: React.FC = () => {
   return (
     <section>
       <h1 className=" text-[32px] font-bold leading-[100%] md:flex hidden">
-        {t("title") || "My Account"}
+        {t("Profile.title") || "Profile.My Account"}
       </h1>
 
       <Link to='/profile/account' className="flex items-center gap-2 md:hidden">
         <BackArrow />
         <h1 className=" text-[32px] font-bold leading-[100%]">
-        {t("title") || "My Account"}
+        {t("Profile.title") || "Profile.My Account"}
       </h1>
       </Link>
       <form onSubmit={onSubmit}>
@@ -188,7 +188,7 @@ const MyAccount: React.FC = () => {
             htmlFor="name"
             className=" text-base font-normal leading-[100%]"
           >
-            {t("account") || "Full Name"}
+            {t("Profile.account") || "Full Name"}
           </label>
           <input
             id="name"
@@ -196,7 +196,7 @@ const MyAccount: React.FC = () => {
             onChange={(e) => setName(e.target.value)}
             type="text"
             className="w-full h-[46px] border border-[#C0C0C0] rounded-[8px] mt-4 px-4 "
-            placeholder={t("inputPlaceholder") || "Write here"}
+            placeholder={t("Profile.inputPlaceholder") || "Write here"}
           />
         </div>
 
@@ -205,7 +205,7 @@ const MyAccount: React.FC = () => {
             htmlFor="email"
             className=" text-base font-normal leading-[100%]"
           >
-            {t("email")}
+            {t("Profile.email")}
           </label>
           <input
             id="email"
@@ -213,7 +213,7 @@ const MyAccount: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             className="w-full h-[46px] border border-[#C0C0C0] rounded-[8px] mt-4 px-4 "
-            placeholder={t("inputPlaceholder") || "Write here"}
+            placeholder={t("Profile.inputPlaceholder") || "Write here"}
           />
         </div>
 
@@ -222,7 +222,7 @@ const MyAccount: React.FC = () => {
             htmlFor="phone"
             className=" text-base font-normal leading-[100%]"
           >
-            {t("phone") || "Phone"}
+            {t("Profile.phone") || "Phone"}
           </label>
           <div className="mt-4">
             <PhoneInput
@@ -243,8 +243,8 @@ const MyAccount: React.FC = () => {
           className="w-full h-12 bg-main rounded-[8px]  text-base font-bold my-12 disabled:opacity-60"
         >
           {isSubmitting
-            ? t("saving") || "Saving..."
-            : t("updateButton") || "Save"}
+            ? t("Profile.saving") || "Saving..."
+            : t("Profile.updateButton") || "Save"}
         </button>
       </form>
     </section>
