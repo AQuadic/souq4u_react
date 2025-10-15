@@ -279,7 +279,7 @@ const Footer = () => {
           </div>
 
           {/* Section 4 - Newsletter */}
-          <div className="  lg: ">
+          {/* <div className="  lg: ">
           <h2 className=" text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
             {t("Navigation.subscribeUs")}
           </h2>
@@ -309,8 +309,16 @@ const Footer = () => {
               {loading ? t("Footer.subscribing") : t("Footer.subscribe")}
             </button>
           </div>
-        </div>
+        </div> */}
 
+          <div>
+            <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
+              {t("Footer.subscribe")}
+            </h2>
+            <div className="flex flex-col gap-4 max-w-[323px] mx-auto lg:mx-0">
+              <p className="text-sm text-gray-500">Coming soon...</p>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
