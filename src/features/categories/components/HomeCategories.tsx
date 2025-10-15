@@ -5,7 +5,7 @@ import { getCategories } from "../api/getCategories";
 import { useTranslation } from "react-i18next";
 
 const HomeCategories = () => {
-  const { t, i18n } = useTranslation("Home");
+  const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
   const { data: categories } = useQuery({
     queryKey: ["categories"],
@@ -14,7 +14,9 @@ const HomeCategories = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h3 className="font-bold text-2xl sm:text-3xl mb-6">{t("categories")}</h3>
+      <h3 className="font-bold text-2xl sm:text-3xl mb-6">
+        {t("Home.categories")}
+      </h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 place-items-center">
         {categories?.map((category) => (
           <button
