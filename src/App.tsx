@@ -15,6 +15,8 @@ import { ProductDetailsPage } from "./features/products/components";
 import MainCart from "./features/cart/components/MainCart";
 import MainCheckout from "./features/checkout/components/MainCheckout";
 import ProfileLayout from "./features/profile/Layout";
+import SaveAddress from "./features/profile/addresses/components/SaveAddress";
+import AddAddressPage from "./features/profile/addresses/add/page";
 
 // Home Page Component
 function HomePage() {
@@ -70,6 +72,9 @@ function App() {
             <Route path="account" element={<MyAccount />} />
             <Route path="orders" element={<MyOrders />} />
             <Route path="favorites" element={<MyFavorites />} />
+            <Route path="addresses" element={<SaveAddress />} />
+            <Route path="addresses/add" element={<AddAddressPage />} />
+            <Route path="addresses/edit/:id" element={<AddAddressPage />} />
           </Route>
           
           <Route path="cart" element={<MainCart />} />
