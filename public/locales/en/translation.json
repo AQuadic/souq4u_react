@@ -413,6 +413,8 @@
     "pending": "Pending",
     "shipping": "Shipping",
     "processing": "Processing",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "noOrders": "No Order Yet",
+    "addOrder": "Please add your order for your better experience"
   }
 }

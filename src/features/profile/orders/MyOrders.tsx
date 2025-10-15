@@ -56,7 +56,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
       {showHeader && (
         <>
           <h2 className="text-[32px] font-bold leading-[100%] mb-4 md:flex hidden">
-            {t("orders")}
+            {t("Profile.orders")}
           </h2>
 
           <Link
@@ -65,7 +65,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
           >
             <BackArrow />
             <h2 className="text-[32px] font-bold leading-[100%]">
-              {t("orders")}
+              {t("Profile.orders")}
             </h2>
           </Link>
         </>
