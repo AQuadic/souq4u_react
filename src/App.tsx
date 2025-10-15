@@ -17,6 +17,8 @@ import MainCheckout from "./features/checkout/components/MainCheckout";
 import ProfileLayout from "./features/profile/Layout";
 import SaveAddress from "./features/profile/addresses/components/SaveAddress";
 import AddAddressPage from "./features/profile/addresses/add/page";
+import { PagesProvider } from "./features/static-pages/providers";
+import { DynamicPage } from "./features/static-pages/components";
 
 // Home Page Component
 function HomePage() {
@@ -48,39 +50,32 @@ function ContactPage() {
   );
 }
 
-function AboutPage() {
-  return (
-    <div className="container py-20 text-center">
-      <h1 className="text-4xl font-bold mb-4">About Us</h1>
-      <p className="text-gray-600">About page coming soon...</p>
-    </div>
-  );
-}
-
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="products" element={<ProductsPage />} />
-          <Route path="products/:id" element={<ProductDetailsPage />} />
-          <Route path="contact" element={<ContactPage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="profile" element={<ProfileLayout />}>
-            <Route index element={<MyAccount />} />
-            <Route path="account" element={<MyAccount />} />
-            <Route path="orders" element={<MyOrders />} />
-            <Route path="favorites" element={<MyFavorites />} />
-            <Route path="addresses" element={<SaveAddress />} />
-            <Route path="addresses/add" element={<AddAddressPage />} />
-            <Route path="addresses/edit/:id" element={<AddAddressPage />} />
+      <PagesProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="products/:id" element={<ProductDetailsPage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="pages/:slug" element={<DynamicPage />} />
+            <Route path="profile" element={<ProfileLayout />}>
+              <Route index element={<MyAccount />} />
+              <Route path="account" element={<MyAccount />} />
+              <Route path="orders" element={<MyOrders />} />
+              <Route path="favorites" element={<MyFavorites />} />
+              <Route path="addresses" element={<SaveAddress />} />
+              <Route path="addresses/add" element={<AddAddressPage />} />
+              <Route path="addresses/edit/:id" element={<AddAddressPage />} />
+            </Route>
+
+            <Route path="cart" element={<MainCart />} />
+            <Route path="checkout" element={<MainCheckout />} />
           </Route>
-          
-          <Route path="cart" element={<MainCart />} />
-          <Route path="checkout" element={<MainCheckout />} />
-        </Route>
-      </Routes>
+        </Routes>
+      </PagesProvider>
     </BrowserRouter>
   );
 }

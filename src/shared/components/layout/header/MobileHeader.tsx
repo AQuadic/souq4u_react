@@ -11,7 +11,10 @@ import { useCartStore } from "@/features/cart/stores";
 import MainAuth from "@/features/auth/components/MainAuth";
 import HeaderSearch from "./HeaderSearch";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { NavLinks } from "./NavLinks";
+import {
+  usePagesContextSafe,
+  useHeaderNavigation,
+} from "@/features/static-pages";
 
 const MobileHeader = () => {
   const { i18n } = useTranslation();
@@ -20,6 +23,10 @@ const MobileHeader = () => {
   const location = useLocation();
   const { isOpen: isCartOpen, openCart, closeCart } = useCartSlider();
   const { user } = useAuth();
+
+  // Get pages from context and build navigation links
+  const pages = usePagesContextSafe();
+  const navLinks = useHeaderNavigation(pages);
 
   const cart = useCartStore((s) => s.cart);
   const cartItemsCount =
@@ -75,7 +82,7 @@ const MobileHeader = () => {
           </button>
 
           <nav className="flex flex-col gap-6 mb-8">
-            {NavLinks.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
@@ -86,7 +93,7 @@ const MobileHeader = () => {
                     : "text-gray-700 hover:text-main"
                 }`}
               >
-                {link.name[locale as keyof typeof link.name]}
+                {locale === "ar" ? link.titleAr : link.titleEn}
               </Link>
             ))}
           </nav>

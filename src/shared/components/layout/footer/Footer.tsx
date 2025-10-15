@@ -9,10 +9,11 @@ import Instagram from "./icons/Instagram";
 import Youtube from "./icons/Youtube";
 import Tiktok from "./icons/Tiktok";
 import Snapchat from "./icons/Snapchat";
-// import SubscribeInput, {
-//   SubscribeInputValue,
-// } from "../../forms/SubscribeInput";
 import FooterContactInfo from "./FooterContactInfo";
+import {
+  usePagesContextSafe,
+  useFooterNavigation,
+} from "@/features/static-pages";
 
 const socialIcons = [
   { Icon: Facebook, href: "https://facebook.com" },
@@ -25,7 +26,12 @@ const socialIcons = [
 ];
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language || "en";
+
+  // Get pages from context and build footer navigation links
+  const pages = usePagesContextSafe();
+  const dynamicLinks = useFooterNavigation(pages);
 
   return (
     <div>
@@ -93,36 +99,27 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Section 3 - Help */}
+          {/* Section 3 - Dynamic Pages (from API) */}
           <div>
             <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
               {t("Footer.help")}
             </h2>
             <div className="flex flex-col gap-4">
-              {/* <Link
-                to="/track-order"
-                className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
-              >
-                {t("Footer.trackOrder")}
-              </Link> */}
               <Link
                 to="/profile/account"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
                 {t("Footer.myAccount")}
               </Link>
-              {/* <Link
-                to="/faq"
-                className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
-              >
-                {t("Footer.faq")}
-              </Link>
-              <Link
-                to="/privacy"
-                className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
-              >
-                {t("Footer.privacyPolicy")}
-              </Link> */}
+              {dynamicLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
+                >
+                  {locale === "ar" ? link.titleAr : link.titleEn}
+                </Link>
+              ))}
             </div>
           </div>
 
