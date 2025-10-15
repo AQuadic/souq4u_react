@@ -396,7 +396,7 @@
     "comment": "Comment",
     "send": "Send",
     "sending": "Sending..."
-  },
+    },
   "Orders": {
     "orders": "Orders",
     "id": "ID:",

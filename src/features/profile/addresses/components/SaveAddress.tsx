@@ -23,7 +23,7 @@ const SaveAddress: React.FC = () => {
     fetchAddresses();
   }, [fetchAddresses]);
 
-  const {t} = useTranslation("Profile.Breadcrumbs");
+  const {t} = useTranslation("Profile");
 
   const handleSelect = (id: number) => {
     setSelectedId(id);
@@ -65,7 +65,7 @@ const SaveAddress: React.FC = () => {
   return (
     <section>
       <h2 className="text-neutral-900 dark:text-white text-[32px] font-bold leading-[100%] mb-8 md:flex hidden">
-        {t("addAddress") || "Save Address"}
+        {t("Profile.AddAddress.header")|| "Save Address"}
       </h2>
 
       <Link
@@ -74,7 +74,7 @@ const SaveAddress: React.FC = () => {
       >
         <BackArrow />
         <h2 className="text-neutral-900 dark:text-white text-[32px] font-bold leading-[100%]">
-          {t("addAddress") || "Save Address"}
+          {t("Profile.addAddress") || "Save Address"}
         </h2>
       </Link>
 

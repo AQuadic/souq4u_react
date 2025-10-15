@@ -187,12 +187,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       {/* Address Title */}
       <div>
         <label htmlFor="title" className="mb-2 block">
-          {t("title")} <span className="text-red-500">*</span>
+          {t("AddressForm.title")} <span className="text-red-500">*</span>
         </label>
         <Input
           id="title"
           type="text"
-          placeholder={t("titlePlaceholder")}
+          placeholder={t("AddressForm.titlePlaceholder")}
           value={formData.title}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleInputChange("title", e.target.value)
@@ -205,12 +205,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       {/* User Name */}
       <div>
         <label htmlFor="user_name" className="mb-2 block">
-          {t("fullName")}
+          {t("AddressForm.fullName")}
         </label>
         <Input
           id="user_name"
           type="text"
-          placeholder={t("fullNamePlaceholder")}
+          placeholder={t("AddressForm.fullNamePlaceholder")}
           value={formData.user_name || ""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleInputChange("user_name", e.target.value)
@@ -230,7 +230,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         >
           <SelectTrigger className="w-full   :  border border-slate-200  ">
             <SelectValue
-              placeholder={citiesLoading ? t("loadingCities") : t("selectCity")}
+              placeholder={citiesLoading ? t("AddressForm.loadingCities") : t("AddressForm.selectCity")}
             />
           </SelectTrigger>
           <SelectContent>
@@ -246,7 +246,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       {formData.city_id && (
         <div className="mt-3">
           <label htmlFor="area" className="mb-2 block">
-            {t("area")} <span className="text-red-500">*</span>
+            {t("AddressForm.area")} <span className="text-red-500">*</span>
           </label>
           <Select
             value={formData.area_id || ""}
@@ -254,7 +254,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           >
             <SelectTrigger className="w-full   :  border border-slate-200  ">
               <SelectValue
-                placeholder={areasLoading ? t("loadingAreas") : t("selectArea")}
+                placeholder={areasLoading ? t("AddressForm.loadingAreas") : t("AddressForm.selectArea")}
               />
             </SelectTrigger>
             <SelectContent>
@@ -273,12 +273,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           htmlFor="phone"
           className="text-sm md:text-base font-semibold leading-[100%]"
         >
-          {t("phone")} <span className="text-red-500">*</span>
+          {t("AddressForm.phone")} <span className="text-red-500">*</span>
         </label>
         <PhoneInput
           value={phone}
           onChange={setPhone}
-          placeholder={t("phonePlaceholder")}
+          placeholder={t("AddressForm.phonePlaceholder")}
           language={locale as "en" | "ar"}
           radius="md"
         />
@@ -287,11 +287,11 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       {/* Address Details */}
       <div>
         <label htmlFor="details" className="mb-2 block">
-          {t("details")} <span className="text-red-500">*</span>
+          {t("AddressForm.details")} <span className="text-red-500">*</span>
         </label>
         <Textarea
           id="details"
-          placeholder={t("detailsPlaceholder")}
+          placeholder={t("AddressForm.detailsPlaceholder")}
           value={formData.details}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
             handleInputChange("details", e.target.value)
@@ -304,12 +304,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       {/* Zipcode */}
       <div>
         <label htmlFor="zipcode" className="mb-2 block">
-          {t("zipcode")}
+          {t("AddressForm.zipcode")}
         </label>
         <Input
           id="zipcode"
           type="text"
-          placeholder={common("inputPlaceholderWriteHere")}
+          placeholder={common("Common.inputPlaceholderWriteHere")}
           value={formData.zipcode || ""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleInputChange("zipcode", e.target.value)
@@ -323,12 +323,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       {/* Email (optional) */}
       <div>
         <label htmlFor="email" className="mb-2 block">
-          {t("email")}
+          {t("AddressForm.email")}
         </label>
         <Input
           id="email"
           type="email"
-          placeholder={common("inputPlaceholderWriteHere")}
+          placeholder={common("Common.inputPlaceholderWriteHere")}
           value={formData.email || ""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleInputChange("email", e.target.value)
@@ -350,7 +350,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             className="rounded border-slate-300 :border-slate-600 text-red-600 focus:ring-red-500"
           />
           <label htmlFor="saveAddress" className="text-sm">
-            {t("saveAddress")}
+            {t("AddressForm.saveAddress")}
           </label>
         </div>
       )}
@@ -364,7 +364,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               onClick={onCancel}
               className="flex-1 px-4 py-2 bg-transparent border border-slate-300   rounded-md hover:bg-slate-100 :hover:bg-slate-700 transition-colors"
             >
-              {common("cancel")}
+              {common("Common.cancel")}
             </button>
           )}
           <button
@@ -392,7 +392,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               if (isCheckout && !formData.saveAddress)
                 return common("checkout");
               // When not editing, show a translated 'Add Address' action
-              return t("addAddress");
+              return t("AddressForm.addAddress");
             })()}
           </button>
         </div>

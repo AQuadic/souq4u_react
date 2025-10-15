@@ -26,7 +26,7 @@ const AddAddressPage: React.FC = () => {
         >
           <span style={{ transform: isRtl ? "scaleX(-1)" : "none" }}>‹</span>
         </button>
-        <h1 className="text-xl font-bold">{t("header")}</h1>
+        <h1 className="text-xl font-bold">{t("Profile.AddAddress.header")}</h1>
       </div>
 
       <AddressForm onSubmit={handleSubmit} showSaveOption={false} />
