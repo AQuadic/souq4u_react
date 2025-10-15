@@ -50,7 +50,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
   return (
     <div className="bg-white dark:bg-[var(--color-cart-bg)] p-6 rounded-lg sticky top-6 shadow-sm border border-gray-100 dark:border-transparent">
       <h2 className="text-gray-900 dark:text-white text-xl font-semibold mb-6">
-        {t("summary")}
+        {t("Cart.summary")}
       </h2>
 
       {/* Promocode - mobile only: placed directly under title on small screens */}
@@ -115,7 +115,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
       <div className="space-y-4 mb-6">
         <div className="flex justify-between items-center">
           <span className="text-gray-600 dark:text-white text-sm">
-            {t("totalItem")}
+            {t("Cart.totalItem")}
           </span>
           <span className="text-gray-900 dark:text-white font-medium">
             {totalItems}
@@ -124,7 +124,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
 
         <div className="flex justify-between items-center">
           <span className="text-gray-600 dark:text-white text-sm">
-            {t("subtotal")}
+            {t("Cart.subtotal")}
           </span>
           <span className="text-gray-900 dark:text-white font-medium">
             {subtotal.toLocaleString()} {t("currency")}
@@ -133,7 +133,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
 
         <div className="flex justify-between items-center">
           <span className="text-gray-600 dark:text-white text-sm">
-            {t("totalProducts")}
+            {t("Cart.totalProducts")}
           </span>
           <span className="text-gray-900 dark:text-white font-medium">
             {totalProducts.toLocaleString()} {t("currency")}
@@ -143,7 +143,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
         {shippingCost > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-white text-sm">
-              {t("shippingCost")}
+              {t("Cart.shippingCost")}
             </span>
             <span className="text-gray-900 dark:text-white font-medium">
               {shippingCost.toLocaleString()} {t("currency")}
@@ -154,7 +154,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
         {taxes > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-white text-sm">
-              {t("taxes")}
+              {t("Cart.taxes")}
             </span>
             <span className="text-gray-900 dark:text-white font-medium">
               {taxes.toLocaleString()} {t("currency")}
@@ -169,7 +169,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
           htmlFor="promocode-input"
           className="block text-gray-900 dark:text-white text-sm font-medium mb-2"
         >
-          {t("addPromocode")}
+          {t("Cart.addPromocode")}
         </label>
 
         {appliedCoupon ? (
@@ -193,7 +193,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
               }}
               className="text-gray-700/60 dark:text-white/60 hover:text-gray-900 dark:hover:text-white text-xs px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
             >
-              {t("remove")}
+              {t("Cart.remove")}
             </button>
           </div>
         ) : (
@@ -204,7 +204,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
               type="text"
               value={promocode}
               onChange={(e) => setPromocode(e.target.value)}
-              placeholder={t("promocodePlaceholder")}
+              placeholder={t("Cart.promocodePlaceholder")}
               className="flex-1 bg-transparent border border-gray-200 dark:border-white/20 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus:border-[var(--color-main)] transition-colors text-sm"
             />
             {promocode.trim() && (
@@ -216,7 +216,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
                 {isCouponLoading && (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 )}
-                {t("apply")}
+                {t("Cart.apply")}
               </button>
             )}
           </form>
@@ -227,12 +227,12 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
       <div className="border-t border-gray-200 dark:border-white/20 pt-4 mb-6">
         <div className="flex justify-between items-center">
           <span className="text-gray-900 dark:text-white text-lg font-semibold">
-            {t("total")}:
+            {t("Cart.total")}:
           </span>
           <div className="text-right">
             <span className="text-gray-900 dark:text-white text-xl font-bold">
               {total.toLocaleString()}{" "}
-              <span className="text-sm font-normal">{t("currency")}</span>
+              <span className="text-sm font-normal">{t("Common.currency")}</span>
             </span>
           </div>
         </div>
@@ -243,7 +243,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
         to="/checkout"
         className="block w-full bg-[var(--color-main)] hover:bg-main/50 text-white font-semibold py-3 px-4 rounded transition-colors duration-200 uppercase tracking-wide text-center"
       >
-        {t("checkout")}
+        {t("Cart.checkout")}
       </Link>
     </div>
   );

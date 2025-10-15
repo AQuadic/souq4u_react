@@ -28,8 +28,8 @@ export const CartCard: React.FC<CartCardProps> = ({
   onUpdateQuantity,
   onRemove,
 }) => {
-  const {t} = useTranslation("Cart");
-  // const common = useTranslation("Common");
+  const {t} = useTranslation();
+  const common = useTranslation("Common");
   const {
     showQuantityUpdateSuccess,
     showQuantityUpdateError,
@@ -100,13 +100,13 @@ export const CartCard: React.FC<CartCardProps> = ({
               </h3>
               {item.size && (
                 <div className="text-gray-600 dark:text-gray-400 text-sm mb-2">
-                  {t("size")} {sizeText}
+                  {t("Common.size")} {sizeText}
                 </div>
               )}
               <div className="text-[var(--color-main)] md:text-xl text-lg font-bold">
                 {item.price.toLocaleString()}{" "}
                 <span className="text-sm font-normal">
-                  {t("currency")}
+                  {t("Common.currency")}
                 </span>
               </div>
             </div>
@@ -117,7 +117,7 @@ export const CartCard: React.FC<CartCardProps> = ({
               className="text-gray-600 dark:text-white/70 hover:text-[var(--color-main)] dark:hover:text-[var(--color-main)] transition-colors flex items-center gap-1 text-sm cursor-pointer"
             >
               <span className="text-lg">🗑️</span>
-              <span className="md:flex hidden">{t("removeItem")}</span>
+              <span className="md:flex hidden">{t("Cart.removeItem")}</span>
             </button>
           </div>
 
