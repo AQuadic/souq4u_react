@@ -146,7 +146,7 @@ const SaveAddress: React.FC = () => {
               isClothesDesign ? "rounded-[24px]" : "rounded-[8px]"
             }`}
           >
-            {t("editAddress") || "Edit Address"}
+            {t("AddressForm.editAddress") || "Edit Address"}
           </Link>
           <Link
             to="/profile/addresses/add"
@@ -154,7 +154,7 @@ const SaveAddress: React.FC = () => {
               isClothesDesign ? "rounded-[24px]" : "rounded-[8px]"
             }`}
           >
-            {t("addAddress") || "Add Address"}
+            {t("AddressForm.addAddress") || "Add Address"}
           </Link>
         </div>
       )}

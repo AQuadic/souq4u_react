@@ -245,7 +245,8 @@
     "saveAddress": "Save this address to my account",
     "saving": "Saving...",
     "updateAddress": "Update Address",
-    "addAddress": "Add Address"
+    "addAddress": "Add Address",
+    "editAddress":"Edit Address"
   },
   "BillingDetails": {
     "title": "Billing Details"
