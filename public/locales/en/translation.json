@@ -55,7 +55,8 @@
   "Navigation": {
     "home": "Home",
     "products": "Products",
-    "productDetails": "Product Details"
+    "productDetails": "Product Details",
+    "subscribeUs": "Subscribe us"
   },
   "Home": {
     "categories": "Categories",
@@ -350,7 +351,8 @@
     "privacyPolicy": "Privacy Policy",
     "enterYourEmail": "Enter your email",
     "subscribing": "Subscribing...",
-    "subscribe": "Subscribe"
+    "subscribe": "Subscribe",
+    "enterEmailPlaceholder": "Enter your email"
   },
   "Notifications": {
     "notifications": "Notifications",

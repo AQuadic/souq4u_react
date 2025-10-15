@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +13,10 @@ import Snapchat from "./icons/Snapchat";
 //   SubscribeInputValue,
 // } from "../../forms/SubscribeInput";
 import FooterContactInfo from "./FooterContactInfo";
+import SubscribeInput, { SubscribeInputValue } from "../../forms/SubscribeInput";
+import { useToast } from "../../ui/toast";
+import { useConfig } from "@/features/config";
+import { subscribe } from "@/features/api/subscribe";
 
 const socialIcons = [
   { Icon: Facebook, href: "https://facebook.com" },
@@ -25,7 +29,155 @@ const socialIcons = [
 ];
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const config = useConfig();
+  const { t, i18n } = useTranslation("Navigation");
+  const locale = i18n.language;
+  const toastT = useTranslation("Toasts");
+  const [subscribeValue, setSubscribeValue] = useState<SubscribeInputValue>({
+    value: "",
+  });
+  const [subscribeError, setSubscribeError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+
+  const [isDialogOpen, ] = useState(false);
+  const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const shouldContinuePollingRef = useRef<boolean>(false);
+  const [isPolling, setIsPolling] = useState(false);
+
+  // Get subscribe type from config, default to email
+  // Normalize subscribe type to either 'phone' or 'email'
+  const rawSubscribeType = config?.subscribe_config?.type;
+  const subscribeType = rawSubscribeType === "phone" ? "phone" : "email";
+
+  // Minimum length for phone numbers (from config) - coerce to number and fallback to 0
+  const subscribeMin = Number(config?.subscribe_config?.min || 0) || 0;
+
+  // Get placeholder based on subscribe type
+  const getSubscribePlaceholder = () => {
+    if (subscribeType === "email") {
+      return t("Footer.enterEmailPlaceholder");
+    }
+    return locale === "ar" ? "أدخل رقم الهاتف" : "Enter phone number";
+  };
+
+  // Extract server message from error objects/strings
+  const getServerErrorMessage = (err: unknown): string | null => {
+    try {
+      const apiErr = err as {
+        response?: {
+          data?: { message?: string; errors?: Record<string, string[]> };
+        };
+        message?: string;
+      };
+
+      const respData = apiErr.response?.data;
+      if (respData?.message) return respData.message;
+      if (Array.isArray(respData?.errors?.email) && respData.errors.email[0])
+        return respData.errors.email[0];
+
+      if (typeof apiErr.message === "string" && apiErr.message) {
+        const m = apiErr.message;
+        const exec = /({\s*"message"[\s\S]*})$/.exec(m);
+        if (exec?.[1]) {
+          try {
+            const parsed = JSON.parse(exec[1]);
+            if (parsed?.message) return parsed.message;
+          } catch {
+            return m;
+          }
+        }
+        return m;
+      }
+
+      if (typeof err === "string") return err;
+    } catch (parseErr) {
+      console.error("Failed to parse API error:", parseErr);
+    }
+    return null;
+  };
+
+
+  const stopPolling = useCallback(() => {
+    shouldContinuePollingRef.current = false;
+    if (pollingTimeoutRef.current) {
+      clearTimeout(pollingTimeoutRef.current);
+      pollingTimeoutRef.current = null;
+    }
+    setIsPolling(false);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      stopPolling();
+    };
+  }, [stopPolling]);
+
+  useEffect(() => {
+    if (!isDialogOpen) {
+      stopPolling();
+    }
+  }, [isDialogOpen, stopPolling]);
+
+  // Handler for subscribe button click extracted for clarity
+  const handleSubscribeClick = async () => {
+    if (loading) return;
+
+    // Validate input
+    const trimmed = subscribeValue.value.trim();
+    if (!trimmed) {
+      setSubscribeError(toastT("validationError"));
+      return;
+    }
+
+    // Validate based on type
+    if (subscribeType === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(trimmed)) {
+        setSubscribeError(t("invalidEmail"));
+        return;
+      }
+    } else if (subscribeType === "phone") {
+      const phoneNumber = subscribeValue.phoneValue?.number || "";
+      if (!phoneNumber) {
+        setSubscribeError(
+          locale === "ar" ? "رقم الهاتف مطلوب" : "Phone number is required"
+        );
+        return;
+      }
+
+      if (subscribeMin > 0 && phoneNumber.length < subscribeMin) {
+        setSubscribeError(
+          locale === "ar"
+            ? `الحد الأدنى لطول رقم الهاتف هو ${subscribeMin}`
+            : `Phone number must be at least ${subscribeMin} digits`
+        );
+        return;
+      }
+    }
+
+    setLoading(true);
+    try {
+      const res = await subscribe(
+        subscribeType,
+        trimmed,
+        subscribeValue.phoneValue?.code
+      );
+      toast.success(t("subscribeSuccess"));
+      // Reset form
+      setSubscribeValue({
+        value: "",
+      });
+      setSubscribeError("");
+    } catch (err) {
+      console.error("Subscribe failed:", err);
+      const serverMsg = getServerErrorMessage(err) || t("subscribeFailed");
+      toast.error(serverMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <div>
@@ -127,14 +279,38 @@ const Footer = () => {
           </div>
 
           {/* Section 4 - Newsletter */}
-          <div>
-            <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
-              {t("Footer.subscribe")}
-            </h2>
-            <div className="flex flex-col gap-4 max-w-[323px] mx-auto lg:mx-0">
-              <p className="text-sm text-gray-500">Coming soon...</p>
-            </div>
+          <div className="  lg: ">
+          <h2 className=" text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
+            {t("Navigation.subscribeUs")}
+          </h2>
+          <div className="flex flex-col gap-4 max-w-[323px] mx-auto lg:mx-0">
+            <SubscribeInput
+              type={subscribeType}
+              value={subscribeValue}
+              onChange={(newValue) => {
+                setSubscribeValue(newValue);
+                // Clear error when user changes input
+                if (subscribeError) {
+                  setSubscribeError("");
+                }
+              }}
+              placeholder={getSubscribePlaceholder()}
+              error={subscribeError}
+              disabled={loading}
+              language={locale as "en" | "ar"}
+              // Only pass a minLength when the subscribe type is not phone
+              minLength={subscribeType === "phone" ? undefined : subscribeMin}
+            />
+            <button
+              onClick={handleSubscribeClick}
+              disabled={loading}
+              className="w-full h-12 bg-main hover:bg-main/90 rounded-[8px] text-[#FDFDFD] text-base lg:text-lg font-bold leading-[100%] transition-colors duration-200 disabled:opacity-60 cursor-pointer"
+            >
+              {loading ? t("Footer.subscribing") : t("Footer.subscribe")}
+            </button>
           </div>
+        </div>
+
         </div>
       </footer>
     </div>
