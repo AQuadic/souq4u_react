@@ -153,35 +153,35 @@ const isArabic = locale === "ar";
 
               {earlierNotifications.length > 0 && (
                 <div>
-                  <h4 className="px-5 pt-3 pb-2 text-base font-semibold">
-                    {t("earlier")}
+                  <h4 className="px-5 pt-3 pb-2 text-base font-semibold text-black">
+                    {t("Notifications.earlier")}
                   </h4>
                   {earlierNotifications.map((n: NotificationType) => (
-                    <DropdownMenuItem
+                  <DropdownMenuItem
                       key={n.id}
                       onClick={() => handleNotificationClick(n)}
                       onSelect={(e) => e.preventDefault()}
-                      className="flex items-center gap-3 py-3 px-5 bg-[#242529] border-b border-[#3A3A3A] cursor-pointer hover:bg-[#2b2c2f]"
+                      className="flex items-center gap-3 py-3 px-5 border-b border-[#E5E5E5] cursor-pointer hover:bg-[#f8f8f8]"
                     >
-                      <div className="relative px-2">
-                        <img
+                      <div className="relative w-[50px] h-[50px] flex-shrink-0">
+                        {/* <img
                           src={n.image?.url || "/images/header/logo.png"}
                           alt="User"
                           width={50}
                           height={50}
-                          className={`rounded-full ${
+                          className={`rounded-full object-cover w-full h-full ${
                             n.read_at ? "opacity-70" : ""
                           }`}
-                        />
+                        /> */}
                         {!n.read_at && (
-                          <span className="absolute top-5 left-0 h-2 w-2 rounded-full bg-main" />
+                          <span className="absolute top-5 right-1 h-2 w-2 rounded-full bg-main" />
                         )}
                       </div>
 
                       <div className="flex-1 flex items-center justify-between gap-2">
                         <p
                           className={`text-xs font-medium leading-[150%] truncate ${
-                            n.read_at ? "text-gray-300" : "text-white"
+                            n.read_at ? "text-gray-400" : "text-black"
                           }`}
                         >
                           {isArabic ? n.body?.ar : n.body?.en}
