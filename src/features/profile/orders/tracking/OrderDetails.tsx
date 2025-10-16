@@ -93,7 +93,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                   {productName}
                 </h2>
                 <p className="text-main md:text-2xl text-base font-bold md:mt-6 mt-2">
-                  {price} <span className="font-normal">{t("egp")}</span>
+                  {price} <span className="font-normal">{t("Orders.egp")}</span>
                 </p>
                 {order.created_at && (
                   <p className="text-[#C0C0C0] text-xs mt-1">
