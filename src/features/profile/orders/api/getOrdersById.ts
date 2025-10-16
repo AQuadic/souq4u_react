@@ -9,7 +9,11 @@ export type OrderItem = {
     en: string;
   };
   variant?: {
+    product_id?: number;
     images?: { url: string }[];
+  };
+  productable?: {
+    product_id?: number;
   };
 };
 

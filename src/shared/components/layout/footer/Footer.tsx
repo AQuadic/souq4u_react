@@ -47,19 +47,19 @@ const Footer = () => {
 
   // Get subscribe type from config, default to email
   // Normalize subscribe type to either 'phone' or 'email'
-  const rawSubscribeType = config?.subscribe_config?.type;
-  const subscribeType = rawSubscribeType === "phone" ? "phone" : "email";
+  // const rawSubscribeType = config?.subscribe_config?.type;
+  // const subscribeType = rawSubscribeType === "phone" ? "phone" : "email";
 
   // Minimum length for phone numbers (from config) - coerce to number and fallback to 0
-  const subscribeMin = Number(config?.subscribe_config?.min || 0) || 0;
+  // const subscribeMin = Number(config?.subscribe_config?.min || 0) || 0;
 
   // Get placeholder based on subscribe type
-  const getSubscribePlaceholder = () => {
-    if (subscribeType === "email") {
-      return t("Footer.enterEmailPlaceholder");
-    }
-    return locale === "ar" ? "أدخل رقم الهاتف" : "Enter phone number";
-  };
+  // const getSubscribePlaceholder = () => {
+  //   if (subscribeType === "email") {
+  //     return t("Footer.enterEmailPlaceholder");
+  //   }
+  //   return locale === "ar" ? "أدخل رقم الهاتف" : "Enter phone number";
+  // };
 
   // Extract server message from error objects/strings
   const getServerErrorMessage = (err: unknown): string | null => {
@@ -120,64 +120,63 @@ const Footer = () => {
   }, [isDialogOpen, stopPolling]);
 
   // Handler for subscribe button click extracted for clarity
-  const handleSubscribeClick = async () => {
-    if (loading) return;
+  // const handleSubscribeClick = async () => {
+  //   if (loading) return;
 
-    // Validate input
-    const trimmed = subscribeValue.value.trim();
-    if (!trimmed) {
-      setSubscribeError(toastT("validationError"));
-      return;
-    }
+  //   // Validate input
+  //   const trimmed = subscribeValue.value.trim();
+  //   if (!trimmed) {
+  //     setSubscribeError(toastT("validationError"));
+  //     return;
+  //   }
 
-    // Validate based on type
-    if (subscribeType === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(trimmed)) {
-        setSubscribeError(t("invalidEmail"));
-        return;
-      }
-    } else if (subscribeType === "phone") {
-      const phoneNumber = subscribeValue.phoneValue?.number || "";
-      if (!phoneNumber) {
-        setSubscribeError(
-          locale === "ar" ? "رقم الهاتف مطلوب" : "Phone number is required"
-        );
-        return;
-      }
+  //   // Validate based on type
+  //   if (subscribeType === "email") {
+  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //     if (!emailRegex.test(trimmed)) {
+  //       setSubscribeError(t("invalidEmail"));
+  //       return;
+  //     }
+  //   } else if (subscribeType === "phone") {
+  //     const phoneNumber = subscribeValue.phoneValue?.number || "";
+  //     if (!phoneNumber) {
+  //       setSubscribeError(
+  //         locale === "ar" ? "رقم الهاتف مطلوب" : "Phone number is required"
+  //       );
+  //       return;
+  //     }
 
-      if (subscribeMin > 0 && phoneNumber.length < subscribeMin) {
-        setSubscribeError(
-          locale === "ar"
-            ? `الحد الأدنى لطول رقم الهاتف هو ${subscribeMin}`
-            : `Phone number must be at least ${subscribeMin} digits`
-        );
-        return;
-      }
-    }
+  //     if (subscribeMin > 0 && phoneNumber.length < subscribeMin) {
+  //       setSubscribeError(
+  //         locale === "ar"
+  //           ? `الحد الأدنى لطول رقم الهاتف هو ${subscribeMin}`
+  //           : `Phone number must be at least ${subscribeMin} digits`
+  //       );
+  //       return;
+  //     }
+  //   }
 
-    setLoading(true);
-    try {
-      const res = await subscribe(
-        subscribeType,
-        trimmed,
-        subscribeValue.phoneValue?.code
-      );
-      toast.success(t("subscribeSuccess"));
-      // Reset form
-      setSubscribeValue({
-        value: "",
-      });
-      setSubscribeError("");
-    } catch (err) {
-      console.error("Subscribe failed:", err);
-      const serverMsg = getServerErrorMessage(err) || t("subscribeFailed");
-      toast.error(serverMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  //   setLoading(true);
+  //   try {
+  //     const res = await subscribe(
+  //       subscribeType,
+  //       trimmed,
+  //       subscribeValue.phoneValue?.code
+  //     );
+  //     toast.success(t("subscribeSuccess"));
+  //     // Reset form
+  //     setSubscribeValue({
+  //       value: "",
+  //     });
+  //     setSubscribeError("");
+  //   } catch (err) {
+  //     console.error("Subscribe failed:", err);
+  //     const serverMsg = getServerErrorMessage(err) || t("subscribeFailed");
+  //     toast.error(serverMsg);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div>
