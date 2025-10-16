@@ -398,7 +398,8 @@
     "feedback": "\"Your feedback matters! Share your rating with us.\"",
     "comment": "Comment",
     "send": "Send",
-    "sending": "Sending..."
+    "sending": "Sending...",
+    "commentPlaceholder": "Write your comment here..."
     },
   "Orders": {
     "orders": "Orders",
