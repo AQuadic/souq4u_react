@@ -131,7 +131,7 @@ export default function NotificationsPage() {
 
           {earlierNotifications.length > 0 && (
             <section>
-              <h2 className="text-xl font-semibold mb-3">{t("earlier")}</h2>
+              <h2 className="text-xl font-semibold mb-3">{t("Notifications.earlier")}</h2>
               <div className="space-y-">
                 {earlierNotifications.map((n: NotificationType) => (
                   <div
