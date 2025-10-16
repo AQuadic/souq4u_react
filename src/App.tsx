@@ -18,6 +18,7 @@ import ProfileLayout from "./features/profile/Layout";
 import SaveAddress from "./features/profile/addresses/components/SaveAddress";
 import AddAddressPage from "./features/profile/addresses/add/page";
 import NotificationsPage from "./features/notifications/NotificationsPage";
+import OrderTrackingPage from "./features/profile/orders/tracking/OrderTrackingPage";
 
 // Home Page Component
 function HomePage() {
@@ -72,6 +73,7 @@ function App() {
             <Route index element={<MyAccount />} />
             <Route path="account" element={<MyAccount />} />
             <Route path="orders" element={<MyOrders />} />
+            <Route path="orders/tracking/:id" element={<OrderTrackingPage />} />
             <Route path="favorites" element={<MyFavorites />} />
             <Route path="addresses" element={<SaveAddress />} />
             <Route path="addresses/add" element={<AddAddressPage />} />

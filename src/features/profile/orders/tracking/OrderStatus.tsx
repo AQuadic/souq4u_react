@@ -26,25 +26,25 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
       icon: <Pending />,
       bg: "bg-[#8B8B8B2B]",
       text: "text-[#C0C0C0]",
-      label: t("pending"),
+      label: t("Orders.pending"),
     },
     shipping: {
       icon: <Shipping />,
       bg: "bg-[#3D9BE924]",
       text: "text-[#3D9BE9]",
-      label: t("shipping"),
+      label: t("Orders.shipping"),
     },
     processing: {
       icon: <Processing />,
       bg: "bg-[#8B8B8B2B]",
       text: "text-[#C0C0C0]",
-      label: t("processing"),
+      label: t("Orders.processing"),
     },
     cancelled: {
       icon: <Cancelled />,
       bg: "bg-[#CA1E0024]",
       text: "text-[#CA1E00]",
-      label: t("cancelled"),
+      label: t("Orders.cancelled"),
     },
   };
 

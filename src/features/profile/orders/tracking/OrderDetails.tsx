@@ -45,7 +45,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
   return (
     <section className="mt-6">
       <h2 className="dark:text-[#FDFDFD] text-2xl font-semibold leading-[100%]">
-        {t("itemSummary")}
+        {t("Orders.itemSummary")}
       </h2>
 
       {order.orderItems.map((item) => {
@@ -77,7 +77,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                   {productName}
                 </h2>
                 <p className="text-main md:text-2xl text-base font-bold md:mt-6 mt-2">
-                  {price} <span className="font-normal">{t("egp")}</span>
+                  {price} <span className="font-normal">{t("Orders.egp")}</span>
                 </p>
               </div>
             </div>
