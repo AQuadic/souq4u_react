@@ -1,11 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ProductQuantitySelector } from "./ProductQuantitySelector";
 import { ProductSizeSelector } from "./ProductSizeSelector";
 import GuideImage from "./GuideImage";
-import { getProductTheme } from "@/features/products/utils/theme";
+// import { getProductTheme } from "@/features/products/utils/theme";
+import Favorite from "../../icons/Favorite";
+import Unfavorite from "../../icons/Unfavorite";
+import { useIsAuthenticated } from "@/features/auth";
+import { useToast } from "@/shared/components/ui/toast";
+import { addFavorite } from "@/features/profile/favorites/api/postFavorites";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 interface ProductVariant {
@@ -25,6 +31,10 @@ interface SelectedAttributes {
 }
 
 interface ProductActionsProps {
+  product: {
+    id: number;
+    is_favorite?: boolean;
+  };
   variants: ProductVariant[];
   quantity: number;
   selectedAttributes?: SelectedAttributes;
@@ -35,6 +45,7 @@ interface ProductActionsProps {
   onQuantityChange: (quantity: number) => void;
   onAttributeChange: (attributeId: number, value: string) => void;
   onAddToCart: () => void;
+  onToggleFavorite?: (productId: number) => void;
   guideImage?: {
     id: number;
     url: string;
@@ -46,6 +57,7 @@ interface ProductActionsProps {
 }
 
 export const ProductActions: React.FC<ProductActionsProps> = ({
+  product,
   variants,
   quantity,
   selectedAttributes = {},
@@ -56,16 +68,67 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   onQuantityChange,
   onAttributeChange,
   onAddToCart,
+  onToggleFavorite,
   guideImage,
-  shortDescription,
-  description,
-  storeType,
+  // shortDescription,
+  // description,
 }) => {
-  // const t = useTranslations("Products");
+  const {t} = useTranslation("Common");
+  const [loading, setLoading] = useState(false);
+  const isAuthenticated = useIsAuthenticated();
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const [favorite, setFavorite] = useState(product.is_favorite);
+  
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
 
-  // Get store theme (defaulting to non-clothes theme)
-  const theme = getProductTheme(storeType);
-  const { t } = useTranslation();
+    if (!isAuthenticated) {
+      // use product namespace translation key; fall back to common or literal
+      const loginMsg =
+        t("loginRequiredToFavorite") ||
+        t("loginRequiredToFavorite") ||
+        "You must be logged in to add favorites";
+      toast.error(loginMsg);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await addFavorite({
+        favorable_id: product.id,
+        favorable_type: "product",
+      });
+      // Update local favorite state
+      setFavorite((prev) => !prev);
+
+      // Invalidate favorites query so any pages listing favorites refetch and stay in sync
+      queryClient.invalidateQueries({ queryKey: ["favorites"] });
+      toast.success(
+        !favorite
+          ? t("addedToFavorites") ||
+              t("addedToFavorites") ||
+              "Added to favorites"
+          : t("removedFromFavorites") ||
+              t("removedFromFavorites") ||
+              "Removed from favorites"
+      );
+      if (onToggleFavorite) {
+        onToggleFavorite(product.id);
+      }
+    } catch (err: unknown) {
+      // log error for debugging and show translated error message
+      console.error("Failed to update favorites", err);
+      toast.error(
+        t("failedToUpdateFavorites") ||
+          t("error") ||
+          "Failed to update favorites"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       {guideImage && <GuideImage guideImage={guideImage} />}
@@ -76,7 +139,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         disabled={isAddingToCart}
       />
 
-      <div className="mt-6 flex flex-col gap-4">
+      <div className="mt-6 flex gap-4">
         <ProductQuantitySelector
           quantity={quantity}
           onQuantityChange={onQuantityChange}
@@ -87,7 +150,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         <motion.button
           onClick={onAddToCart}
           disabled={!isInStock || isAddingToCart}
-          className={`w-full ${theme.button.height} ${theme.button.rounded} flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden bg-main`}
+          className={`w-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden bg-main`}
           whileHover={{ scale: isInStock && !isAddingToCart ? 1.02 : 1 }}
           whileTap={{ scale: isInStock && !isAddingToCart ? 0.98 : 1 }}
           animate={isAddingToCart ? { scale: [1, 1.05, 1] } : {}}
@@ -115,6 +178,13 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             </motion.div>
           )}
         </motion.button>
+        <button
+          onClick={handleFavoriteClick}
+          className="ltr:ml-auto rtl:mr-auto"
+          disabled={loading}
+        >
+          {favorite ? <Favorite /> : <Unfavorite />}
+        </button>
       </div>
     </div>
   );
