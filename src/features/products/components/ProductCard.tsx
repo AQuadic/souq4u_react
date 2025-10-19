@@ -120,7 +120,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Link
       to={`/products/${product.id}`}
-      className="shadow-md hover:shadow-lg rounded-3xl py-4 w-full sm:w-[276px] h-[480px] flex flex-col border"
+      className="shadow-md hover:shadow-lg rounded-3xl md:py-4 w-full sm:w-[276px] md:h-[480px] flex flex-col border"
     >
       <div className="  dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl p-4 relative  transition-shadow duration-300 ">
         <div className="flex items-center justify-between">
@@ -196,11 +196,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         </div>
 
-        <p className=" lg:text-base text-xs font-normal leading-[160%] lg:mt-4 mt-1 h-24 sm:h-12 overflow-y-hidden ">
+        <p className=" lg:text-base text-xs font-normal leading-[160%] lg:mt-4 mt-1 sm:h-12 overflow-y-hidden ">
           {shortDescription}
         </p>
 
-        <div className=" mt-auto">
+        <div className=" md:mt-auto">
           <div className="mt-[18px] flex lg:flex-row flex-col lg:items-center gap-2  justify-between ">
             <h2 className="text-main text-base font-bold leading-4">
               {formatPrice(product.variants?.[0]?.final_price ?? 0)}{" "}
