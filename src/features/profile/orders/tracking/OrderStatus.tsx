@@ -7,6 +7,7 @@ import { Order } from "../api/getOrdersById";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import BackArrow from "@/features/products/icons/BackArrow";
+import Completed from "../icons/Completed";
 
 type OrderStatusProps = {
   order: Order;
@@ -14,7 +15,7 @@ type OrderStatusProps = {
 
 const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
   const { t, i18n } = useTranslation("Orders");
-  const locale = i18n.language;
+  const locale = i18n.language
 
   const currentStatus = order.status?.toLowerCase() || "pending";
 
@@ -28,6 +29,24 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
       text: "text-[#C0C0C0]",
       label: t("Orders.pending"),
     },
+    confirmed: {
+      icon: <Processing />,
+      bg: "bg-[#E2F7E2]",
+      text: "text-[#2E8B57]",
+      label: t("Orders.confirmed"),
+    },
+    "ready for shipping": {
+      icon: <Shipping />,
+      bg: "bg-[#C8F2FF]",
+      text: "text-[#0077B6]",
+      label: t("Orders.readyForShipping"),
+    },
+    "in shipping": {
+      icon: <Shipping />,
+      bg: "bg-[#D9F7E8]",
+      text: "text-[#1AA179]",
+      label: t("Orders.inShipping"),
+    },
     shipping: {
       icon: <Shipping />,
       bg: "bg-[#3D9BE924]",
@@ -39,6 +58,12 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
       bg: "bg-[#8B8B8B2B]",
       text: "text-[#C0C0C0]",
       label: t("Orders.processing"),
+    },
+    completed: {
+      icon: <Completed />,
+      bg: "bg-[#057E2324]",
+      text: "text-[#057E03]",
+      label: t("Orders.completed"),
     },
     cancelled: {
       icon: <Cancelled />,
@@ -62,6 +87,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
           {t("tracking")}
         </h2>
       </Link>
+
       <div
         className={`w-full h-[72px] rounded-[8px] mt-8 p-4 flex items-center gap-2 ${styles.bg}`}
       >
@@ -74,6 +100,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
           <p className="dark:text-[#C0C0C0] text-sm font-normal leading-[100%] mt-2">
             {order.created_at
               ? new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", {
+                  weekday: "long",
                   day: "2-digit",
                   month: "2-digit",
                   year: "numeric",
