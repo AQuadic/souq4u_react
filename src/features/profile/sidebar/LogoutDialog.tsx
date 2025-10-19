@@ -144,7 +144,7 @@ export default function LogoutDialog(props: Readonly<Props>) {
                 <button
                   onClick={handleLogout}
                   aria-label={t("Auth.logoutDialog.yes")}
-                  className="w-[140px] h-12 rounded-[8px] bg-red-600 hover:bg-main text-white text-base font-medium cursor-pointer transition-colors"
+                  className="w-[140px] h-12 rounded-[8px] bg-main hover:bg-main text-white text-base font-medium cursor-pointer transition-colors"
                 >
                   {t("Auth.logoutDialog.yes")}
                 </button>
