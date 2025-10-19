@@ -54,14 +54,14 @@ export const VerificationForm = ({
       />
 
       <h2 className="  text-xl md:text-2xl lg:text-[32px] font-bold leading-[120%] text-center mt-4 md:mt-6">
-        {t("fastVerification")}
+        {t("Auth.fastVerification")}
       </h2>
       <p className="text-[#C0C0C0] text-sm md:text-base lg:text-lg font-normal leading-[140%] text-center px-2 md:px-4 mt-3 md:mt-4">
-        {t("verificationDescription")}
+        {t("Auth.verificationDescription")}
       </p>
 
       <h3 className=" text-sm md:text-base font-semibold leading-[120%] mt-4 md:mt-6 text-center">
-        {t("sendFromNumber")}
+        {t("Auth.sendFromNumber")}
       </h3>
       <p
         className=" text-base md:text-lg font-semibold leading-[120%] mt-2 md:mt-3 text-center"
@@ -74,7 +74,7 @@ export const VerificationForm = ({
         onClick={onBack}
         className="text-main text-xs md:text-sm font-medium mt-2 md:mt-3 underline flex items-center justify-center text-center mx-auto hover:text-main/80 transition-colors cursor-pointer"
       >
-        {t("changeNumber")}
+        {t("Auth.changeNumber")}
       </button>
 
       <p className=" text-lg md:text-xl lg:text-2xl font-semibold leading-[120%] mt-4 md:mt-6 text-center">
@@ -82,7 +82,7 @@ export const VerificationForm = ({
       </p>
 
       <p className="text-main text-xs md:text-sm font-medium leading-[120%] mt-2 md:mt-3 text-center">
-        {isPolling ? t("checkingVerification") : t("otpReady")}
+        {isPolling ? t("Auth.checkingVerification") : t("Auth.otpReady")}
       </p>
 
       {whatsappUrl ? (
@@ -92,11 +92,11 @@ export const VerificationForm = ({
           rel="noopener noreferrer"
           className="w-full h-12 md:h-14 bg-main rounded-full md:rounded-[112px] mt-4 md:mt-6   text-base md:text-lg font-bold mx-auto flex items-center justify-center transition-opacity hover:opacity-90"
         >
-          {t("openWhatsApp")}
+          {t("Auth.openWhatsApp")}
         </a>
       ) : (
         <button className="w-full h-12 md:h-14 bg-main rounded-full md:rounded-[112px] mt-4 md:mt-6   text-base md:text-lg font-bold mx-auto block transition-opacity hover:opacity-90">
-          {t("continue")}
+          {t("Auth.continue")}
         </button>
       )}
 
@@ -104,7 +104,7 @@ export const VerificationForm = ({
         onClick={onResendVerification}
         className="text-main text-sm md:text-base font-semibold mt-6 md:mt-8 flex items-center justify-center mx-auto hover:text-main/80 transition-colors"
       >
-        {t("generateNewCode")}
+        {t("Auth.generateNewCode")}
       </button>
     </section>
   );
