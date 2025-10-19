@@ -5,11 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { getOrders, GetOrdersResponse, Order } from "./api/getOrders";
 import OrdersEmpty from "./OrdersEmpty";
-import ReviewDialog from "./ReviewDialog";
-import BackArrow from "@/features/products/icons/BackArrow";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import BackArrow from "@/features/products/icons/BackArrow";
 const statusStyles: Record<string, { bg: string; text: string }> = {
   pending: { bg: "bg-[#C8C8C812]", text: "text-[#C8C8C8]" },
   processing: { bg: "bg-[#DF7A0012]", text: "text-[#DF7A00]" },
@@ -101,7 +100,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                     height={156}
                     className="md:w-[156px] w-20 md:h-[156px] h-20 "
                   />
-                  <div>
+                  <div className="px-2">
                     <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
                       {t("id")} #<span>{order.order_id}</span>
                     </p>
@@ -110,14 +109,16 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                     </h1>
                     <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%] md:mt-6 mt-3">
                       {order.created_at
-                        ? new Intl.DateTimeFormat(
-                            locale === "ar" ? "ar-EG" : "en-GB",
-                            {
+                        ? (() => {
+                            const dateLocale =
+                              locale === "ar" ? "ar-EG" : "en-GB";
+                            return new Intl.DateTimeFormat(dateLocale, {
+                              weekday: "long",
                               day: "2-digit",
                               month: "2-digit",
                               year: "numeric",
-                            }
-                          ).format(new Date(order.created_at))
+                            }).format(new Date(order.created_at));
+                          })()
                         : "N/A"}
                     </p>
                   </div>
@@ -126,16 +127,12 @@ const MyOrders: React.FC<MyOrdersProps> = ({
               {order.status && (
                 <div className="absolute top-4 ltr:right-6 rtl:left-6">
                   <div
-                    className={`w-[101px] h-7 ${bg} rounded-[8px] ${text} text-xs flex items-center justify-center`}
+                    className={`w-[110px] h-7 ${bg} rounded-[8px] ${text} text-xs flex items-center justify-center`}
                   >
                     {order.status}
                   </div>
                 </div>
               )}
-
-              <div className="absolute top-12 ltr:right-10 rtl:left-10">
-                <ReviewDialog productName={productName} orderId={order.id} />
-              </div>
             </div>
           );
         })

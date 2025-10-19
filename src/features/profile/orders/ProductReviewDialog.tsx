@@ -100,8 +100,8 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
     }
   };
 
-  // Don't show button if order is not delivered
-  if (orderStatus !== "delivered") {
+  // Don't show button if order is not completed
+  if (orderStatus?.toLowerCase() !== "completed") {
     return null;
   }
 

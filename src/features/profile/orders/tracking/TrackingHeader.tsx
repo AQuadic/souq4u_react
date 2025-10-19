@@ -6,9 +6,9 @@ const TrackingHeader = () => {
   const { t } = useTranslation("Profile.Breadcrumbs");
 
   const items = [
-    { label: t("account"), href: "/" },
-    { label: t("orders"), href: "/profile/orders" },
-    { label: t("tracking") },
+    { label: t("Profile.Breadcrumbs.account"), href: "/" },
+    { label: t("Profile.Breadcrumbs.orders"), href: "/profile/orders" },
+    { label: t("Profile.Breadcrumbs.tracking") },
   ];
 
   return (

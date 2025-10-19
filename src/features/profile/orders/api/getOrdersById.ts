@@ -9,8 +9,8 @@ export type OrderItem = {
     en: string;
   };
   variant?: {
-    product_id?: number;
     images?: { url: string }[];
+    product_id?: number;
   };
   productable?: {
     product_id?: number;
@@ -40,10 +40,12 @@ export interface Order {
   total: number;
 
   orderItems: OrderItem[];
+
+  is_reviewed: boolean
 }
 
 export async function getOrderById(
-  type:"id" | "item" | "code" | "tracking_number",
+  type: "id" | "item" | "code" | "tracking_number",
   id: string
 ): Promise<Order> {
   const res = await axios.get(`/orders/${type}/${id}`, {

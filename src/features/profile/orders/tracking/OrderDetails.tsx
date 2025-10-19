@@ -87,15 +87,16 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
               />
               <div className="mx-4 flex flex-col justify-between h-full">
                 <span className="dark:text-[#C0C0C0] md:text-base text-xs font-poppins">
-                  ID: #{item.id}
+                  ID: #{order.id}
                 </span>
                 <h2 className="dark:text-[#FDFDFD] md:text-2xl text-base font-bold leading-[100%] md:mt-6 mt-4">
                   {productName}
                 </h2>
                 <p className="text-main md:text-2xl text-base font-bold md:mt-6 mt-2">
-                  {price} <span className="font-normal">{t("Orders.egp")}</span>
+                  {price} <span className="font-normal">{t("egp")}</span>
                 </p>
-                {order.created_at && (
+                {/* Show days since order */}
+                {/* {order.created_at && (
                   <p className="text-[#C0C0C0] text-xs mt-1">
                     {Math.floor(
                       (Date.now() - new Date(order.created_at).getTime()) /
@@ -103,7 +104,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                     )}{" "}
                     {t("days", { defaultValue: "days" })}
                   </p>
-                )}
+                )} */}
                 {/* Review button under product summary */}
                 {productId && (
                   <div className="mt-3">
@@ -111,6 +112,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                       productName={productName}
                       orderId={order.id}
                       productId={productId}
+                      orderStatus={order.status}
+                      isReviewed={order.is_reviewed}
                     />
                   </div>
                 )}
