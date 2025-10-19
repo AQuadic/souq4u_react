@@ -135,22 +135,22 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
         </h1>
       </div>
       <p className="text-lg md:text-xl lg:text-[32px] font-medium leading-[120%] mt-6 md:mt-8 text-center">
-        {t("welcome", { brandName: "Souq4U" })}
+        {t("Auth.welcome")}
       </p>
       <h2 className="text-xl md:text-2xl lg:text-[32px] font-bold leading-[120%] mt-4 md:mt-6 text-center">
-        {t("signIn")}
+        {t("Auth.signIn")}
       </h2>
       <div className="mt-6 md:mt-8 lg:mt-10 flex flex-col gap-2">
         <label
           htmlFor="phone"
           className="text-sm md:text-base font-semibold leading-[100%] text-left rtl:text-right mb-2"
         >
-          {t("phone")}
+          {t("Auth.phone")}
         </label>
         <PhoneInput
           value={phone}
           onChange={setPhone}
-          placeholder={t("enterPhone")}
+          placeholder={t("Auth.enterPhone")}
           language={locale as "en" | "ar"}
         />
       </div>
@@ -159,14 +159,14 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
         disabled={loading || phone.number.length === 0}
         className="w-full h-12 md:h-14 bg-main text-white rounded-full md:rounded-[112px] mt-4 md:mt-5 text-base md:text-lg font-bold cursor-pointer disabled:opacity-50 transition-opacity"
       >
-        {loading ? t("signingIn") : t("signIn")}
+        {loading ? t("Auth.signingIn") : t("Auth.signIn")}
       </button>
 
       <Link
         to="/"
         className="w-full h-12 md:h-14  border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg  leading-[100%] transition-colors hover:bg-main/10"
       >
-        {t("continueAsGuest")}
+        {t("Auth.continueAsGuest")}
       </Link>
     </form>
   );

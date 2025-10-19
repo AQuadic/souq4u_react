@@ -279,7 +279,7 @@
     "rememberMe": "Remember Me",
     "loginSuccess": "Login successful! Welcome back.",
     "loginError": "Login failed",
-    "welcome": "Welcome Back To {brandName}!",
+    "welcome": "Welcome Back",
     "enterPhone": "Enter your phone",
     "phoneRequired": "Please enter your phone number",
     "signingIn": "Signing In...",
