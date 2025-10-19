@@ -15,8 +15,8 @@ const ProductReviewsSummary: React.FC<Props> = ({
   reviewable_id,
   reviewable_type = "product",
 }) => {
-  const { t } = useTranslation("Products");
-  const { t: common } = useTranslation("Common");
+  const { t } = useTranslation();
+  const { t: common } = useTranslation();
   // Fetch summary counts keyed by rating string
   const { data, isLoading, isError, error } = useProductReviewSummary(
     reviewable_type,
@@ -53,7 +53,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
 
   return (
     <aside
-      aria-label={t("reviewSummary.ariaLabel")}
+      aria-label={t("Products.reviewSummary.ariaLabel")}
       className="w-full max-w-[373px] sm:max-w-[373px] max-sm:mx-auto"
       style={{ height: "auto" }}
     >
@@ -65,7 +65,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
             <div className="flex-shrink-0">
               <img
                 src="/images/products/productIMG.png"
-                alt={t("reviewSummary.productImageAlt")}
+                alt={t("Products.reviewSummary.productImageAlt")}
                 width={48}
                 height={48}
                 className="w-12 h-12 rounded-md object-cover"
@@ -94,13 +94,13 @@ const ProductReviewsSummary: React.FC<Props> = ({
             </div>
           </div>
           <h3 className="mt-3 text-slate-900 dark:text-white text-lg">
-            {t("reviewSummary.heading")}
+            {t("Products.reviews")}
           </h3>
 
           <div className="mt-4 space-y-3">
             {isError && (
               <div className="text-sm text-red-400">
-                {t("reviewSummary.errorLoading", {
+                {t("Products.reviewSummary.errorLoading", {
                   message: String(error?.message),
                 })}
               </div>
@@ -113,7 +113,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
                   <div className="flex items-center justify-between text-sm text-gray-300 mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-slate-900 dark:text-white">
-                        {t("reviewSummary.starsLabel", { count: b.stars })}
+                        {b.stars} {t("Products.reviewSummary.starsLabel")}
                       </span>
                     </div>
                     <span className="text-slate-500 dark:text-gray-400">

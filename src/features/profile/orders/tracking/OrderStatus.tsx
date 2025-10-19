@@ -3,10 +3,19 @@ import Pending from "../icons/Pending";
 import Shipping from "../icons/Shipping";
 import Processing from "../icons/Processing";
 import Cancelled from "../icons/Cancelled";
+import Confirmed from "../icons/Confirmed";
+import ReadyForShipping from "../icons/ReadyForShipping";
+import InShipping from "../icons/InShipping";
+import Completed from "../icons/Completed";
+import PreOrder from "../icons/PreOrder";
 import { Order } from "../api/getOrdersById";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import BackArrow from "@/features/products/icons/BackArrow";
+import {
+  normalizeOrderStatus,
+  type OrderStatus as OrderStatusType,
+} from "../utils/orderStatus";
 
 type OrderStatusProps = {
   order: Order;
@@ -16,39 +25,60 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
   const { t, i18n } = useTranslation("Orders");
   const locale = i18n.language;
 
-  const currentStatus = order.status?.toLowerCase() || "pending";
+  const normalizedStatus = normalizeOrderStatus(order.status);
 
   const statusStyles: Record<
-    string,
-    { icon: React.ReactNode; bg: string; text: string; label: string }
+    OrderStatusType,
+    { icon: React.ReactNode; bg: string; text: string }
   > = {
     pending: {
       icon: <Pending />,
       bg: "bg-[#8B8B8B2B]",
       text: "text-[#C0C0C0]",
-      label: t("Orders.pending"),
+    },
+    PreOrder: {
+      icon: <PreOrder />,
+      bg: "bg-[#9C27B024]",
+      text: "text-[#9C27B0]",
+    },
+    confirmed: {
+      icon: <Confirmed />,
+      bg: "bg-[#03A90024]",
+      text: "text-[#03A900]",
+    },
+    ready_for_shipping: {
+      icon: <ReadyForShipping />,
+      bg: "bg-[#FFA50024]",
+      text: "text-[#FFA500]",
+    },
+    in_shipping: {
+      icon: <InShipping />,
+      bg: "bg-[#3D9BE924]",
+      text: "text-[#3D9BE9]",
     },
     shipping: {
       icon: <Shipping />,
       bg: "bg-[#3D9BE924]",
       text: "text-[#3D9BE9]",
-      label: t("Orders.shipping"),
     },
     processing: {
       icon: <Processing />,
       bg: "bg-[#8B8B8B2B]",
       text: "text-[#C0C0C0]",
-      label: t("Orders.processing"),
+    },
+    completed: {
+      icon: <Completed />,
+      bg: "bg-[#03A90024]",
+      text: "text-[#03A900]",
     },
     cancelled: {
       icon: <Cancelled />,
       bg: "bg-[#CA1E0024]",
       text: "text-[#CA1E00]",
-      label: t("Orders.cancelled"),
     },
   };
 
-  const styles = statusStyles[currentStatus] || statusStyles.pending;
+  const styles = statusStyles[normalizedStatus] || statusStyles.pending;
 
   return (
     <div>
@@ -68,7 +98,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
         {styles.icon}
         <div>
           <p className={`${styles.text} text-base font-normal leading-[100%]`}>
-            {styles.label}
+            {t(normalizedStatus)}
           </p>
 
           <p className="dark:text-[#C0C0C0] text-sm font-normal leading-[100%] mt-2">

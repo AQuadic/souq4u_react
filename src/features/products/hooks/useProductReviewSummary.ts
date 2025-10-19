@@ -7,12 +7,12 @@ import {
 const QUERY_KEY = "productReviewSummary";
 
 export const useProductReviewSummary = (
-  reviewable_type: string,
-  reviewable_id: number
+  relatable_type: string,
+  relatable_id: number
 ) => {
   return useQuery<ReviewSummaryResponse, Error>({
-    queryKey: [QUERY_KEY, reviewable_type, reviewable_id],
-    queryFn: () => getReviewSummary(reviewable_type, reviewable_id),
+    queryKey: [QUERY_KEY, relatable_type, relatable_id],
+    queryFn: () => getReviewSummary(relatable_type, relatable_id),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };

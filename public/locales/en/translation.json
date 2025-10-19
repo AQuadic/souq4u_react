@@ -97,7 +97,15 @@
     "filterByPrice": "Filter by Price",
     "egp": "EGP",
     "categories": "Categories",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "noReviewsYet": "No Reviews Yet",
+    "beTheFirst": "Be the first to review this product!",
+    "reviewSummary": {
+      "ariaLabel": "Product Review Summary",
+      "productImageAlt": "Product Image",
+      "heading": "Review Summary",
+      "starsLabel": "stars"
+    }
   },
   "ProductsGrid": {
     "home": "Home",
@@ -247,7 +255,7 @@
     "saving": "Saving...",
     "updateAddress": "Update Address",
     "addAddress": "Add Address",
-    "editAddress":"Edit Address"
+    "editAddress": "Edit Address"
   },
   "BillingDetails": {
     "title": "Billing Details"
@@ -400,7 +408,7 @@
     "send": "Send",
     "sending": "Sending...",
     "commentPlaceholder": "Write your comment here..."
-    },
+  },
   "Orders": {
     "orders": "Orders",
     "id": "ID:",
@@ -415,10 +423,18 @@
     "taxes": "Taxes:",
     "total": "Total",
     "pending": "Pending",
+    "PreOrder": "Pre-Order",
+    "confirmed": "Confirmed",
+    "ready_for_shipping": "Ready for Shipping",
+    "in_shipping": "In Shipping",
     "shipping": "Shipping",
     "processing": "Processing",
+    "completed": "Completed",
     "cancelled": "Cancelled",
     "noOrders": "No Order Yet",
-    "addOrder": "Please add your order for your better experience"
+    "addOrder": "Please add your order for your better experience",
+    "cancel": "Cancel",
+    "confirmCancel": "Are you sure you want to cancel this order?",
+    "confirm": "Confirm"
   }
 }

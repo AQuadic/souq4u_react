@@ -7,15 +7,9 @@ import { getOrders, GetOrdersResponse, Order } from "./api/getOrders";
 import OrdersEmpty from "./OrdersEmpty";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { normalizeOrderStatus, getStatusColors } from "./utils/orderStatus";
 
 import BackArrow from "@/features/products/icons/BackArrow";
-const statusStyles: Record<string, { bg: string; text: string }> = {
-  pending: { bg: "bg-[#C8C8C812]", text: "text-[#C8C8C8]" },
-  processing: { bg: "bg-[#DF7A0012]", text: "text-[#DF7A00]" },
-  shipping: { bg: "bg-[#03A90012]", text: "text-[#03A900]" },
-  cancelled: { bg: "bg-[#FF503112]", text: "text-[#FF5031]" },
-  confirmed: { bg: "bg-[#03A90012]", text: "text-[#03A900]" },
-};
 
 interface MyOrdersProps {
   showHeader?: boolean;
@@ -45,9 +39,11 @@ const MyOrders: React.FC<MyOrdersProps> = ({
   if (isError) return <p className="text-red-500">Something went wrong.</p>;
 
   const ordersToShow = statusFilter
-    ? data?.items?.data?.filter((order) =>
-        order.status ? statusFilter.includes(order.status) : false
-      )
+    ? data?.items?.data?.filter((order) => {
+        if (!order.status) return false;
+        const normalizedStatus = normalizeOrderStatus(order.status);
+        return statusFilter.includes(normalizedStatus);
+      })
     : data?.items?.data;
 
   return (
@@ -72,13 +68,8 @@ const MyOrders: React.FC<MyOrdersProps> = ({
 
       {ordersToShow?.length ? (
         ordersToShow.map((order: Order) => {
-          const statusKey =
-            typeof order.status === "string" && statusStyles[order.status]
-              ? order.status
-              : null;
-          const { bg, text } = statusKey
-            ? statusStyles[statusKey]
-            : { bg: "", text: "" };
+          const normalizedStatus = normalizeOrderStatus(order.status);
+          const { bg, text } = getStatusColors(normalizedStatus);
 
           const productName =
             locale === "ar" ? order.product_name?.ar : order.product_name?.en;
@@ -129,7 +120,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                   <div
                     className={`w-[110px] h-7 ${bg} rounded-[8px] ${text} text-xs flex items-center justify-center`}
                   >
-                    {order.status}
+                    {t(normalizedStatus)}
                   </div>
                 </div>
               )}

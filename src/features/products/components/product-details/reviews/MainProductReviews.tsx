@@ -13,7 +13,7 @@ interface Props {
 }
 
 const MainProductReviews: React.FC<Props> = ({ productId }) => {
-  const { t } = useTranslation("Products");
+  const { t } = useTranslation();
   const { data } = useQuery({
     queryKey: ["productReviews", productId],
     queryFn: () => getReviews("product", productId),
@@ -42,7 +42,7 @@ const MainProductReviews: React.FC<Props> = ({ productId }) => {
 
   return (
     <div className="mt-6">
-      <h3 className="font-bold text-[32px] mb-4">{t("reviews")}</h3>
+      <h3 className="font-bold text-[32px] mb-4">{t("Products.reviews")}</h3>
       <div className="flex gap-6 max-sm:flex-col">
         <ProductReviewsSummary reviewable_id={productId} />
         <ProductReviewsListing reviews={reviews} />

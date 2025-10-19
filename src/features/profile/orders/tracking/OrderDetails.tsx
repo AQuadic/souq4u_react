@@ -7,6 +7,7 @@ import { Order } from "../api/getOrdersById";
 import { cancelOrder } from "../api/cancelOrder";
 import { useTranslation } from "react-i18next";
 import ProductReviewDialog from "../ProductReviewDialog";
+import { canCancelOrder } from "../utils/orderStatus";
 
 type OrderDetailsProps = {
   order: Order;
@@ -121,7 +122,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
             </div>
 
             <div className="flex flex-col items-end gap-2 pr-4">
-              {order.status?.toLowerCase() === "pending" && (
+              {canCancelOrder(order.status) && (
                 <>
                   <button
                     type="button"

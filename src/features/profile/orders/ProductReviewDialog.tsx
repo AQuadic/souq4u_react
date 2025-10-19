@@ -14,6 +14,7 @@ import { useToast } from "@/shared/components/ui/toast/toast-store";
 import { sendReview } from "./api/postReviews";
 import { getErrorMessage } from "@/shared/utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import { canReviewOrder } from "./utils/orderStatus";
 
 type ProductReviewDialogProps = {
   productName?: string;
@@ -34,7 +35,7 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const {t} = useTranslation("Profile");
+  const { t } = useTranslation("Profile");
   const toast = useToast();
 
   const smileImages: Record<number, string> = {
@@ -77,10 +78,14 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
               ? translated
               : t("Profile.reviewSuccess", { product: productName ?? "item" });
         } catch {
-          displayMsg = t("Profile.reviewSuccess", { product: productName ?? "item" });
+          displayMsg = t("Profile.reviewSuccess", {
+            product: productName ?? "item",
+          });
         }
       } else {
-        displayMsg = t("Profile.reviewSuccess", { product: productName ?? "item" });
+        displayMsg = t("Profile.reviewSuccess", {
+          product: productName ?? "item",
+        });
       }
 
       toast.success(displayMsg);
@@ -101,7 +106,7 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
   };
 
   // Don't show button if order is not completed
-  if (orderStatus?.toLowerCase() !== "completed") {
+  if (!canReviewOrder(orderStatus)) {
     return null;
   }
 
