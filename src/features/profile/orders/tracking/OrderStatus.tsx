@@ -92,6 +92,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
           {t("tracking")}
         </h2>
       </Link>
+
       <div
         className={`w-full h-[72px] rounded-[8px] mt-8 p-4 flex items-center gap-2 ${styles.bg}`}
       >
@@ -104,6 +105,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
           <p className="dark:text-[#C0C0C0] text-sm font-normal leading-[100%] mt-2">
             {order.created_at
               ? new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", {
+                  weekday: "long",
                   day: "2-digit",
                   month: "2-digit",
                   year: "numeric",

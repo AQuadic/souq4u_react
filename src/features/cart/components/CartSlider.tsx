@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { CartItem } from "./CartSummaryCard";
 import { CartSummary } from "./CartSummary";
 import { useCartOperations } from "@/features/cart/hooks";
-import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 interface CartSliderProps {
@@ -15,26 +14,10 @@ interface CartSliderProps {
 }
 
 export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
-  const { t } = useTranslation();
+  const {t} = useTranslation("CartSlider");
   const { cart, updateItemQuantity, removeItem } = useCartOperations();
-  const location = useLocation();
-  const isOnCartPage = location.pathname.includes("/cart");
-
-  const renderEmptyContent = () => {
-    if (isOnCartPage) {
-      return (
-        <div className="flex items-center justify-center h-full">
-          <p className="text-gray-400 text-center">&nbsp;</p>
-        </div>
-      );
-    }
-
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-gray-400 text-center">{t("Cart.emptyCart")}</p>
-      </div>
-    );
-  };
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+  
   // ...existing code...
   const cartItems = cart?.items || [];
   const calculations = cart?.calculations || {
@@ -46,13 +29,28 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
   };
   const subtotal = calculations.subtotal;
   const tax = calculations.tax;
+  // const discount = calculations.discount;
   const total = calculations.total;
+  
   const handleUpdateQuantity = (id: number, quantity: number) => {
     updateItemQuantity(id, quantity);
   };
+  
   const handleRemoveItem = (id: number) => {
-    removeItem(id);
+    setItemToDelete(id);
   };
+  
+  const confirmDelete = () => {
+    if (itemToDelete !== null) {
+      removeItem(itemToDelete);
+      setItemToDelete(null);
+    }
+  };
+  
+  const cancelDelete = () => {
+    setItemToDelete(null);
+  };
+  
   return (
     <AnimatePresence>
       {isOpen && (
@@ -93,7 +91,9 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto p-4">
               {cartItems.length === 0 ? (
-                renderEmptyContent()
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-gray-400 text-center">{t("empty")}</p>
+                </div>
               ) : (
                 <div className="space-y-4">
                   {cartItems.map((item) => (
@@ -112,11 +112,52 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
               <CartSummary
                 subtotal={subtotal}
                 tax={tax}
+                // discount={discount}
                 total={total}
                 onClose={onClose}
               />
             )}
           </motion.div>
+          
+          <AnimatePresence>
+            {itemToDelete !== null && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/50 z-[60]"
+                  onClick={cancelDelete}
+                />
+                
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  transition={{ duration: 0.2 }}
+                  className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white dark:bg-gray-800 rounded-lg shadow-xl z-[70] p-6"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    {t("Cart.confirmDelete")}
+                  </h3>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={cancelDelete}
+                      className="px-4 py-2 rounded-lg border border-gray-300 transition-colors font-medium cursor-pointer"
+                    >
+                      {t("Common.cancel", { defaultValue: "Cancel" })}
+                    </button>
+                    <button
+                      onClick={confirmDelete}
+                      className="px-4 py-2 rounded-lg bg-main text-white transition-colors font-medium cursor-pointer"
+                    >
+                      {t("Cart.remove")}
+                    </button>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
         </>
       )}
     </AnimatePresence>

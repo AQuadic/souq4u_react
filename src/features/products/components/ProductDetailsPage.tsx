@@ -372,7 +372,7 @@ const ProductDetailsPage: React.FC = () => {
             guideImage={product.guide_image}
             shortDescription={shortDescription}
             description={description}
-            storeType={undefined}
+            product={{ id: product.id, is_favorite: product.is_favorite }}
           />
         </div>
       </div>

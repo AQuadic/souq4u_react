@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import ResFav from "../../icons/ResFav";
 import ResUnFav from "../../icons/ResUnFav";
+import { useTranslation } from "react-i18next";
 
 // Simple arrow components to replace heroicons
 const ChevronLeftIcon = ({ className }: { className?: string }) => (
@@ -247,6 +248,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
   const [isRtl, setIsRtl] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const {t} = useTranslation("Products");
 
   // Detect RTL direction
   useEffect(() => {
@@ -318,6 +321,11 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isExpanded && e.key === "Escape") {
+        setIsExpanded(false);
+        return;
+      }
+      
       if (e.key === "ArrowLeft") {
         if (isRtl) {
           goToNext();
@@ -335,7 +343,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isRtl, goToNext, goToPrevious]);
+  }, [isRtl, goToNext, goToPrevious, isExpanded]);
 
   return (
     <div
@@ -354,41 +362,58 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             productName={productName}
             vertical
           />
-          <MainGallery
-            displayImages={displayImages}
-            currentIndex={currentIndex}
-            totalImages={totalImages}
-            productName={productName}
-            isRtl={isRtl}
-            goToNext={goToNext}
-            goToPrevious={goToPrevious}
-            onToggleFavorite={onToggleFavorite}
-            isFavorite={isFavorite}
-            galleryRef={galleryRef}
-            handleTouchStart={handleTouchStart}
-            handleTouchMove={handleTouchMove}
-            handleTouchEnd={handleTouchEnd}
-            showSideThumbnails={showSideThumbnails}
-          />
+          <div className="flex-1 relative">
+            <div 
+              onClick={() => setIsExpanded(true)}
+              className="cursor-zoom-in"
+            >
+              <MainGallery
+                displayImages={displayImages}
+                currentIndex={currentIndex}
+                totalImages={totalImages}
+                productName={productName}
+                isRtl={isRtl}
+                goToNext={goToNext}
+                goToPrevious={goToPrevious}
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={isFavorite}
+                galleryRef={galleryRef}
+                handleTouchStart={handleTouchStart}
+                handleTouchMove={handleTouchMove}
+                handleTouchEnd={handleTouchEnd}
+                showSideThumbnails={showSideThumbnails}
+              />
+            </div>
+          </div>
         </>
       ) : (
         <>
-          <MainGallery
-            displayImages={displayImages}
-            currentIndex={currentIndex}
-            totalImages={totalImages}
-            productName={productName}
-            isRtl={isRtl}
-            goToNext={goToNext}
-            goToPrevious={goToPrevious}
-            onToggleFavorite={onToggleFavorite}
-            isFavorite={isFavorite}
-            galleryRef={galleryRef}
-            handleTouchStart={handleTouchStart}
-            handleTouchMove={handleTouchMove}
-            handleTouchEnd={handleTouchEnd}
-            showSideThumbnails={showSideThumbnails}
-          />
+          <div className="relative">
+            <div 
+              onClick={() => setIsExpanded(true)}
+              className="cursor-zoom-in"
+            >
+              <MainGallery
+                displayImages={displayImages}
+                currentIndex={currentIndex}
+                totalImages={totalImages}
+                productName={productName}
+                isRtl={isRtl}
+                goToNext={goToNext}
+                goToPrevious={goToPrevious}
+                onToggleFavorite={onToggleFavorite}
+                isFavorite={isFavorite}
+                galleryRef={galleryRef}
+                handleTouchStart={handleTouchStart}
+                handleTouchMove={handleTouchMove}
+                handleTouchEnd={handleTouchEnd}
+                showSideThumbnails={showSideThumbnails}
+              />
+            </div>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm pointer-events-none">
+              {t('tapToExpand')}
+            </div>
+          </div>
           <Thumbnails
             displayImages={displayImages}
             currentIndex={currentIndex}
@@ -413,6 +438,91 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
               aria-label={`Go to image ${index + 1}`}
             />
           ))}
+        </div>
+      )}
+
+      {isExpanded && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={() => setIsExpanded(false)}
+        >
+          <button
+            onClick={() => setIsExpanded(false)}
+            className="absolute top-4 right-4 z-50 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Close full screen"
+          >
+            <svg className="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div 
+            className="relative w-full h-full flex items-center justify-center p-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={displayImages[currentIndex].url || "/placeholder-product.jpg"}
+              alt={displayImages[currentIndex].alt || productName}
+              width={1200}
+              height={1200}
+              className="max-w-full max-h-full object-contain"
+            />
+
+            {totalImages > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // isRtl ? goToNext() : goToPrevious();
+                  }}
+                  className={`absolute top-1/2 -translate-y-1/2 ${
+                    isRtl ? "right-4" : "left-4"
+                  } z-10 bg-white/80 hover:bg-white/90 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  aria-label={isRtl ? "Next image" : "Previous image"}
+                >
+                  {isRtl ? (
+                    <ChevronRightIcon className="w-8 h-8 text-gray-700" />
+                  ) : (
+                    <ChevronLeftIcon className="w-8 h-8 text-gray-700" />
+                  )}
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // isRtl ? goToPrevious() : goToNext();
+                  }}
+                  className={`absolute top-1/2 -translate-y-1/2 ${
+                    isRtl ? "left-4" : "right-4"
+                  } z-10 bg-white/80 hover:bg-white/90 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  aria-label={isRtl ? "Previous image" : "Next image"}
+                >
+                  {isRtl ? (
+                    <ChevronLeftIcon className="w-8 h-8 text-gray-700" />
+                  ) : (
+                    <ChevronRightIcon className="w-8 h-8 text-gray-700" />
+                  )}
+                </button>
+
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+                  {displayImages.map((image, index) => (
+                    <button
+                      key={`modal-dot-${image.id}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        goToSlide(index);
+                      }}
+                      className={`w-3 h-3 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 ${
+                        index === currentIndex
+                          ? "bg-white scale-125"
+                          : "bg-white/50 hover:bg-white/75"
+                      }`}
+                      aria-label={`Go to image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

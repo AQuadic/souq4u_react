@@ -97,9 +97,7 @@
     "filterByPrice": "Filter by Price",
     "egp": "EGP",
     "categories": "Categories",
-    "loading": "Loading...",
-    "noReviewsYet": "No Reviews Yet",
-    "beTheFirst": "Be the first to review this product!",
+
     "reviewSummary": {
       "ariaLabel": "Product Review Summary",
       "productImageAlt": "Product Image",
@@ -194,7 +192,8 @@
     "couponRemoveError": "Failed to remove coupon",
     "loginRequiredForCart": "Please login to add items to your cart",
     "outOfStock": "Out of stock",
-    "onlyXAvailable": "Only {count} available in stock"
+    "onlyXAvailable": "Only {count} available in stock",
+    "confirmDelete": "Are you sure you want to delete item?"
   },
   "Checkout": {
     "title": "Checkout",
