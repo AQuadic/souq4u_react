@@ -6,6 +6,7 @@ import MobileHeader from "./header/MobileHeader";
 import Footer from "./footer/Footer";
 import { CartInitializer } from "@/features/cart";
 import { AuthInitializer } from "@/features/auth";
+import MobileNavigation from "./header/MobileNavigation";
 
 const Layout = () => {
   return (
@@ -28,6 +29,8 @@ const Layout = () => {
 
       {/* Footer */}
       <Footer />
+
+      <MobileNavigation />
     </div>
   );
 };
