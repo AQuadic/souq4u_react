@@ -31,6 +31,7 @@ import ProductList from "./ProductList";
 import RecentlyViewedProducts from "./RecentlyViewedProducts";
 import { useRecentlyViewedStore } from "../stores/recently-viewed-store";
 import { useTranslation } from "react-i18next";
+import MainProductReviews from "./product-details/reviews/MainProductReviews";
 
 type MultiTextOrString = MultilingualText | string | undefined;
 
@@ -375,6 +376,8 @@ const ProductDetailsPage: React.FC = () => {
           />
         </div>
       </div>
+
+      <MainProductReviews productId={product.id} />
 
       {!!product?.id && (
         <>

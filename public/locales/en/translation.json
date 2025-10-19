@@ -97,7 +97,9 @@
     "filterByPrice": "Filter by Price",
     "egp": "EGP",
     "categories": "Categories",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "noReviewsYet": "There are no reviews yet.",
+    "beTheFirst": "Be the first to review this product."
   },
   "ProductsGrid": {
     "home": "Home",
