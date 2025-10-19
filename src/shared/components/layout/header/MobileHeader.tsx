@@ -12,14 +12,17 @@ import MainAuth from "@/features/auth/components/MainAuth";
 import HeaderSearch from "./HeaderSearch";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { NavLinks } from "./NavLinks";
+import LogoutDialog from "@/features/profile/sidebar/LogoutDialog";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../ui/accordion";
 
 const MobileHeader = () => {
-  const { i18n } = useTranslation();
+  const {t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const locale = i18n.language || "en";
   const location = useLocation();
   const { isOpen: isCartOpen, openCart, closeCart } = useCartSlider();
   const { user } = useAuth();
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const cart = useCartStore((s) => s.cart);
   const cartItemsCount =
@@ -40,14 +43,13 @@ const MobileHeader = () => {
         <img src="/logo.png" width={80} height={40} alt="souq4u" />
       </Link>
       <div className="flex items-center gap-5 relative">
-        {user && (
-          <button className="cursor-pointer relative" onClick={openCart}>
-            <Cart />
-            {cartItemsCount > 0 && (
-              <span className="absolute top-0 left-0 h-3 w-3 rounded-full bg-main z-40 pointer-events-none" />
-            )}
-          </button>
-        )}
+        <button onClick={openCart} className="relative">
+          <Cart />
+          {/* Badge: show when there are items in cart */}
+          {cartItemsCount > 0 && (
+            <span className="absolute top-1 left-1 -translate-x-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-main ring-2 ring-white z-20 pointer-events-none" />
+          )}
+        </button>
         <HeaderSearch />
         <button onClick={() => setIsOpen(true)} className="">
           <Menu />
@@ -61,12 +63,11 @@ const MobileHeader = () => {
         />
       )}
       <div
-        className={`fixed top-0 right-0 h-full w-72 z-50 transform transition-transform duration-300 
+        className={`fixed top-0 right-0 h-full w-72 z-50 transform transition-transform duration-300 p-4
           bg-white text-gray-900
           overflow-y-auto overflow-x-hidden shadow-2xl
           ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
-        <div className="p-6">
           <button
             onClick={() => setIsOpen(false)}
             className="mb-8 hover:opacity-70 transition-opacity"
@@ -91,17 +92,50 @@ const MobileHeader = () => {
             ))}
           </nav>
 
-          {/* Auth Section */}
-          <div className="mb-6">
-            <MainAuth />
-          </div>
+        {user && (
+          <Accordion type="single" collapsible className="w-full mt-4">
+            <AccordionItem value="profile">
+              <AccordionTrigger className="p-0 hover:no-underline">
+                <div className="flex items-center justify-between w-full">
+                  <h1 className="text-base font-medium hover:text-main transition-colors">
+                    {t("Common.profile")}
+                  </h1>
+                </div>
+              </AccordionTrigger>
 
-          {/* Language switcher */}
-          <div className="space-y-4 mt-auto pt-6 border-t border-gray-200">
-            <LanguageSwitcher mode="full" isMobile={true} className="" />
+              <AccordionContent className="mt-4 flex flex-col gap-4 text-lg hover:text-main transition-colors">
+                <Link to="/profile/account">{t("Common.account")}</Link>
+                {/* <Link to="/notifications">Notification</Link> */}
+                {/* <Link to="/change-password">Change Password</Link> */}
+                <Link to="/profile/favorites">{t("Common.favorite")}</Link>
+                <Link to="/profile/orders">{t("Common.orders")}</Link>
+                <Link to="/profile/addresses">{t("Common.saveAddress")}</Link>
+                <button
+                  onClick={() => setIsLogoutOpen(true)}
+                  className="text-left text-red-600 hover:text-main transition-colors rtl:text-right"
+                >
+                  {t("Common.logout")}
+                </button>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
+
+        <div className="mt-6 space-y-4">
+          <div className="border-t border-gray-600 pt-4 flex items-center justify-between">
+            <LanguageSwitcher
+              mode="full"
+              isMobile={true}
+              className=""
+            />
+          </div>
+          <div className="border-t border-gray-600 pt-4">
+            <MainAuth onProfileClick={() => setIsOpen(false)} />
           </div>
         </div>
       </div>
+
+      <LogoutDialog open={isLogoutOpen} onOpenChange={setIsLogoutOpen} />
 
       {/* Cart Slider */}
       <CartSlider isOpen={isCartOpen} onClose={closeCart} />
