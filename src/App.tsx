@@ -19,6 +19,7 @@ import SaveAddress from "./features/profile/addresses/components/SaveAddress";
 import AddAddressPage from "./features/profile/addresses/add/page";
 import NotificationsPage from "./features/notifications/NotificationsPage";
 import OrderTrackingPage from "./features/profile/orders/tracking/OrderTrackingPage";
+import { ToastContainer } from "./shared/components/ui/toast";
 
 // Home Page Component
 function HomePage() {
@@ -85,6 +86,8 @@ function App() {
           <Route path="notifications" element={<NotificationsPage />} />
         </Route>
       </Routes>
+
+      <ToastContainer />
     </BrowserRouter>
   );
 }
