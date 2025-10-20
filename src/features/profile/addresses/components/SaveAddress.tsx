@@ -80,7 +80,7 @@ const SaveAddress: React.FC = () => {
 
       {isLoading && (
         <p className="text-neutral-600 dark:text-neutral-400">
-          Loading addresses...
+          {t('Profile.loadingAddressess')}
         </p>
       )}
       {error && <p className="text-red-500">{error}</p>}

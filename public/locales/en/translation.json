@@ -408,7 +408,10 @@
     "send": "Send",
     "sending": "Sending...",
     "commentPlaceholder": "Write your comment here...",
-    "reviewed": "Reviewed"
+    "reviewed": "Reviewed",
+    "loadingAddressess": "Loading addresses...",
+    "loadingFav": "Loading favorites...",
+    "loadingOrders": "Loading orders..."
   },
   "Orders": {
     "orders": "Orders",
