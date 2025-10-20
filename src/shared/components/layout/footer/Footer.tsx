@@ -13,10 +13,14 @@ import Snapchat from "./icons/Snapchat";
 //   SubscribeInputValue,
 // } from "../../forms/SubscribeInput";
 import FooterContactInfo from "./FooterContactInfo";
-import SubscribeInput, { SubscribeInputValue } from "../../forms/SubscribeInput";
+// import SubscribeInput, { SubscribeInputValue } from "../../forms/SubscribeInput";
 import { useToast } from "../../ui/toast";
 import { useConfig } from "@/features/config";
-import { subscribe } from "@/features/api/subscribe";
+// import { subscribe } from "@/features/api/subscribe";
+import { checkOtp, postLogin, ResendResponse, resendVerification, useAuthStore, useLogin, VerificationForm } from "@/features/auth";
+import LoginForm from "@/features/auth/components/LoginForm";
+import { Dialog, DialogContent, DialogHeader } from "../../ui/dialog";
+import { useNavigate } from "react-router-dom";
 
 const socialIcons = [
   { Icon: Facebook, href: "https://facebook.com" },
@@ -30,20 +34,31 @@ const socialIcons = [
 
 const Footer = () => {
   const config = useConfig();
-  const { t, i18n } = useTranslation("Navigation");
-  const locale = i18n.language;
-  const toastT = useTranslation("Toasts");
-  const [subscribeValue, setSubscribeValue] = useState<SubscribeInputValue>({
-    value: "",
-  });
-  const [subscribeError, setSubscribeError] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation("Navigation");
+  const navigate = useNavigate();
+  // const locale = i18n.language;
+  // const toastT = useTranslation("Toasts");
+  // const [subscribeValue, setSubscribeValue] = useState<SubscribeInputValue>({
+  //   value: "",
+  // });
+  // const [subscribeError, setSubscribeError] = useState<string>("");
+  // const [loading, setLoading] = useState(false);
   const toast = useToast();
 
-  const [isDialogOpen, ] = useState(false);
   const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const shouldContinuePollingRef = useRef<boolean>(false);
   const [isPolling, setIsPolling] = useState(false);
+  const isAuth = useAuthStore((state) => state.isAuthenticated);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [step, setStep] = useState<"login" | "verify">("login");
+  const [loginData, setLoginData] = useState<{
+    phone: string;
+    phone_country?: string;
+    token?: string;
+  } | null>(null);
+  const [verificationData, setVerificationData] =
+    useState<ResendResponse | null>(null);
+  const loginUser = useLogin();
 
   // Get subscribe type from config, default to email
   // Normalize subscribe type to either 'phone' or 'email'
@@ -62,40 +77,40 @@ const Footer = () => {
   // };
 
   // Extract server message from error objects/strings
-  const getServerErrorMessage = (err: unknown): string | null => {
-    try {
-      const apiErr = err as {
-        response?: {
-          data?: { message?: string; errors?: Record<string, string[]> };
-        };
-        message?: string;
-      };
+  // const getServerErrorMessage = (err: unknown): string | null => {
+  //   try {
+  //     const apiErr = err as {
+  //       response?: {
+  //         data?: { message?: string; errors?: Record<string, string[]> };
+  //       };
+  //       message?: string;
+  //     };
 
-      const respData = apiErr.response?.data;
-      if (respData?.message) return respData.message;
-      if (Array.isArray(respData?.errors?.email) && respData.errors.email[0])
-        return respData.errors.email[0];
+  //     const respData = apiErr.response?.data;
+  //     if (respData?.message) return respData.message;
+  //     if (Array.isArray(respData?.errors?.email) && respData.errors.email[0])
+  //       return respData.errors.email[0];
 
-      if (typeof apiErr.message === "string" && apiErr.message) {
-        const m = apiErr.message;
-        const exec = /({\s*"message"[\s\S]*})$/.exec(m);
-        if (exec?.[1]) {
-          try {
-            const parsed = JSON.parse(exec[1]);
-            if (parsed?.message) return parsed.message;
-          } catch {
-            return m;
-          }
-        }
-        return m;
-      }
+  //     if (typeof apiErr.message === "string" && apiErr.message) {
+  //       const m = apiErr.message;
+  //       const exec = /({\s*"message"[\s\S]*})$/.exec(m);
+  //       if (exec?.[1]) {
+  //         try {
+  //           const parsed = JSON.parse(exec[1]);
+  //           if (parsed?.message) return parsed.message;
+  //         } catch {
+  //           return m;
+  //         }
+  //       }
+  //       return m;
+  //     }
 
-      if (typeof err === "string") return err;
-    } catch (parseErr) {
-      console.error("Failed to parse API error:", parseErr);
-    }
-    return null;
-  };
+  //     if (typeof err === "string") return err;
+  //   } catch (parseErr) {
+  //     console.error("Failed to parse API error:", parseErr);
+  //   }
+  //   return null;
+  // };
 
 
   const stopPolling = useCallback(() => {
@@ -118,6 +133,154 @@ const Footer = () => {
       stopPolling();
     }
   }, [isDialogOpen, stopPolling]);
+
+    const handleAccountClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isAuth) {
+      navigate("/profile/account");
+    } else {
+      if (config?.store_type === "Clothes") {
+        navigate("/auth/login");
+      } else {
+        setIsDialogOpen(true);
+      }
+    }
+  };
+
+    const pollOtpStatus = useCallback(
+    async (
+      phone: string,
+      token: string,
+      phoneCountry?: string,
+      reference?: string
+    ) => {
+      stopPolling();
+
+      setIsPolling(true);
+      shouldContinuePollingRef.current = true;
+
+      const maxAttempts = 60;
+      let attempts = 0;
+
+      const poll = async (): Promise<void> => {
+        if (!shouldContinuePollingRef.current) {
+          setIsPolling(false);
+          return;
+        }
+
+        try {
+          attempts++;
+          const response = await checkOtp(
+            phone,
+            token,
+            phoneCountry,
+            reference
+          );
+
+          if (!shouldContinuePollingRef.current) {
+            console.log("Polling stopped during request");
+            setIsPolling(false);
+            return;
+          }
+
+          if (response?.user && response?.token) {
+            stopPolling();
+            loginUser(response.user, response.token);
+            toast.success(t("loginSuccess"), undefined);
+            setStep("login");
+            setIsDialogOpen(false);
+            return;
+          }
+
+          if (attempts < maxAttempts && shouldContinuePollingRef.current) {
+            pollingTimeoutRef.current = setTimeout(poll, 5000); // Poll every 5 seconds
+          } else {
+            stopPolling();
+            toast.error(t("verificationTimedOut"));
+          }
+        } catch (error) {
+          console.error("OTP check failed:", error);
+          if (!shouldContinuePollingRef.current) {
+            setIsPolling(false);
+            return;
+          }
+
+          if (attempts < maxAttempts && shouldContinuePollingRef.current) {
+            pollingTimeoutRef.current = setTimeout(poll, 5000);
+          } else {
+            stopPolling();
+            toast.error(t("verificationFailed"));
+          }
+        }
+      };
+
+      poll();
+    },
+    [loginUser, stopPolling, t, toast]
+  );
+
+    const handleLogin = async (payload: {
+    phone: string;
+    phone_country?: string;
+  }) => {
+    try {
+      const loginResp = await postLogin(payload);
+      const token = loginResp?.token;
+
+      setLoginData({
+        phone: payload.phone,
+        phone_country: payload.phone_country,
+        token,
+      });
+
+      const verificationResp = await resendVerification(
+        payload.phone,
+        token,
+        payload.phone_country
+      );
+
+      setVerificationData(verificationResp);
+
+      toast.success(t("verificationCodeSent"));
+      setStep("verify");
+
+      await pollOtpStatus(
+        payload.phone,
+        token,
+        payload.phone_country,
+        verificationResp.otp_callback?.reference
+      );
+    } catch (error: unknown) {
+      let errorMessage = "Resend failed";
+      if (error && typeof error === "object") {
+        const err = error as {
+          message?: string;
+          errors?: { phone?: string[] };
+        };
+        errorMessage =
+          err?.message || err?.errors?.phone?.[0] || t("resendFailed");
+      }
+      toast.error(errorMessage);
+      throw error;
+    }
+  };
+
+    const handleResendVerification = useCallback(async () => {
+    if (loginData?.phone && loginData?.token) {
+      try {
+        const verificationResp = await resendVerification(
+          loginData.phone,
+          loginData.token,
+          loginData.phone_country
+        );
+        setVerificationData(verificationResp);
+        toast.success(t("newVerificationCodeSent"));
+      } catch (error) {
+        console.error("Resend verification failed:", error);
+        toast.error(t("failedToSendCode"));
+      }
+    }
+  }, [loginData, t, toast]);
 
   // Handler for subscribe button click extracted for clarity
   // const handleSubscribeClick = async () => {
@@ -257,11 +420,12 @@ const Footer = () => {
                 {t("Footer.trackOrder")}
               </Link> */}
               <Link
-                to="/profile/account"
-                className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
-              >
-                {t("Footer.myAccount")}
-              </Link>
+              to="/profile/account"
+              onClick={handleAccountClick}
+              className=" text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200 cursor-pointer"
+            >
+              {t("Footer.myAccount")}
+            </Link>
               {/* <Link
                 to="/faq"
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
@@ -318,6 +482,36 @@ const Footer = () => {
               <p className="text-sm text-gray-500">Coming soon...</p>
             </div>
           </div>
+
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) {
+            stopPolling();
+            setStep("login");
+          }
+        }}
+      >
+        <DialogContent className="w-full md:max-w-[600px] lg:max-w-[691px] rounded-[20px] md:rounded-[40px]   border-none py-8 md:py-12 lg:py-20 max-h-[90vh] overflow-y-auto scroll-hidden z-[40] mx-auto">
+          <DialogHeader>
+            {step === "login" ? (
+              <LoginForm onSubmit={handleLogin} />
+            ) : (
+              <VerificationForm
+                onBack={() => {
+                  stopPolling();
+                  setStep("login");
+                }}
+                loginData={loginData}
+                verificationData={verificationData}
+                onResendVerification={handleResendVerification}
+                isPolling={isPolling}
+              />
+            )}
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
         </div>
       </footer>
     </div>
