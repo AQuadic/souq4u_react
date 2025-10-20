@@ -27,6 +27,7 @@ const FooterContactInfo = () => {
         <a
           href={`tel:+12075550119`}
           className="text-[#FDFDFD] lg:text-[40px] text-[32px] font-bold leading-[100%] xl:px-16 py-11 xl:py-0"
+          dir="ltr"
         >
           (207) 555-0119
         </a>
