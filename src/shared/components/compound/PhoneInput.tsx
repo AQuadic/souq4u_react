@@ -4,7 +4,7 @@ import * as React from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/shared/components/ui/input";
 import { cn } from "@/shared/lib/utils";
-// import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import {
   countries,
   arabicCountryNames,
@@ -121,9 +121,32 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
       setSearchTerm("");
     };
 
-    // Handle phone number input
+    const getPhoneMaxLength = (countryIso2: string): number => {
+      switch (countryIso2.toUpperCase()) {
+        case "EG":
+          return 11;
+        case "SA":
+          return 9;
+        case "AE":
+          return 9;
+        case "US":
+          return 10;
+        case "GB":
+          return 10;
+        case "FR":
+          return 9;
+        default:
+          return 15;
+      }
+    };
+
+    const maxPhoneLength = getPhoneMaxLength(selectedCountry.iso2);
+
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newNumber = e.target.value.replace(/[^\d]/g, ""); // Only allow digits
+      let newNumber = e.target.value.replace(/[^\d]/g, ""); // Only allow digits
+      if (newNumber.length > maxPhoneLength) {
+        newNumber = newNumber.slice(0, maxPhoneLength);
+      }
       onChange({
         code: value.code,
         number: newNumber,
@@ -131,10 +154,10 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     };
 
     // Translations for placeholders
-    // const tCommon = useTranslations("Common");
-    const resolvedPlaceholder = placeholder ?? ("phoneNumber");
+    const {t} = useTranslation("Common");
+    const resolvedPlaceholder = placeholder ?? t("phoneNumber");
     const resolvedSearchPlaceholder =
-      searchPlaceholder ?? ("searchCountryOrCode");
+      searchPlaceholder ?? t("Common.searchCountryOrCode");
 
     return (
       <div className={cn("relative w-full", className)} dir="ltr">
@@ -144,7 +167,7 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
             "border-input hover:border-foreground/50",
             "bg-background text-foreground",
             "dark:border-white/20 dark:hover:border-white/40 dark:bg-transparent dark:text-white",
-            "focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20",
+            "focus-within:border-main focus-within:ring-2 focus-within:ring-main/20",
             "dark:focus-within:border-white dark:focus-within:ring-white/20",
             disabled && "opacity-50 cursor-not-allowed",
             radiusWrapper
@@ -198,6 +221,7 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
             placeholder={resolvedPlaceholder}
             disabled={disabled}
             minLength={props.minLength}
+            maxLength={maxPhoneLength}
             className={cn(
               "flex-1 h-full px-4 py-3 bg-transparent border-0 outline-none text-sm",
               "placeholder:text-muted-foreground text-foreground",
