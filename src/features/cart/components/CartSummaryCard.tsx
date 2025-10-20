@@ -81,7 +81,7 @@ export const CartItem: React.FC<CartItemProps> = ({
         {/* Size */}
         <div className="mb-2">
           <span className="text-gray-600 dark:text-gray-400 text-xs">
-            {t("Address.size") || t("Common.size")} {sizeText || "N/A"}
+            { t("Common.size")} {sizeText || "N/A"}
           </span>
         </div>
 

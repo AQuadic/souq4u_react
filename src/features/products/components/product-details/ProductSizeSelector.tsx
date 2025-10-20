@@ -8,6 +8,7 @@ import {
 } from "@/shared/components/ui/select";
 import { getProductTheme } from "@/features/products/utils/theme";
 import { ColorSelector } from "./ColorSelector";
+import i18n from "@/i18n";
 
 interface ProductVariant {
   id: number;
@@ -70,9 +71,10 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
     variant.attributes?.forEach((attr) => {
       // attribute must have an id
       if (!attr.attribute?.id) return;
+    const locale = i18n.language
 
       const attrId = attr.attribute.id;
-      const attrName = attr.attribute.name?.en || attr.attribute.name?.en || "";
+      const attrName = attr.attribute.name?.[locale] || attr.attribute.name?.en || "";
       // normalize type to lowercase for robust comparisons
       const attrType = (attr.attribute.type || "Text").toLowerCase();
       const valueId = attr.value?.id || 0;
