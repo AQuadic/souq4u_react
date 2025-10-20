@@ -3,10 +3,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "../api/getCategories";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const HomeCategories = () => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
+  const navigate = useNavigate()
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => await getCategories(),
@@ -21,7 +23,7 @@ const HomeCategories = () => {
         {categories?.map((category) => (
           <button
             key={category.id}
-            // onClick={() => router.push(`/products?category_id=${category.id}`)}
+            onClick={() => navigate(`/products?category_id=${category.id}`)}
             className="flex flex-col items-center group"
           >
             <div className="w-[122px] h-[122px] rounded-full overflow-hidden bg-gray-100 shadow-md transition-transform duration-300 group-hover:scale-105">
