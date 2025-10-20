@@ -56,7 +56,7 @@ const AddressCard: React.FC<AddressCardProps> = ({
     >
       {/* Selection indicator */}
       <div className="flex items-end justify-between">
-        <div className="flex-1">
+        <div className="">
           <div className="flex items-center gap-2 mb-2">
             <div
               className={`
@@ -71,7 +71,7 @@ const AddressCard: React.FC<AddressCardProps> = ({
             <h3 className="dark:text-white font-medium">{address.title}</h3>
           </div>
 
-          <p className="dark:text-gray-300 text-sm leading-relaxed">
+          <p className="dark:text-gray-300 text-sm leading-relaxed ltr:text-left rtl:text-right">
             {address.details}
           </p>
 
