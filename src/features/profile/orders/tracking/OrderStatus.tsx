@@ -82,14 +82,14 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
 
   return (
     <div>
-      <h2 className="text-[#FDFDFD] text-[32px] font-bold leading-[100%] md:flex hidden">
-        {t("tracking")}
-      </h2>
+      {/* <h2 className="text-[32px] font-bold leading-[100%] md:flex hidden">
+        {t("Orders.tracking")}
+      </h2> */}
 
       <Link to="/profile/orders" className="flex items-center gap-2 md:hidden">
         <BackArrow />
-        <h2 className="text-[#FDFDFD] text-xl font-bold leading-[100%]">
-          {t("tracking")}
+        <h2 className="text-xl font-bold leading-[100%]">
+          {t("Orders.tracking")}
         </h2>
       </Link>
 
@@ -99,7 +99,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
         {styles.icon}
         <div>
           <p className={`${styles.text} text-base font-normal leading-[100%]`}>
-            {t(normalizedStatus)}
+            {locale === "ar" ? order.status : t(normalizedStatus)}
           </p>
 
           <p className="dark:text-[#C0C0C0] text-sm font-normal leading-[100%] mt-2">

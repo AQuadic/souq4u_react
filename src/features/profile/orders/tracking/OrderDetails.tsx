@@ -94,7 +94,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                   {productName}
                 </h2>
                 <p className="text-main md:text-2xl text-base font-bold md:mt-6 mt-2">
-                  {price} <span className="font-normal">{t("egp")}</span>
+                  {price} <span className="font-normal">{t("Orders.egp")}</span>
                 </p>
                 {/* Show days since order */}
                 {/* {order.created_at && (
@@ -134,7 +134,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                   >
                     {loadingId === order.id
                       ? "Cancelling..."
-                      : t("cancel", { defaultValue: "Cancel" })}
+                      : t("Orders.cancel")}
                   </button>
 
                   {isDialogOpen && toCancelId === order.id && (
