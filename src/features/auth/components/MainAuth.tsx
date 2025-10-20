@@ -265,7 +265,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
           }
         }}
       >
-        <DialogContent className="w-full max-w-[500px] md:max-w-[600px] lg:max-w-[691px] rounded-[20px] md:rounded-[40px]   border-none py-8 md:py-12 lg:py-20 mx-4 max-h-[90vh] overflow-y-auto scroll-hidden z-[40]">
+        <DialogContent className="w-full md:max-w-[600px] lg:max-w-[691px] rounded-[20px] md:rounded-[40px]   border-none py-8 md:py-12 lg:py-20 max-h-[90vh] overflow-y-auto scroll-hidden z-[40] mx-auto">
           <DialogHeader>
             {step === "login" ? (
               <LoginForm onSubmit={handleLogin} />
