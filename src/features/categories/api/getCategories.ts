@@ -5,6 +5,7 @@ export interface GetCategoriesParams {
   parent_id?: number;
   q?: string;
   type?: string;
+  with_children?: boolean;
 }
 
 export interface Category {
@@ -27,6 +28,10 @@ export async function getCategories(
   params: GetCategoriesParams = {}
 ): Promise<Category[]> {
   const response = await axios.get("/category", {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
     params,
   });
 
