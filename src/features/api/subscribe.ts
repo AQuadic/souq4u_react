@@ -17,7 +17,7 @@ export const subscribeEmail = async (email: string) => {
   try {
     const res = await axios.request<SubscribeResponse>({
       method: "POST",
-      url: "/subscribe",
+      url: "/store/subscribe",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
