@@ -78,7 +78,7 @@ export const useCartToast = () => {
     productName: string;
     quantity: number;
   }) => {
-    const message = t("updatedQuantity", {
+    const message = t("Cart.updatedQuantity", {
       productName,
       quantity,
     });
@@ -87,12 +87,12 @@ export const useCartToast = () => {
   };
 
   const showQuantityUpdateError = (productName: string) => {
-    const message = t("failedUpdateQuantity", { productName });
+    const message = t("Cart.failedUpdateQuantity", { productName });
     toast.error(message, { duration: 5000 });
   };
 
   const showItemRemoveSuccess = (productName: string) => {
-    const message = t("removedFromCart", { productName });
+    const message = t("Cart.removedFromCart", { productName });
     toast.success(message, { duration: 3000 });
   };
 
