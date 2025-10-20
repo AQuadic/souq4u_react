@@ -83,7 +83,9 @@ const isArabic = locale === "ar";
         <button className="relative">
           <Notifications />
           {notifications.some((n) => !n.read_at) && (
-            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-main" />
+            <span className="absolute -top-2 -left-2 min-w-[18px] h-[18px] rounded-full bg-main text-white text-[10px] font-bold flex items-center justify-center px-[5px]">
+              {notifications.filter((n) => !n.read_at).length}
+            </span>
           )}
         </button>
       </DropdownMenuTrigger>

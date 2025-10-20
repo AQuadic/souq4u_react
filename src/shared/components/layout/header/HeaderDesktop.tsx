@@ -64,7 +64,9 @@ const HeaderDesktop = () => {
                 <button className="cursor-pointer relative" onClick={openCart}>
                   <Cart />
                   {cartItemsCount > 0 && (
-                    <span className="absolute top-0 left-0 h-3 w-3 rounded-full bg-main z-40 pointer-events-none" />
+                    <span className="absolute -top-2 -left-2 min-w-[18px] h-[18px] rounded-full bg-main text-white text-[10px] font-bold flex items-center justify-center px-[5px] z-40 pointer-events-none">
+                      {cartItemsCount}
+                    </span>
                   )}
                 </button>
               </>
