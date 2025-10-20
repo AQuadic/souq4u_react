@@ -15,10 +15,19 @@ const BestOffersSection = () => {
       titleKey={t("Products.bestOffers")}
       titleAlign="center"
       maxItems={8}
-      queryParams={{}} // Temporarily removed all params
-      onlyDiscounted={false} // Temporarily disabled filtering
-      viewAllLink="/products"
+      queryParams={{
+        sort_by: "updated_at",
+        sort_order: "desc",
+        only_discount: 1,
+      }}
+      theme={{
+        gridClassName: "xl:grid-cols-4 grid-cols-2",
+      }}
+      onlyDiscounted={true}
+      viewAllLink="/products?is_discounted=1"
       viewAllTextKey={t("Products.viewAllProducts")}
+      showTopRated={true}
+      
     />
   );
 };
