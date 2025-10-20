@@ -116,7 +116,7 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
         disabled
         className="px-3 py-1 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 cursor-not-allowed"
       >
-        {t("reviewed")}
+        {t("Profile.reviewed")}
       </button>
     );
   }

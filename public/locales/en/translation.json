@@ -406,7 +406,8 @@
     "comment": "Comment",
     "send": "Send",
     "sending": "Sending...",
-    "commentPlaceholder": "Write your comment here..."
+    "commentPlaceholder": "Write your comment here...",
+    "reviewed": "Reviewed"
   },
   "Orders": {
     "orders": "Orders",
