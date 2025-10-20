@@ -73,7 +73,7 @@ const HeaderSearch = () => {
         )}
       </AnimatePresence>
 
-      {/* Backdrop + Panel */}
+      {/* Backdrop + Panel - covers screen on mobile, anchors on desktop */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -82,25 +82,19 @@ const HeaderSearch = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-50"
-            onClick={closeOverlay}
-            onPointerDown={closeOverlay}
+            className="fixed inset-0 z-50 bg-black/10"
+            onMouseDown={closeOverlay}
             onTouchStart={closeOverlay}
             onKeyDown={(e) => {
-              if (e.key === "Escape") closeOverlay();
+              if (e.key === "Escape") {
+                setIsOpen(false);
+                setSearchValue("");
+              }
             }}
             tabIndex={-1}
           >
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              className="absolute inset-0 bg-transparent"
-            />
-
-            <div className="relative h-full w-full">
-              {/* Desktop search box */}
+            {/* Panel - centered on small screens, top-right on md+ */}
+            <div className="relative h-full w-full pointer-events-none">
               <motion.div
                 layout
                 initial={{ opacity: 0, scale: 0.98, y: -8 }}
@@ -109,8 +103,9 @@ const HeaderSearch = () => {
                 transition={{ type: "spring", stiffness: 700, damping: 28 }}
                 className={`absolute ${
                   isRTL ? "left-4" : "right-4"
-                } top-3 hidden md:flex items-center gap-2 bg-white/60 dark:bg-slate-800/60 text-neutral-900 dark:text-white rounded-full px-3 py-1 shadow-lg border border-gray-200 dark:border-transparent backdrop-blur-sm`}
-                onClick={(e) => e.stopPropagation()}
+                } top-3 hidden md:flex items-center gap-2 bg-white/60 dark:bg-slate-800/60 text-neutral-900 dark:text-white rounded-full px-3 py-1 shadow-lg border border-gray-200 dark:border-transparent backdrop-blur-sm pointer-events-auto`}
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
               >
                 <span className="inline-flex items-center justify-center w-4 h-4 text-neutral-800 dark:text-white/90">
                   <SearchIcon />
@@ -133,15 +128,20 @@ const HeaderSearch = () => {
                   {t("Common.search")}
                 </button>
                 <button
-                  onClick={closeOverlay}
-                  aria-label={t("Common.close")}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setSearchValue("");
+                  }}
+                  aria-label={t("close")}
                   className="p-1 rounded-full hover:bg-neutral-200 dark:hover:bg-white/6 transition"
                 >
-                  <CloseIcon className="w-4 h-4 text-neutral-700 dark:text-white/90" />
+                  <span className="inline-flex items-center justify-center w-4 h-4">
+                    <CloseIcon className="w-4 h-4 text-neutral-700 dark:text-white/90" />
+                  </span>
                 </button>
               </motion.div>
 
-              {/* Mobile search box */}
+              {/* Mobile centered panel */}
               <motion.div
                 layout
                 initial={{ opacity: 0, scale: 0.98 }}
@@ -149,9 +149,12 @@ const HeaderSearch = () => {
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 700, damping: 28 }}
                 className="md:hidden absolute inset-0 flex items-start justify-center p-6 pt-20"
-                onClick={(e) => e.stopPropagation()}
               >
-                <div className="w-full max-w-lg">
+                <div
+                  className="w-full max-w-lg pointer-events-auto"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                >
                   <div className="flex items-center gap-2 bg-white/60 dark:bg-slate-900/60 text-neutral-900 dark:text-white rounded-2xl px-3 py-2 shadow-xl border border-gray-100 dark:border-slate-700 backdrop-blur-sm overflow-hidden">
                     <span className="inline-flex items-center justify-center w-5 h-5 text-neutral-700 dark:text-white/90 flex-shrink-0">
                       <SearchIcon />
@@ -169,16 +172,21 @@ const HeaderSearch = () => {
                     <button
                       onClick={handleSearchClick}
                       className="bg-main text-white px-3 rounded-full text-sm transition h-8 flex items-center justify-center flex-shrink-0"
-                      aria-label={t("Common.search")}
+                      aria-label={t("search")}
                     >
                       {t("Common.search")}
                     </button>
                     <button
-                      onClick={closeOverlay}
-                      aria-label={t("Common.close")}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setSearchValue("");
+                      }}
+                      aria-label={t("close")}
                       className="p-1 rounded-full transition flex-shrink-0"
                     >
-                      <CloseIcon className="w-5 h-5 text-neutral-700 dark:text-white/90" />
+                      <span className="inline-flex items-center justify-center w-5 h-5">
+                        <CloseIcon className="w-5 h-5 text-neutral-700 dark:text-white/90" />
+                      </span>
                     </button>
                   </div>
                 </div>

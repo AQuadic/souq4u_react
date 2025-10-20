@@ -12,18 +12,22 @@ import { Breadcrumbs } from "@/shared/components/BreadCrumbs/BreadCrumbs";
 import ProductsSorting from "./ProductsSorting";
 import ProductCardListing from "../ProductCardListing";
 import { useProductFilters } from "../../hooks/useProductFilters";
-// import { useSearchParams } from "next/navigation";
 import ProductsCategoryFilter from "./ProductsCategoryFilter";
+import ProductsPagination from "@/shared/components/pagenation/ProductsPagenation";
+import { useLocation } from "react-router-dom";
 
 const ProductsGrid: React.FC = () => {
   const { t } = useTranslation();
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const { filters, setCategory, setPriceRange, setSorting } =
     useProductFilters();
 
-  // const searchParams = useSearchParams();
-  // const searchQuery = searchParams?.get("search") ?? undefined;
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
+  const searchQuery = searchParams.get("search") ?? undefined;
 
   // Fetch price range from API
   const { data: priceRangeData } = useQuery<{
@@ -36,12 +40,32 @@ const ProductsGrid: React.FC = () => {
   });
 
   const { data, isLoading, isFetching, error } = useQuery<Product[], Error>({
-    queryKey: ["products", filters],
-    queryFn: () => getProducts(), // Temporarily removed all params
+    queryKey: ["products", filters, searchQuery],
+    queryFn: () =>
+      getProducts({
+        q: searchQuery,
+        pagination: false,
+        sort_by: filters.sortBy,
+        sort_order: filters.sortOrder,
+        only_discount: filters.onlyDiscount,
+        category_id: filters.categoryId,
+        min_price: filters.minPrice,
+        max_price: filters.maxPrice,
+      }),
     staleTime: 5000,
   });
 
-  // favorites are handled inside ProductCard; no local favorites state needed here
+  // Calculate pagination
+  const totalProducts = data?.length ?? 0;
+  const totalPages = Math.ceil(totalProducts / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProducts = data?.slice(startIndex, endIndex) ?? [];
+
+  // Reset to page 1 when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, searchQuery]);
 
   if (error) {
     return (
@@ -89,8 +113,8 @@ const ProductsGrid: React.FC = () => {
             view={view}
             setView={setView}
             setSorting={setSorting}
-            displayed={data?.length ?? 0}
-            total={data?.length ?? 0}
+            displayed={currentProducts.length}
+            total={totalProducts}
           />
 
           {isFetching && !isLoading && (
@@ -131,22 +155,32 @@ const ProductsGrid: React.FC = () => {
             </div>
           )}
 
-          {!isLoading && data && data.length > 0 && (
-            <div
-              className={`md:mt-12 mt-6 ${
-                view === "grid"
-                  ? "grid lg:grid-cols-3 grid-cols-2 gap-6 justify-items-center"
-                  : "flex flex-col gap-4"
-              }`}
-            >
-              {data.map((product) =>
-                view === "grid" ? (
-                  <ProductCard key={product.id} product={product} />
-                ) : (
-                  <ProductCardListing key={product.id} product={product} />
-                )
+          {!isLoading && currentProducts.length > 0 && (
+            <>
+              <div
+                className={`md:mt-12 mt-6 ${
+                  view === "grid"
+                    ? "grid lg:grid-cols-3 grid-cols-2 gap-6 justify-items-center"
+                    : "flex flex-col gap-4"
+                }`}
+              >
+                {currentProducts.map((product) =>
+                  view === "grid" ? (
+                    <ProductCard key={product.id} product={product} />
+                  ) : (
+                    <ProductCardListing key={product.id} product={product} />
+                  )
+                )}
+              </div>
+
+              {totalPages > 1 && (
+                <ProductsPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
               )}
-            </div>
+            </>
           )}
 
           {!isLoading && data && data.length === 0 && (
