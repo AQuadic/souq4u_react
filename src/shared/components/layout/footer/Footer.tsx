@@ -9,14 +9,13 @@ import Instagram from "./icons/Instagram";
 import Youtube from "./icons/Youtube";
 import Tiktok from "./icons/Tiktok";
 import Snapchat from "./icons/Snapchat";
-// import SubscribeInput, {
-//   SubscribeInputValue,
-// } from "../../forms/SubscribeInput";
+import SubscribeInput, {
+  SubscribeInputValue,
+} from "../../forms/SubscribeInput";
 import FooterContactInfo from "./FooterContactInfo";
-// import SubscribeInput, { SubscribeInputValue } from "../../forms/SubscribeInput";
 import { useToast } from "../../ui/toast";
 import { useConfig } from "@/features/config";
-// import { subscribe } from "@/features/api/subscribe";
+import { subscribe } from "@/features/api/subscribe";
 import { checkOtp, postLogin, ResendResponse, resendVerification, useAuthStore, useLogin, VerificationForm } from "@/features/auth";
 import LoginForm from "@/features/auth/components/LoginForm";
 import { Dialog, DialogContent, DialogHeader } from "../../ui/dialog";
@@ -34,15 +33,15 @@ const socialIcons = [
 
 const Footer = () => {
   const config = useConfig();
-  const { t } = useTranslation("Navigation");
+  const { t, i18n } = useTranslation("Navigation");
   const navigate = useNavigate();
-  // const locale = i18n.language;
-  // const toastT = useTranslation("Toasts");
-  // const [subscribeValue, setSubscribeValue] = useState<SubscribeInputValue>({
-  //   value: "",
-  // });
-  // const [subscribeError, setSubscribeError] = useState<string>("");
-  // const [loading, setLoading] = useState(false);
+  const locale = i18n.language;
+  const toastT = useTranslation("Toasts");
+  const [subscribeValue, setSubscribeValue] = useState<SubscribeInputValue>({
+    value: "",
+  });
+  const [subscribeError, setSubscribeError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
 
   const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -62,55 +61,55 @@ const Footer = () => {
 
   // Get subscribe type from config, default to email
   // Normalize subscribe type to either 'phone' or 'email'
-  // const rawSubscribeType = config?.subscribe_config?.type;
-  // const subscribeType = rawSubscribeType === "phone" ? "phone" : "email";
+  const rawSubscribeType = config?.subscribe_config?.type;
+  const subscribeType = rawSubscribeType === "phone" ? "phone" : "email";
 
   // Minimum length for phone numbers (from config) - coerce to number and fallback to 0
-  // const subscribeMin = Number(config?.subscribe_config?.min || 0) || 0;
+  const subscribeMin = Number(config?.subscribe_config?.min || 0) || 0;
 
   // Get placeholder based on subscribe type
-  // const getSubscribePlaceholder = () => {
-  //   if (subscribeType === "email") {
-  //     return t("Footer.enterEmailPlaceholder");
-  //   }
-  //   return locale === "ar" ? "أدخل رقم الهاتف" : "Enter phone number";
-  // };
+  const getSubscribePlaceholder = () => {
+    if (subscribeType === "email") {
+      return t("Footer.enterEmailPlaceholder");
+    }
+    return locale === "ar" ? "أدخل رقم الهاتف" : "Enter phone number";
+  };
 
   // Extract server message from error objects/strings
-  // const getServerErrorMessage = (err: unknown): string | null => {
-  //   try {
-  //     const apiErr = err as {
-  //       response?: {
-  //         data?: { message?: string; errors?: Record<string, string[]> };
-  //       };
-  //       message?: string;
-  //     };
+  const getServerErrorMessage = (err: unknown): string | null => {
+    try {
+      const apiErr = err as {
+        response?: {
+          data?: { message?: string; errors?: Record<string, string[]> };
+        };
+        message?: string;
+      };
 
-  //     const respData = apiErr.response?.data;
-  //     if (respData?.message) return respData.message;
-  //     if (Array.isArray(respData?.errors?.email) && respData.errors.email[0])
-  //       return respData.errors.email[0];
+      const respData = apiErr.response?.data;
+      if (respData?.message) return respData.message;
+      if (Array.isArray(respData?.errors?.email) && respData.errors.email[0])
+        return respData.errors.email[0];
 
-  //     if (typeof apiErr.message === "string" && apiErr.message) {
-  //       const m = apiErr.message;
-  //       const exec = /({\s*"message"[\s\S]*})$/.exec(m);
-  //       if (exec?.[1]) {
-  //         try {
-  //           const parsed = JSON.parse(exec[1]);
-  //           if (parsed?.message) return parsed.message;
-  //         } catch {
-  //           return m;
-  //         }
-  //       }
-  //       return m;
-  //     }
+      if (typeof apiErr.message === "string" && apiErr.message) {
+        const m = apiErr.message;
+        const exec = /({\s*"message"[\s\S]*})$/.exec(m);
+        if (exec?.[1]) {
+          try {
+            const parsed = JSON.parse(exec[1]);
+            if (parsed?.message) return parsed.message;
+          } catch {
+            return m;
+          }
+        }
+        return m;
+      }
 
-  //     if (typeof err === "string") return err;
-  //   } catch (parseErr) {
-  //     console.error("Failed to parse API error:", parseErr);
-  //   }
-  //   return null;
-  // };
+      if (typeof err === "string") return err;
+    } catch (parseErr) {
+      console.error("Failed to parse API error:", parseErr);
+    }
+    return null;
+  };
 
 
   const stopPolling = useCallback(() => {
@@ -283,63 +282,63 @@ const Footer = () => {
   }, [loginData, t, toast]);
 
   // Handler for subscribe button click extracted for clarity
-  // const handleSubscribeClick = async () => {
-  //   if (loading) return;
+  const handleSubscribeClick = async () => {
+    if (loading) return;
 
-  //   // Validate input
-  //   const trimmed = subscribeValue.value.trim();
-  //   if (!trimmed) {
-  //     setSubscribeError(toastT("validationError"));
-  //     return;
-  //   }
+    // Validate input
+    const trimmed = subscribeValue.value.trim();
+    if (!trimmed) {
+      setSubscribeError(t("validationError"));
+      return;
+    }
 
-  //   // Validate based on type
-  //   if (subscribeType === "email") {
-  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //     if (!emailRegex.test(trimmed)) {
-  //       setSubscribeError(t("invalidEmail"));
-  //       return;
-  //     }
-  //   } else if (subscribeType === "phone") {
-  //     const phoneNumber = subscribeValue.phoneValue?.number || "";
-  //     if (!phoneNumber) {
-  //       setSubscribeError(
-  //         locale === "ar" ? "رقم الهاتف مطلوب" : "Phone number is required"
-  //       );
-  //       return;
-  //     }
+    // Validate based on type
+    if (subscribeType === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(trimmed)) {
+        setSubscribeError(t("invalidEmail"));
+        return;
+      }
+    } else if (subscribeType === "phone") {
+      const phoneNumber = subscribeValue.phoneValue?.number || "";
+      if (!phoneNumber) {
+        setSubscribeError(
+          locale === "ar" ? "رقم الهاتف مطلوب" : "Phone number is required"
+        );
+        return;
+      }
 
-  //     if (subscribeMin > 0 && phoneNumber.length < subscribeMin) {
-  //       setSubscribeError(
-  //         locale === "ar"
-  //           ? `الحد الأدنى لطول رقم الهاتف هو ${subscribeMin}`
-  //           : `Phone number must be at least ${subscribeMin} digits`
-  //       );
-  //       return;
-  //     }
-  //   }
+      if (subscribeMin > 0 && phoneNumber.length < subscribeMin) {
+        setSubscribeError(
+          locale === "ar"
+            ? `الحد الأدنى لطول رقم الهاتف هو ${subscribeMin}`
+            : `Phone number must be at least ${subscribeMin} digits`
+        );
+        return;
+      }
+    }
 
-  //   setLoading(true);
-  //   try {
-  //     const res = await subscribe(
-  //       subscribeType,
-  //       trimmed,
-  //       subscribeValue.phoneValue?.code
-  //     );
-  //     toast.success(t("subscribeSuccess"));
-  //     // Reset form
-  //     setSubscribeValue({
-  //       value: "",
-  //     });
-  //     setSubscribeError("");
-  //   } catch (err) {
-  //     console.error("Subscribe failed:", err);
-  //     const serverMsg = getServerErrorMessage(err) || t("subscribeFailed");
-  //     toast.error(serverMsg);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+    setLoading(true);
+    try {
+      const res = await subscribe(
+        subscribeType,
+        trimmed,
+        subscribeValue.phoneValue?.code
+      );
+      toast.success(t("subscribeSuccess"));
+      // Reset form
+      setSubscribeValue({
+        value: "",
+      });
+      setSubscribeError("");
+    } catch (err) {
+      console.error("Subscribe failed:", err);
+      const serverMsg = getServerErrorMessage(err) || t("subscribeFailed");
+      toast.error(serverMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -362,7 +361,7 @@ const Footer = () => {
             </div>
 
             <p className="text-base lg:text-lg font-normal leading-[150%] max-w-[340px] mx-auto lg:mx-0 mb-6">
-              &quot;High-quality products that make your life better.&quot;
+              &quot;{t('Footer.footerDescribtion')}&quot;
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-3">
@@ -441,8 +440,8 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Section 4 - Newsletter */}
-          {/* <div className="  lg: ">
+        {/* Section 4 - Newsletter */}
+        <div className="  lg: ">
           <h2 className=" text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
             {t("Navigation.subscribeUs")}
           </h2>
@@ -472,16 +471,16 @@ const Footer = () => {
               {loading ? t("Footer.subscribing") : t("Footer.subscribe")}
             </button>
           </div>
-        </div> */}
+        </div>
 
-          <div>
+          {/* <div>
             <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
               {t("Footer.subscribe")}
             </h2>
             <div className="flex flex-col gap-4 max-w-[323px] mx-auto lg:mx-0">
               <p className="text-sm text-gray-500">Coming soon...</p>
             </div>
-          </div>
+          </div> */}
 
       <Dialog
         open={isDialogOpen}
