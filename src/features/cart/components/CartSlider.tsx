@@ -92,7 +92,7 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
             <div className="flex-1 overflow-y-auto p-4">
               {cartItems.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
-                  <p className="text-gray-400 text-center">{t("empty")}</p>
+                  <p className="text-gray-400 text-center">{t("Cart.empty")}</p>
                 </div>
               ) : (
                 <div className="space-y-4">
