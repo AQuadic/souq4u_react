@@ -50,11 +50,13 @@ const MainHero = () => {
     );
   }
 
+  const repeatedSlides = [...data.data, ...data.data, ...data.data];
+
   return (
     <main className="container py-6">
       <Slider {...settings}>
-        {data.data.map((slide) => (
-          <HeroSlide key={slide.id} slide={slide} />
+        {repeatedSlides.map((slide, index) => (
+          <HeroSlide key={`${slide.id}-${index}`} slide={slide} />
         ))}
       </Slider>
     </main>
