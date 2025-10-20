@@ -47,13 +47,13 @@ export default function DeleteAddressDialog(props: Readonly<Props>) {
             <div className="rounded-3xl border-none bg-white dark:bg-[#121216] shadow-xl">
               <div className="px-6 pt-6">
                 <h2 className="text-center leading-[150%] text-gray-900 dark:text-gray-100 text-2xl font-medium">
-                  {t("title")}
+                  {t("Address.deleteDialog.title")}
                 </h2>
               </div>
 
               <div className="px-6 mt-4 text-center">
                 <p className="text-sm text-gray-700 dark:text-gray-300">
-                  {t("description", { title: addressTitle || "" })}
+                  {t("Address.deleteDialog.description", { title: addressTitle || "" })}
                 </p>
               </div>
 
@@ -63,14 +63,14 @@ export default function DeleteAddressDialog(props: Readonly<Props>) {
                   aria-label={t("yes")}
                   className="w-[140px] h-12 rounded-[8px] bg-main hover:bg-main text-white text-base font-medium cursor-pointer transition-colors"
                 >
-                  {t("yes")}
+                  {t("Address.deleteDialog.yes")}
                 </button>
                 <button
                   onClick={() => setDialogOpen(false)}
                   aria-label={t("no")}
                   className="w-[140px] h-12 rounded-[8px] border border-gray-300 dark:border-gray-700 text-base font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
                 >
-                  {t("no")}
+                  {t("Address.deleteDialog.no")}
                 </button>
               </div>
             </div>
