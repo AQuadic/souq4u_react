@@ -25,7 +25,7 @@ export const useCartToast = () => {
       quantity > 1 ? ` (${quantity}x)` : ""
     }`;
 
-    const message = t("addToCartSentence", { product: productLabel });
+    const message = t("Cart.addToCartSentence", { product: productLabel });
 
     toast.success(message, {
       action: (
@@ -37,7 +37,7 @@ export const useCartToast = () => {
             console.log("View cart clicked");
           }}
         >
-          {t("viewCart")}
+          {t("Cart.viewCart")}
         </Link>
       ),
       duration: 5000,

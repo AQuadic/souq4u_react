@@ -179,7 +179,7 @@
     "saveOffer": "Save {amount} {currency} ({percent}% off)",
     "loginToCheckout": "Please login to checkout",
     "loginRequired": "Login Required",
-    "addToCartSentence": "{product} added to your cart",
+    "addToCartSentence": "Product added to your cart",
     "viewCart": "View Cart",
     "failedToAdd": "Failed to add item to cart",
     "updatedQuantity": "Updated {productName} quantity to {quantity}",
