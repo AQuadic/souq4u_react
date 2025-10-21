@@ -9,6 +9,10 @@ export interface Config {
       lng?: number;
     };
   };
+  subscribe_config?: {
+    type?: string;
+    min?: number;
+  };
 }
 
 interface ConfigState {

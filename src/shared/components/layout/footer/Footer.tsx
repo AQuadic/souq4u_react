@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import Facebook from "./icons/Facebook";
@@ -13,13 +13,24 @@ import SubscribeInput, {
   SubscribeInputValue,
 } from "../../forms/SubscribeInput";
 import FooterContactInfo from "./FooterContactInfo";
+import {
+  usePagesContextSafe,
+  useFooterNavigation,
+} from "@/features/static-pages";
 import { useToast } from "../../ui/toast";
 import { useConfig } from "@/features/config";
 import { subscribe } from "@/features/api/subscribe";
-import { checkOtp, postLogin, ResendResponse, resendVerification, useAuthStore, useLogin, VerificationForm } from "@/features/auth";
+import {
+  checkOtp,
+  postLogin,
+  ResendResponse,
+  resendVerification,
+  useAuthStore,
+  useLogin,
+  VerificationForm,
+} from "@/features/auth";
 import LoginForm from "@/features/auth/components/LoginForm";
 import { Dialog, DialogContent, DialogHeader } from "../../ui/dialog";
-import { useNavigate } from "react-router-dom";
 
 const socialIcons = [
   { Icon: Facebook, href: "https://facebook.com" },
@@ -34,9 +45,12 @@ const socialIcons = [
 const Footer = () => {
   const config = useConfig();
   const { t, i18n } = useTranslation("Navigation");
+  const locale = i18n.language || "en";
+
+  // Get pages from context and build footer navigation links
+  const pages = usePagesContextSafe();
+  const dynamicLinks = useFooterNavigation(pages);
   const navigate = useNavigate();
-  const locale = i18n.language;
-  const toastT = useTranslation("Toasts");
   const [subscribeValue, setSubscribeValue] = useState<SubscribeInputValue>({
     value: "",
   });
@@ -105,12 +119,11 @@ const Footer = () => {
       }
 
       if (typeof err === "string") return err;
-    } catch (parseErr) {
-      console.error("Failed to parse API error:", parseErr);
+    } catch (error_) {
+      console.error("Failed to parse API error:", error_);
     }
     return null;
   };
-
 
   const stopPolling = useCallback(() => {
     shouldContinuePollingRef.current = false;
@@ -133,20 +146,18 @@ const Footer = () => {
     }
   }, [isDialogOpen, stopPolling]);
 
-    const handleAccountClick = (e: React.MouseEvent) => {
+  const handleAccountClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isAuth) {
       navigate("/profile/account");
+    } else if (config?.store_type === "Clothes") {
+      navigate("/auth/login");
     } else {
-      if (config?.store_type === "Clothes") {
-        navigate("/auth/login");
-      } else {
-        setIsDialogOpen(true);
-      }
+      setIsDialogOpen(true);
     }
   };
 
-    const pollOtpStatus = useCallback(
+  const pollOtpStatus = useCallback(
     async (
       phone: string,
       token: string,
@@ -185,7 +196,7 @@ const Footer = () => {
           if (response?.user && response?.token) {
             stopPolling();
             loginUser(response.user, response.token);
-            toast.success(t("loginSuccess"), undefined);
+            toast.success(t("loginSuccess"));
             setStep("login");
             setIsDialogOpen(false);
             return;
@@ -218,7 +229,7 @@ const Footer = () => {
     [loginUser, stopPolling, t, toast]
   );
 
-    const handleLogin = async (payload: {
+  const handleLogin = async (payload: {
     phone: string;
     phone_country?: string;
   }) => {
@@ -264,7 +275,7 @@ const Footer = () => {
     }
   };
 
-    const handleResendVerification = useCallback(async () => {
+  const handleResendVerification = useCallback(async () => {
     if (loginData?.phone && loginData?.token) {
       try {
         const verificationResp = await resendVerification(
@@ -320,11 +331,7 @@ const Footer = () => {
 
     setLoading(true);
     try {
-      const res = await subscribe(
-        subscribeType,
-        trimmed,
-        subscribeValue.phoneValue?.code
-      );
+      await subscribe(subscribeType, trimmed, subscribeValue.phoneValue?.code);
       toast.success(t("subscribeSuccess"));
       // Reset form
       setSubscribeValue({
@@ -361,7 +368,7 @@ const Footer = () => {
             </div>
 
             <p className="text-base lg:text-lg font-normal leading-[150%] max-w-[340px] mx-auto lg:mx-0 mb-6">
-              &quot;{t('Footer.footerDescribtion')}&quot;
+              &quot;{t("Footer.footerDescribtion")}&quot;
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-3">
@@ -406,72 +413,63 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Section 3 - Help */}
+          {/* Section 3 - Dynamic Pages (from API) */}
           <div>
             <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
               {t("Footer.help")}
             </h2>
             <div className="flex flex-col gap-4">
-              {/* <Link
-                to="/track-order"
-                className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
-              >
-                {t("Footer.trackOrder")}
-              </Link> */}
               <Link
-              to="/profile/account"
-              onClick={handleAccountClick}
-              className=" text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200 cursor-pointer"
-            >
-              {t("Footer.myAccount")}
-            </Link>
-              {/* <Link
-                to="/faq"
-                className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
+                to="/profile/account"
+                onClick={handleAccountClick}
+                className=" text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200 cursor-pointer"
               >
-                {t("Footer.faq")}
+                {t("Footer.myAccount")}
               </Link>
-              <Link
-                to="/privacy"
-                className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
-              >
-                {t("Footer.privacyPolicy")}
-              </Link> */}
+              {dynamicLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
+                >
+                  {locale === "ar" ? link.titleAr : link.titleEn}
+                </Link>
+              ))}
             </div>
           </div>
 
-        {/* Section 4 - Newsletter */}
-        <div className="  lg: ">
-          <h2 className=" text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
-            {t("Navigation.subscribeUs")}
-          </h2>
-          <div className="flex flex-col gap-4 max-w-[323px] mx-auto lg:mx-0">
-            <SubscribeInput
-              type={subscribeType}
-              value={subscribeValue}
-              onChange={(newValue) => {
-                setSubscribeValue(newValue);
-                // Clear error when user changes input
-                if (subscribeError) {
-                  setSubscribeError("");
-                }
-              }}
-              placeholder={getSubscribePlaceholder()}
-              error={subscribeError}
-              disabled={loading}
-              language={locale as "en" | "ar"}
-              // Only pass a minLength when the subscribe type is not phone
-              minLength={subscribeType === "phone" ? undefined : subscribeMin}
-            />
-            <button
-              onClick={handleSubscribeClick}
-              disabled={loading}
-              className="w-full h-12 bg-main hover:bg-main/90 rounded-[8px] text-[#FDFDFD] text-base lg:text-lg font-bold leading-[100%] transition-colors duration-200 disabled:opacity-60 cursor-pointer"
-            >
-              {loading ? t("Footer.subscribing") : t("Footer.subscribe")}
-            </button>
+          {/* Section 4 - Newsletter */}
+          <div className="  lg: ">
+            <h2 className=" text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
+              {t("Navigation.subscribeUs")}
+            </h2>
+            <div className="flex flex-col gap-4 max-w-[323px] mx-auto lg:mx-0">
+              <SubscribeInput
+                type={subscribeType}
+                value={subscribeValue}
+                onChange={(newValue) => {
+                  setSubscribeValue(newValue);
+                  // Clear error when user changes input
+                  if (subscribeError) {
+                    setSubscribeError("");
+                  }
+                }}
+                placeholder={getSubscribePlaceholder()}
+                error={subscribeError}
+                disabled={loading}
+                language={locale as "en" | "ar"}
+                // Only pass a minLength when the subscribe type is not phone
+                minLength={subscribeType === "phone" ? undefined : subscribeMin}
+              />
+              <button
+                onClick={handleSubscribeClick}
+                disabled={loading}
+                className="w-full h-12 bg-main hover:bg-main/90 rounded-[8px] text-[#FDFDFD] text-base lg:text-lg font-bold leading-[100%] transition-colors duration-200 disabled:opacity-60 cursor-pointer"
+              >
+                {loading ? t("Footer.subscribing") : t("Footer.subscribe")}
+              </button>
+            </div>
           </div>
-        </div>
 
           {/* <div>
             <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
@@ -482,35 +480,35 @@ const Footer = () => {
             </div>
           </div> */}
 
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) {
-            stopPolling();
-            setStep("login");
-          }
-        }}
-      >
-        <DialogContent className="w-full md:max-w-[600px] lg:max-w-[691px] rounded-[20px] md:rounded-[40px]   border-none py-8 md:py-12 lg:py-20 max-h-[90vh] overflow-y-auto scroll-hidden z-[40] mx-auto">
-          <DialogHeader>
-            {step === "login" ? (
-              <LoginForm onSubmit={handleLogin} />
-            ) : (
-              <VerificationForm
-                onBack={() => {
-                  stopPolling();
-                  setStep("login");
-                }}
-                loginData={loginData}
-                verificationData={verificationData}
-                onResendVerification={handleResendVerification}
-                isPolling={isPolling}
-              />
-            )}
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => {
+              setIsDialogOpen(open);
+              if (!open) {
+                stopPolling();
+                setStep("login");
+              }
+            }}
+          >
+            <DialogContent className="w-full md:max-w-[600px] lg:max-w-[691px] rounded-[20px] md:rounded-[40px]   border-none py-8 md:py-12 lg:py-20 max-h-[90vh] overflow-y-auto scroll-hidden z-[40] mx-auto">
+              <DialogHeader>
+                {step === "login" ? (
+                  <LoginForm onSubmit={handleLogin} />
+                ) : (
+                  <VerificationForm
+                    onBack={() => {
+                      stopPolling();
+                      setStep("login");
+                    }}
+                    loginData={loginData}
+                    verificationData={verificationData}
+                    onResendVerification={handleResendVerification}
+                    isPolling={isPolling}
+                  />
+                )}
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </footer>
     </div>

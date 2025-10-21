@@ -11,17 +11,29 @@ import { useCartStore } from "@/features/cart/stores";
 import MainAuth from "@/features/auth/components/MainAuth";
 import HeaderSearch from "./HeaderSearch";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { NavLinks } from "./NavLinks";
+import {
+  usePagesContextSafe,
+  useHeaderNavigation,
+} from "@/features/static-pages";
 import LogoutDialog from "@/features/profile/sidebar/LogoutDialog";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../../ui/accordion";
 
 const MobileHeader = () => {
-  const {t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const locale = i18n.language || "en";
   const location = useLocation();
   const { isOpen: isCartOpen, openCart, closeCart } = useCartSlider();
   const { user } = useAuth();
+
+  // Get pages from context and build navigation links
+  const pages = usePagesContextSafe();
+  const navLinks = useHeaderNavigation(pages);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const cart = useCartStore((s) => s.cart);
@@ -68,29 +80,29 @@ const MobileHeader = () => {
           overflow-y-auto overflow-x-hidden shadow-2xl
           ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
-          <button
-            onClick={() => setIsOpen(false)}
-            className="mb-8 hover:opacity-70 transition-opacity"
-          >
-            <X size={24} className="text-gray-700" />
-          </button>
+        <button
+          onClick={() => setIsOpen(false)}
+          className="mb-8 hover:opacity-70 transition-opacity"
+        >
+          <X size={24} className="text-gray-700" />
+        </button>
 
-          <nav className="flex flex-col gap-6 mb-8">
-            {NavLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`text-base font-normal transition-colors ${
-                  isActivePath(link.href)
-                    ? "text-main font-semibold"
-                    : "text-gray-700 hover:text-main"
-                }`}
-              >
-                {link.name[locale as keyof typeof link.name]}
-              </Link>
-            ))}
-          </nav>
+        <nav className="flex flex-col gap-6 mb-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              onClick={() => setIsOpen(false)}
+              className={`text-base font-normal transition-colors ${
+                isActivePath(link.href)
+                  ? "text-main font-semibold"
+                  : "text-gray-700 hover:text-main"
+              }`}
+            >
+              {locale === "ar" ? link.titleAr : link.titleEn}
+            </Link>
+          ))}
+        </nav>
 
         {user && (
           <Accordion type="single" collapsible className="w-full mt-4">
@@ -123,11 +135,7 @@ const MobileHeader = () => {
 
         <div className="mt-6 space-y-4">
           <div className="border-t border-gray-600 pt-4 flex items-center justify-between">
-            <LanguageSwitcher
-              mode="full"
-              isMobile={true}
-              className=""
-            />
+            <LanguageSwitcher mode="full" isMobile={true} className="" />
           </div>
           <div className="border-t border-gray-600 pt-4">
             <MainAuth onProfileClick={() => setIsOpen(false)} />
