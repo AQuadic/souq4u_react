@@ -412,7 +412,9 @@
     "reviewed": "Reviewed",
     "loadingAddressess": "Loading addresses...",
     "loadingFav": "Loading favorites...",
-    "loadingOrders": "Loading orders..."
+    "loadingOrders": "Loading orders...",
+    "noAddress": "No Address Yet",
+    "noAddressDes": "Please add your addresses for your better experience"
   },
   "Orders": {
     "orders": "Orders",
