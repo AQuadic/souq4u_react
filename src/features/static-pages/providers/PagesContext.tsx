@@ -12,6 +12,7 @@ import { getPages } from "../api";
 interface PagesContextValue {
   pages: Page[];
   isLoading: boolean;
+  error: Error | null;
 }
 
 const PagesContext = createContext<PagesContextValue | undefined>(undefined);
@@ -27,6 +28,7 @@ interface PagesProviderProps {
 export function PagesProvider({ children }: PagesProviderProps) {
   const [pages, setPages] = useState<Page[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -34,16 +36,20 @@ export function PagesProvider({ children }: PagesProviderProps) {
     const fetchPages = async () => {
       try {
         setIsLoading(true);
+        setError(null);
         const data = await getPages();
 
         if (mounted) {
           setPages(data);
           console.log("✅ Fetched pages:", data.length, "pages");
         }
-      } catch (error) {
-        console.error("❌ Failed to fetch pages:", error);
+      } catch (err) {
+        console.error("❌ Failed to fetch pages:", err);
         if (mounted) {
           setPages([]);
+          setError(
+            err instanceof Error ? err : new Error("Failed to fetch pages")
+          );
         }
       } finally {
         if (mounted) {
@@ -59,7 +65,10 @@ export function PagesProvider({ children }: PagesProviderProps) {
     };
   }, []);
 
-  const value = useMemo(() => ({ pages, isLoading }), [pages, isLoading]);
+  const value = useMemo(
+    () => ({ pages, isLoading, error }),
+    [pages, isLoading, error]
+  );
 
   return (
     <PagesContext.Provider value={value}>{children}</PagesContext.Provider>

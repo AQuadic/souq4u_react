@@ -9,11 +9,11 @@ import { usePagesContext } from "../providers";
  * Migration: Replace `useStaticPages()` with `usePagesContext()`
  */
 export const useStaticPages = () => {
-  const { pages, isLoading } = usePagesContext();
+  const { pages, isLoading, error } = usePagesContext();
 
   return {
     pages,
     loading: isLoading,
-    error: null,
+    error,
   };
 };

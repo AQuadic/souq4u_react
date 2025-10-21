@@ -13,6 +13,10 @@ export interface Page {
   order_column: number;
   created_at: string;
   updated_at: string;
+  country_id: number | null;
+  tenant_id: number | null;
+  app_ids: string[];
+  image: string | null;
 }
 
 export interface GetPagesResponse {
@@ -38,20 +42,34 @@ export const getPages = async (): Promise<Page[]> => {
         data.length,
         "pages"
       );
-      return data;
+      return data.filter((page) => page.is_active === 1);
     } else if (data && typeof data === "object" && "pages" in data) {
       console.log(
         "✅ Pages API returned wrapped object:",
         data.pages?.length || 0,
         "pages"
       );
-      return data.pages || [];
+      return (data.pages || []).filter((page) => page.is_active === 1);
     }
 
     console.warn("⚠️ Unexpected pages API response format:", data);
     return [];
   } catch (error) {
     console.error("❌ Failed to fetch pages:", error);
-    return [];
+    throw error;
+  }
+};
+
+/**
+ * Fetches a single static page by ID from the API
+ */
+export const getPageById = async (id: number): Promise<Page> => {
+  try {
+    const response = await axios.get<Page>(`/pages/${id}`);
+    console.log(`✅ Page ${id} fetched successfully`);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Failed to fetch page ${id}:`, error);
+    throw error;
   }
 };
