@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import Facebook from "./icons/Facebook";
@@ -31,7 +31,6 @@ import {
 } from "@/features/auth";
 import LoginForm from "@/features/auth/components/LoginForm";
 import { Dialog, DialogContent, DialogHeader } from "../../ui/dialog";
-import { useNavigate } from "react-router-dom";
 
 const socialIcons = [
   { Icon: Facebook, href: "https://facebook.com" },
@@ -45,15 +44,13 @@ const socialIcons = [
 
 const Footer = () => {
   const config = useConfig();
-  const { t, i18n, i18n } = useTranslation("Navigation");
+  const { t, i18n } = useTranslation("Navigation");
   const locale = i18n.language || "en";
 
   // Get pages from context and build footer navigation links
   const pages = usePagesContextSafe();
   const dynamicLinks = useFooterNavigation(pages);
   const navigate = useNavigate();
-  const locale = i18n.language;
-  const toastT = useTranslation("Toasts");
   const [subscribeValue, setSubscribeValue] = useState<SubscribeInputValue>({
     value: "",
   });
@@ -122,8 +119,8 @@ const Footer = () => {
       }
 
       if (typeof err === "string") return err;
-    } catch (parseErr) {
-      console.error("Failed to parse API error:", parseErr);
+    } catch (error_) {
+      console.error("Failed to parse API error:", error_);
     }
     return null;
   };
@@ -153,12 +150,10 @@ const Footer = () => {
     e.preventDefault();
     if (isAuth) {
       navigate("/profile/account");
+    } else if (config?.store_type === "Clothes") {
+      navigate("/auth/login");
     } else {
-      if (config?.store_type === "Clothes") {
-        navigate("/auth/login");
-      } else {
-        setIsDialogOpen(true);
-      }
+      setIsDialogOpen(true);
     }
   };
 
@@ -201,7 +196,7 @@ const Footer = () => {
           if (response?.user && response?.token) {
             stopPolling();
             loginUser(response.user, response.token);
-            toast.success(t("loginSuccess"), undefined);
+            toast.success(t("loginSuccess"));
             setStep("login");
             setIsDialogOpen(false);
             return;
@@ -336,11 +331,7 @@ const Footer = () => {
 
     setLoading(true);
     try {
-      const res = await subscribe(
-        subscribeType,
-        trimmed,
-        subscribeValue.phoneValue?.code
-      );
+      await subscribe(subscribeType, trimmed, subscribeValue.phoneValue?.code);
       toast.success(t("subscribeSuccess"));
       // Reset form
       setSubscribeValue({
