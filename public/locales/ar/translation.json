@@ -98,7 +98,8 @@
       "productImageAlt": "صورة المنتج",
       "heading": "ملخص التقييمات",
       "starsLabel": "نجوم"
-    }
+    },
+    "tapToExpand": "انقر للتوسع"
   },
   "ProductsGrid": {
     "home": "\u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629",
