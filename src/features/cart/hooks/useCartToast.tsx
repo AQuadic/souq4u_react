@@ -119,8 +119,8 @@ export const useCartToast = () => {
 
   const loginRequired = () => {
     const message =
-      t("loginRequired") ||
-      t("loginRequiredForCart") ||
+      t("Cart.loginRequired") ||
+      t("Cart.loginRequiredForCart") ||
       "Please login to continue.";
     toast.error(message, { duration: 5000 });
   };
