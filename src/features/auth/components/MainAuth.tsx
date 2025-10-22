@@ -184,7 +184,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
           loginData.phone_country
         );
         setVerificationData(verificationResp);
-        toast.success(t("newVerificationCodeSent"));
+        // toast.success(t("newVerificationCodeSent"));
       } catch (error) {
         console.error("Resend verification failed:", error);
         toast.error(t("failedToSendCode"));
@@ -218,7 +218,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
       // Store verification response data
       setVerificationData(verificationResp);
 
-      toast.success(t("verificationCodeSent"));
+      // toast.success(t("verificationCodeSent"));
       setStep("verify");
 
       // Start polling for OTP status automatically

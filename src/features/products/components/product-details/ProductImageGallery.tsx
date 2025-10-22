@@ -410,8 +410,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 showSideThumbnails={showSideThumbnails}
               />
             </div>
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm pointer-events-none">
-              {t('tapToExpand')}
+            <div className="absolute left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm pointer-events-none">
+              {t('Products.tapToExpand')}
             </div>
           </div>
           <Thumbnails
