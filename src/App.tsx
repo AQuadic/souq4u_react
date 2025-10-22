@@ -22,6 +22,7 @@ import { DynamicPage } from "./features/static-pages/components";
 import NotificationsPage from "./features/notifications/NotificationsPage";
 import OrderTrackingPage from "./features/profile/orders/tracking/OrderTrackingPage";
 import { ToastContainer } from "./shared/components/ui/toast";
+import SubscribeModalProvider from "./shared/components/modals/SubscribeModalProvider";
 
 // Home Page Component
 function HomePage() {
@@ -57,32 +58,34 @@ function App() {
   return (
     <BrowserRouter>
       <PagesProvider>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="products" element={<ProductsPage />} />
-            <Route path="products/:id" element={<ProductDetailsPage />} />
-            <Route path="contact" element={<ContactPage />} />
-            <Route path="pages/:slug" element={<DynamicPage />} />
-            <Route path="profile" element={<ProfileLayout />}>
-              <Route index element={<MyAccount />} />
-              <Route path="account" element={<MyAccount />} />
-              <Route path="orders" element={<MyOrders />} />
-              <Route
-                path="orders/tracking/:id"
-                element={<OrderTrackingPage />}
-              />
-              <Route path="favorites" element={<MyFavorites />} />
-              <Route path="addresses" element={<SaveAddress />} />
-              <Route path="addresses/add" element={<AddAddressPage />} />
-              <Route path="addresses/edit/:id" element={<AddAddressPage />} />
-            </Route>
+        <SubscribeModalProvider>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="products" element={<ProductsPage />} />
+              <Route path="products/:id" element={<ProductDetailsPage />} />
+              <Route path="contact" element={<ContactPage />} />
+              <Route path="pages/:slug" element={<DynamicPage />} />
+              <Route path="profile" element={<ProfileLayout />}>
+                <Route index element={<MyAccount />} />
+                <Route path="account" element={<MyAccount />} />
+                <Route path="orders" element={<MyOrders />} />
+                <Route
+                  path="orders/tracking/:id"
+                  element={<OrderTrackingPage />}
+                />
+                <Route path="favorites" element={<MyFavorites />} />
+                <Route path="addresses" element={<SaveAddress />} />
+                <Route path="addresses/add" element={<AddAddressPage />} />
+                <Route path="addresses/edit/:id" element={<AddAddressPage />} />
+              </Route>
 
-            <Route path="cart" element={<MainCart />} />
-            <Route path="checkout" element={<MainCheckout />} />
-            <Route path="notifications" element={<NotificationsPage />} />
-          </Route>
-        </Routes>
+              <Route path="cart" element={<MainCart />} />
+              <Route path="checkout" element={<MainCheckout />} />
+              <Route path="notifications" element={<NotificationsPage />} />
+            </Route>
+          </Routes>
+        </SubscribeModalProvider>
       </PagesProvider>
 
       <ToastContainer />

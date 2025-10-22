@@ -360,7 +360,14 @@
     "subscribing": "Subscribing...",
     "subscribe": "Subscribe",
     "enterEmailPlaceholder": "Enter your email",
-    "footerDescribtion": "High-quality products that make your life better."
+    "footerDescribtion": "High-quality products that make your life better.",
+    "invalidEmail": "Please enter a valid email address",
+    "subscribeSuccess": "Successfully subscribed to our newsletter!",
+    "subscribeFailed": "Failed to subscribe. Please try again.",
+    "subscribeModalTitle": "Stay Updated!",
+    "subscribeModalDescription": "Subscribe to our newsletter and get the latest updates, exclusive offers, and special promotions delivered straight to your inbox.",
+    "subscribeModalClose": "Close",
+    "subscribeModalNoThanks": "No thanks"
   },
   "Notifications": {
     "notifications": "Notifications",

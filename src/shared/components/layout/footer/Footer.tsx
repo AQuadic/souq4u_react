@@ -31,6 +31,7 @@ import {
 } from "@/features/auth";
 import LoginForm from "@/features/auth/components/LoginForm";
 import { Dialog, DialogContent, DialogHeader } from "../../ui/dialog";
+import { getPhoneValidationError } from "@/shared/utils/phoneValidationHelper";
 
 const socialIcons = [
   { Icon: Facebook, href: "https://facebook.com" },
@@ -100,9 +101,33 @@ const Footer = () => {
       };
 
       const respData = apiErr.response?.data;
+
+      // First check for specific field errors (email or phone)
+      if (respData?.errors && typeof respData.errors === "object") {
+        // Check for email errors
+        if (Array.isArray(respData.errors.email) && respData.errors.email[0]) {
+          return respData.errors.email[0];
+        }
+        // Check for phone errors
+        if (Array.isArray(respData.errors.phone) && respData.errors.phone[0]) {
+          return respData.errors.phone[0];
+        }
+        // Check for phone_country errors
+        if (
+          Array.isArray(respData.errors.phone_country) &&
+          respData.errors.phone_country[0]
+        ) {
+          return respData.errors.phone_country[0];
+        }
+        // Get first error from any field
+        const firstError = Object.values(respData.errors)[0];
+        if (Array.isArray(firstError) && firstError[0]) {
+          return firstError[0];
+        }
+      }
+
+      // Then check for general message
       if (respData?.message) return respData.message;
-      if (Array.isArray(respData?.errors?.email) && respData.errors.email[0])
-        return respData.errors.email[0];
 
       if (typeof apiErr.message === "string" && apiErr.message) {
         const m = apiErr.message;
@@ -307,11 +332,19 @@ const Footer = () => {
     if (subscribeType === "email") {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(trimmed)) {
-        setSubscribeError(t("invalidEmail"));
+        setSubscribeError(t("Footer.invalidEmail"));
         return;
       }
     } else if (subscribeType === "phone") {
       const phoneNumber = subscribeValue.phoneValue?.number || "";
+      const countryCode = subscribeValue.phoneValue?.code || "EG";
+
+      console.log("🔍 Footer - Validating phone:", {
+        phoneNumber,
+        countryCode,
+        phoneValueRaw: subscribeValue.phoneValue,
+      });
+
       if (!phoneNumber) {
         setSubscribeError(
           locale === "ar" ? "رقم الهاتف مطلوب" : "Phone number is required"
@@ -319,14 +352,20 @@ const Footer = () => {
         return;
       }
 
-      if (subscribeMin > 0 && phoneNumber.length < subscribeMin) {
-        setSubscribeError(
-          locale === "ar"
-            ? `الحد الأدنى لطول رقم الهاتف هو ${subscribeMin}`
-            : `Phone number must be at least ${subscribeMin} digits`
-        );
+      // Use centralized validation helper
+      const phoneError = getPhoneValidationError(
+        phoneNumber,
+        countryCode,
+        locale as "en" | "ar"
+      );
+
+      if (phoneError) {
+        console.log("❌ Phone validation failed:", phoneError);
+        setSubscribeError(phoneError);
         return;
       }
+
+      console.log("✅ Phone validation passed");
     }
 
     setLoading(true);
