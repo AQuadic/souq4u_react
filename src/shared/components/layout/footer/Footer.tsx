@@ -324,7 +324,7 @@ const Footer = () => {
     // Validate input
     const trimmed = subscribeValue.value.trim();
     if (!trimmed) {
-      setSubscribeError(t("validationError"));
+      setSubscribeError(t("Toasts.validationError"));
       return;
     }
 
@@ -371,7 +371,7 @@ const Footer = () => {
     setLoading(true);
     try {
       await subscribe(subscribeType, trimmed, subscribeValue.phoneValue?.code);
-      toast.success(t("subscribeSuccess"));
+      toast.success(t("Footer.subscribeSuccess"));
       // Reset form
       setSubscribeValue({
         value: "",

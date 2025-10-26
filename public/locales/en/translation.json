@@ -58,6 +58,19 @@
     "productDetails": "Product Details",
     "subscribeUs": "Subscribe us"
   },
+  "Toasts": {
+    "invalidRequest": "Invalid request. Please check your information and try again.",
+    "pleaseLogin": "Please log in to continue.",
+    "permissionDenied": "You don't have permission to perform this action.",
+    "notFound": "The requested resource was not found.",
+    "validationError": "Please check your input data and try again.",
+    "serverError": "Server error occurred. Please try again later.",
+    "serviceUnavailable": "Service temporarily unavailable. Please try again later.",
+    "networkError": "Network error. Please check your connection and try again.",
+    "tryAgain": "Please try again.",
+    "success": "Success",
+    "error": "Error"
+  },
   "Home": {
     "categories": "Categories",
     "bestOffers": "Best Offers",
