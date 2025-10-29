@@ -131,7 +131,9 @@ const ProductList: React.FC<ProductListProps> = ({
 
   const { data, isLoading, error } = useQuery<Product[]>({
     queryKey: finalQueryKey,
-    queryFn: () => getProducts(), // Temporarily removed all params
+    queryFn: () =>
+      // Merge provided queryParams with defaults handled by getProducts
+      getProducts({ ...(queryParams || {}) }),
   });
 
   let processedProducts = data || [];

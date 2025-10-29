@@ -12,7 +12,8 @@ const BestSeller = () => {
     <ProductList
       titleKey="bestSellers"
       titleAlign="center"
-      queryParams={{}}
+      // For home listings, request 8 items per page from API
+      queryParams={{ per_page: 8 }}
       onlyDiscounted={false}
       viewAllLink="/products"
       viewAllTextKey="viewAllProducts"

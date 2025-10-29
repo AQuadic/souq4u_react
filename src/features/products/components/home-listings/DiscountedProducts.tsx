@@ -13,7 +13,8 @@ const DiscountedProducts = () => {
     <ProductList
       titleKey="discountedProducts"
       titleAlign="center"
-      queryParams={{}}
+      // Request 8 items per page for home listing
+      queryParams={{ per_page: 8 }}
       onlyDiscounted={false}
       viewAllLink="/products"
       viewAllTextKey="viewAllProducts"

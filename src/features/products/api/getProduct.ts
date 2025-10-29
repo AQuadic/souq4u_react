@@ -5,7 +5,14 @@ export interface GetProductsParams {
   sort_by?: "id" | "price" | "created_at" | "updated_at";
   sort_order?: "asc" | "desc";
   only_discount?: boolean | number;
-  pagination?: boolean;
+  // Backend accepts a string value `"normal"` for pagination mode.
+  // Keep boolean for backward compatibility but the code will send 'normal' by default.
+  pagination?: boolean | "normal";
+  // New pagination controls
+  page?: number;
+  per_page?: number;
+  // Some callers may still use numeric flags for discount filtering
+  is_discount?: boolean | number;
   category_id?: number;
   min_price?: number;
   max_price?: number;
@@ -118,12 +125,16 @@ export async function getProducts(
     return v ? 1 : 0;
   }
 
+  // Always send pagination mode as 'normal' to match new backend expectation.
+  // Page and per_page can be overridden by callers via `params`.
   const paramsPayload: Record<string, unknown> = {
-    pagination: params?.pagination ?? false,
+    pagination: "normal",
+    page: params?.page ?? 1,
+    per_page: params?.per_page ?? 4,
     category_id: params?.category_id,
     q: params?.q,
-    sort_by: params?.sort_by,
-    sort_order: params?.sort_order,
+    sort_by: params?.sort_by ?? "updated_at",
+    sort_order: params?.sort_order ?? "desc",
     min_price: params?.min_price,
     max_price: params?.max_price,
   };
@@ -141,10 +152,18 @@ export async function getProducts(
     paramsPayload.only_discount = coerceFlag(params.only_discount);
   }
 
+  if (params?.is_discount !== undefined) {
+    paramsPayload.is_discount = coerceFlag(params.is_discount);
+  }
+
   // Note: we intentionally do NOT send `is_discount` anymore.
   // The backend will derive discount filtering from `only_discount` or other params server-side.
 
-  const response = await axios.request<Product[]>({
+  const response = await axios.request<{
+    data: Product[];
+    links?: Record<string, unknown>;
+    meta?: Record<string, unknown>;
+  }>({
     url: "/products",
     method: "GET",
     params: paramsPayload,
@@ -154,7 +173,9 @@ export async function getProducts(
     },
   });
 
-  return response.data;
+  // The API now returns an envelope: { data: Product[], links, meta }
+  // Keep the helper's contract stable by returning the inner array.
+  return response.data.data || [];
 }
 
 export async function getProduct(id: string | number): Promise<Product> {
