@@ -44,11 +44,7 @@ const ProductsGrid: React.FC = () => {
     queryFn: () =>
       getProducts({
         q: searchQuery,
-        // Use server-side "normal" pagination mode and default page/per_page
-        // Products page uses the default per_page (4) unless overridden
-        pagination: "normal",
-        page: 1,
-        per_page: 4,
+        pagination: false,
         sort_by: filters.sortBy,
         sort_order: filters.sortOrder,
         only_discount: filters.onlyDiscount,

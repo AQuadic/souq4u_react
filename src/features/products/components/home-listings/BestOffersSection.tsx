@@ -15,9 +15,8 @@ const BestOffersSection = () => {
       titleKey={t("Products.bestOffers")}
       titleAlign="center"
       maxItems={8}
-      // Request 8 items per page for home section
-      queryParams={{ per_page: 8 }}
-      onlyDiscounted={false}
+      queryParams={{}} // Temporarily removed all params
+      onlyDiscounted={false} // Temporarily disabled filtering
       viewAllLink="/products"
       viewAllTextKey={t("Products.viewAllProducts")}
     />

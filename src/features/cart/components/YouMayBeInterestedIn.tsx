@@ -30,10 +30,7 @@ export const YouMayBeInterestedIn: React.FC<YouMayBeInterestedInProps> = ({
         maxItems={maxItems}
         skeletonCount={maxItems}
         queryParams={{
-          // Use server-side normal pagination
-          pagination: "normal",
-          page: 1,
-          per_page: maxItems,
+          pagination: false,
           sort_by: "created_at",
           sort_order: "desc",
           is_featured: 1,
