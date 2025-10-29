@@ -357,7 +357,7 @@
     "selectLanguage": "Select Language"
   },
   "HomeTryApp": {
-    "title": "Try the Eshhaar App Now!",
+    "title": "Try the {{brand}} App Now!",
     "description": "Now, Buy And Sell All You Have\nWith Our Mobile Application.",
     "googlePlayAlt": "google play",
     "appStoreAlt": "app store",

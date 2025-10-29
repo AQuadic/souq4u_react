@@ -3,20 +3,24 @@ import { useTranslation } from "react-i18next";
 
 const HomeTryApp = () => {
   const { t } = useTranslation();
-  const title = t("HomeTryApp.title");
   const description = t("HomeTryApp.description");
   const googlePlayAlt = t("HomeTryApp.googlePlayAlt");
   const appStoreAlt = t("HomeTryApp.appStoreAlt");
   const featureAlt = t("HomeTryApp.featureAlt");
+  // Use a unique marker for the brand so translations can place the brand around it
+  const rawTitle = t("HomeTryApp.title", { brand: "___BRAND___" });
+  const titleParts = rawTitle.split("___BRAND___");
+  const titleBefore = titleParts[0] ?? "";
+  const titleAfter = titleParts.slice(1).join("___BRAND___") ?? "";
 
   return (
     <section className="container flex justify-between items-center max-sm:flex-col gap-6">
       <div>
-        <h3 className="text-2xl font-bold sm:text-[40px]">
-          {title.split(" ").map((part, i) => (
-            <React.Fragment key={`text-${i}`}>{part} </React.Fragment>
-          ))}
-        </h3>
+        <h1 className="text-2xl lg:text-[40px] font-semibold text-main font-anton-sc">
+          {titleBefore && <>{titleBefore} </>}
+          Souq<span className="text-main-orange">4</span>U
+          {titleAfter && <> {titleAfter}</>}
+        </h1>
         <p className="max-w-[545px] text-xl sm:text-2xl my-6 sm:my-10 text-main-gray">
           {description.split("\n").map((line, idx) => (
             <React.Fragment key={`desc-line-${line.substring(0, 10)}-${idx}`}>
