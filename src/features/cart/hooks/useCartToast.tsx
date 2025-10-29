@@ -25,7 +25,7 @@ export const useCartToast = () => {
       quantity > 1 ? ` (${quantity}x)` : ""
     }`;
 
-    const message = t("addToCartSentence", { product: productLabel });
+    const message = t("Cart.addToCartSentence", { product: productLabel });
 
     toast.success(message, {
       action: (
@@ -37,7 +37,7 @@ export const useCartToast = () => {
             console.log("View cart clicked");
           }}
         >
-          {t("viewCart")}
+          {t("Cart.viewCart")}
         </Link>
       ),
       duration: 5000,
@@ -78,7 +78,7 @@ export const useCartToast = () => {
     productName: string;
     quantity: number;
   }) => {
-    const message = t("updatedQuantity", {
+    const message = t("Cart.updatedQuantity", {
       productName,
       quantity,
     });
@@ -87,12 +87,12 @@ export const useCartToast = () => {
   };
 
   const showQuantityUpdateError = (productName: string) => {
-    const message = t("failedUpdateQuantity", { productName });
+    const message = t("Cart.failedUpdateQuantity", { productName });
     toast.error(message, { duration: 5000 });
   };
 
   const showItemRemoveSuccess = (productName: string) => {
-    const message = t("removedFromCart", { productName });
+    const message = t("Cart.removedFromCart", { productName });
     toast.success(message, { duration: 3000 });
   };
 
@@ -119,8 +119,8 @@ export const useCartToast = () => {
 
   const loginRequired = () => {
     const message =
-      t("loginRequired") ||
-      t("loginRequiredForCart") ||
+      t("Cart.loginRequired") ||
+      t("Cart.loginRequiredForCart") ||
       "Please login to continue.";
     toast.error(message, { duration: 5000 });
   };

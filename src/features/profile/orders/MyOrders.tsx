@@ -35,7 +35,12 @@ const MyOrders: React.FC<MyOrdersProps> = ({
     },
   });
 
-  if (isLoading) return <p className="text-white">Loading orders...</p>;
+  if (isLoading)
+    return (
+      <p className="text-neutral-600">
+        {t("Profile.loadingOrders")}
+      </p>
+  );
   if (isError) return <p className="text-red-500">Something went wrong.</p>;
 
   const ordersToShow = statusFilter

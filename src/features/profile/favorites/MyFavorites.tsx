@@ -61,7 +61,13 @@ const MyFavorites = () => {
     });
   };
 
-  if (isLoading) return <FavEmptyState />;
+  if (isLoading)
+    return (
+      <p className="text-neutral-600">
+        {t("Profile.loadingFav")}
+      </p>
+    );
+        
   if (isError) return <div>Error loading favorites.</div>;
 
   const sourceFavs = localFavData ?? favData;

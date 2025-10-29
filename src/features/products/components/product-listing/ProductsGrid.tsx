@@ -28,6 +28,14 @@ const ProductsGrid: React.FC = () => {
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const searchQuery = searchParams.get("search") ?? undefined;
+  const categoryIdFromUrl = searchParams.get("category_id");
+
+  React.useEffect(() => {
+    if (categoryIdFromUrl && filters.categoryId !== Number(categoryIdFromUrl)) {
+      setCategory(Number(categoryIdFromUrl));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryIdFromUrl]);
 
   // Fetch price range from API
   const { data: priceRangeData } = useQuery<{

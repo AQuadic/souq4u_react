@@ -390,7 +390,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               if (isEditing) return t("updateAddress");
               // If in checkout mode and not saving address, show "Checkout"
               if (isCheckout && !formData.saveAddress)
-                return common("checkout");
+                return common("Cart.checkout");
               // When not editing, show a translated 'Add Address' action
               return t("AddressForm.addAddress");
             })()}

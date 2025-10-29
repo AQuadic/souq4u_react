@@ -9,6 +9,7 @@ import DeleteAddressDialog from "@/features/address/components/DeleteAddressDial
 import BackArrow from "@/features/products/icons/BackArrow";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import AddressEmpty from "./AddressEmpty";
 
 const SaveAddress: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -74,16 +75,22 @@ const SaveAddress: React.FC = () => {
       >
         <BackArrow />
         <h2 className="text-neutral-900 dark:text-white text-[32px] font-bold leading-[100%]">
-          {t("Profile.addAddress") || "Save Address"}
+        {t("Profile.AddAddress.header")|| "Save Address"}
         </h2>
       </Link>
 
       {isLoading && (
         <p className="text-neutral-600 dark:text-neutral-400">
-          Loading addresses...
+          {t('Profile.loadingAddressess')}
         </p>
       )}
       {error && <p className="text-red-500">{error}</p>}
+
+      {!isLoading && addresses.length === 0 && (
+        <div className="">
+          <AddressEmpty />
+        </div>
+      )}
 
       {addresses.map((addr) => (
         <button

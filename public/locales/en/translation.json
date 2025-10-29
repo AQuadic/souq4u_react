@@ -58,6 +58,19 @@
     "productDetails": "Product Details",
     "subscribeUs": "Subscribe us"
   },
+  "Toasts": {
+    "invalidRequest": "Invalid request. Please check your information and try again.",
+    "pleaseLogin": "Please log in to continue.",
+    "permissionDenied": "You don't have permission to perform this action.",
+    "notFound": "The requested resource was not found.",
+    "validationError": "Please check your input data and try again.",
+    "serverError": "Server error occurred. Please try again later.",
+    "serviceUnavailable": "Service temporarily unavailable. Please try again later.",
+    "networkError": "Network error. Please check your connection and try again.",
+    "tryAgain": "Please try again.",
+    "success": "Success",
+    "error": "Error"
+  },
   "Home": {
     "categories": "Categories",
     "bestOffers": "Best Offers",
@@ -103,7 +116,8 @@
       "productImageAlt": "Product Image",
       "heading": "Review Summary",
       "starsLabel": "stars"
-    }
+    },
+    "tapToExpand": "Tap to expand"
   },
   "ProductsGrid": {
     "home": "Home",
@@ -179,7 +193,7 @@
     "saveOffer": "Save {amount} {currency} ({percent}% off)",
     "loginToCheckout": "Please login to checkout",
     "loginRequired": "Login Required",
-    "addToCartSentence": "{product} added to your cart",
+    "addToCartSentence": "Product added to your cart",
     "viewCart": "View Cart",
     "failedToAdd": "Failed to add item to cart",
     "updatedQuantity": "Updated {productName} quantity to {quantity}",
@@ -359,7 +373,15 @@
     "enterYourEmail": "Enter your email",
     "subscribing": "Subscribing...",
     "subscribe": "Subscribe",
-    "enterEmailPlaceholder": "Enter your email"
+    "enterEmailPlaceholder": "Enter your email",
+    "footerDescribtion": "High-quality products that make your life better.",
+    "invalidEmail": "Please enter a valid email address",
+    "subscribeSuccess": "Successfully subscribed to our newsletter!",
+    "subscribeFailed": "Failed to subscribe. Please try again.",
+    "subscribeModalTitle": "Stay Updated!",
+    "subscribeModalDescription": "Subscribe to our newsletter and get the latest updates, exclusive offers, and special promotions delivered straight to your inbox.",
+    "subscribeModalClose": "Close",
+    "subscribeModalNoThanks": "No thanks"
   },
   "Notifications": {
     "notifications": "Notifications",
@@ -407,7 +429,12 @@
     "send": "Send",
     "sending": "Sending...",
     "commentPlaceholder": "Write your comment here...",
-    "reviewed": "Reviewed"
+    "reviewed": "Reviewed",
+    "loadingAddressess": "Loading addresses...",
+    "loadingFav": "Loading favorites...",
+    "loadingOrders": "Loading orders...",
+    "noAddress": "No Address Yet",
+    "noAddressDes": "Please add your addresses for your better experience"
   },
   "Orders": {
     "orders": "Orders",

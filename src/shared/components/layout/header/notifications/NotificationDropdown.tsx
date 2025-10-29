@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -15,14 +15,17 @@ import {
 } from "./api/getNotifications";
 import { markNotificationAsRead } from "./api/markNotificationAsRead";
 import { markNotificationAsUnread } from "./api/markNotificationAsUnread";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Notifications from "../icons/Notifications";
 import { useTranslation } from "react-i18next";
 
 export default function NotificationDropdown() {
-const { t, i18n } = useTranslation();
-const locale = i18n.language;
-const isArabic = locale === "ar";
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+  const isArabic = locale === "ar";
+  const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
 
   const {
     data: notifications = [],
@@ -40,6 +43,14 @@ const isArabic = locale === "ar";
         await markNotificationAsRead(n.id.toString());
       } else {
         await markNotificationAsUnread(n.id.toString());
+      }
+
+      setOpen(false);
+
+      if (n.order_id) {
+        navigate(`/profile/orders/tracking/${n.order_id}`);
+      } else {
+        navigate("/notifications");
       }
 
       await refetch();
@@ -78,7 +89,7 @@ const isArabic = locale === "ar";
     todayNotifications.length > 0 || earlierNotifications.length > 0;
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button className="relative">
           <Notifications />
@@ -92,7 +103,7 @@ const isArabic = locale === "ar";
 
       <DropdownMenuContent
         align={isArabic ? "start" : "end"}
-        className="md:w-[436px] bg-[#FDFDFD] text-white rounded-3xl border-none overflow-hidden"
+        className="md:w-[436px] bg-[#FDFDFD] text-white rounded-3xl border-none"
       >
         <div dir={isArabic ? "rtl" : "ltr"}>
           {hasNotifications ? (
@@ -101,7 +112,11 @@ const isArabic = locale === "ar";
                 <DropdownMenuLabel className="text-black text-2xl font-semibold">
                   {t("Notifications.notifications")}
                 </DropdownMenuLabel>
-                <Link to='/notifications' className="text-main text-lg font-medium cursor-pointer">
+                <Link
+                  to="/notifications"
+                  onClick={() => setOpen(false)}
+                  className="text-main text-lg font-medium cursor-pointer"
+                >
                   {t("Notifications.seeAll")}
                 </Link>
               </div>
@@ -116,30 +131,30 @@ const isArabic = locale === "ar";
                       key={n.id}
                       onClick={() => handleNotificationClick(n)}
                       onSelect={(e) => e.preventDefault()}
-                      className="flex items-center gap-3 py-3 px-5 border-b border-[#3A3A3A] cursor-pointer hover:bg-[#2b2c2f]"
+                      className="flex items-center gap-3 py-3 px-8 border-b border-[#E5E5E5] cursor-pointer hover:bg-[#f9f9f9]"
                     >
-                      <div className="relative px-2">
+                      <div className="relative w-[40px] h-[40px]">
                         <img
-                          src={n.image?.url || "/images/header/logo.png"}
-                          alt="User"
-                          width={50}
-                          height={50}
-                          className="rounded-full"
+                          src={"/logo.png"}
+                          alt="Notification"
+                          className={`w-full h-full object-cover rounded-full ${
+                            n.read_at ? "opacity-70" : ""
+                          }`}
                         />
                         {!n.read_at && (
-                          <span className="absolute top-2 left-0 h-2 w-2 rounded-full bg-main" />
+                          <span className="absolute top-5 -right-3 h-2 w-2 rounded-full bg-main" />
                         )}
                       </div>
 
-                      <div className="flex-1 flex items-center justify-between gap-2">
+                      <div className="flex-1 flex flex-col justify-between gap-1 overflow-hidden">
                         <p
-                          className={`text-xs font-medium leading-[150%] truncate ${
-                            n.read_at ? "text-gray-300" : "text-black"
+                          className={`text-sm font-medium leading-[150%] break-words ${
+                            n.read_at ? "text-gray-500" : "text-black"
                           }`}
                         >
                           {isArabic ? n.body?.ar : n.body?.en}
                         </p>
-                        <span className="text-[10px] font-medium text-[#A1A1A1] whitespace-nowrap">
+                        <span className="text-[10px] font-medium text-[#A1A1A1] self-end">
                           {new Date(n.created_at).toLocaleString(locale, {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -159,36 +174,34 @@ const isArabic = locale === "ar";
                     {t("Notifications.earlier")}
                   </h4>
                   {earlierNotifications.map((n: NotificationType) => (
-                  <DropdownMenuItem
+                    <DropdownMenuItem
                       key={n.id}
                       onClick={() => handleNotificationClick(n)}
                       onSelect={(e) => e.preventDefault()}
-                      className="flex items-center gap-3 py-3 px-5 border-b border-[#E5E5E5] cursor-pointer hover:bg-[#f8f8f8]"
+                      className="flex items-center gap-3 py-3 px-8 border-b border-[#E5E5E5] cursor-pointer hover:bg-[#f9f9f9]"
                     >
-                      <div className="relative w-[50px] h-[50px] flex-shrink-0">
-                        {/* <img
-                          src={n.image?.url || "/images/header/logo.png"}
-                          alt="User"
-                          width={50}
-                          height={50}
-                          className={`rounded-full object-cover w-full h-full ${
+                      <div className="relative w-[40px] h-[40px]">
+                        <img
+                          src={"/logo.png"}
+                          alt="Notification"
+                          className={`w-full h-full object-cover rounded-full ${
                             n.read_at ? "opacity-70" : ""
                           }`}
-                        /> */}
+                        />
                         {!n.read_at && (
-                          <span className="absolute top-5 right-1 h-2 w-2 rounded-full bg-main" />
+                          <span className="absolute top-5 -right-3 h-2 w-2 rounded-full bg-main" />
                         )}
                       </div>
 
-                      <div className="flex-1 flex items-center justify-between gap-2">
+                      <div className="flex-1 flex flex-col justify-between gap-1 overflow-hidden">
                         <p
-                          className={`text-xs font-medium leading-[150%] truncate ${
-                            n.read_at ? "text-gray-400" : "text-black"
+                          className={`text-sm font-medium leading-[150%] break-words ${
+                            n.read_at ? "text-gray-500" : "text-black"
                           }`}
                         >
                           {isArabic ? n.body?.ar : n.body?.en}
                         </p>
-                        <span className="text-[10px] font-medium text-[#A1A1A1] whitespace-nowrap">
+                        <span className="text-[10px] font-medium text-[#A1A1A1] self-end">
                           {new Date(n.created_at).toLocaleString(locale, {
                             hour: "2-digit",
                             minute: "2-digit",

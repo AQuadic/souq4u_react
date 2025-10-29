@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/shared/components/ui/LanguageSwitcher";
 import Cart from "@/features/cart/components/icons/Cart";
 import MainAuth from "@/features/auth/components/MainAuth";
@@ -8,17 +9,23 @@ import { useCartSlider } from "@/features/cart/hooks/useCartSlider";
 import { useCartStore } from "@/features/cart/stores";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import HeaderSearch from "./HeaderSearch";
-import { NavLinks } from "./NavLinks";
 import NotificationDropdown from "./notifications/NotificationDropdown";
-import { useTranslation } from "react-i18next";
+import {
+  usePagesContextSafe,
+  useHeaderNavigation,
+} from "@/features/static-pages";
 
 const HeaderDesktop = () => {
   const location = useLocation();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const locale = i18n.language;
 
   const { isOpen: isCartOpen, openCart, closeCart } = useCartSlider();
   const { user } = useAuth();
+
+  // Get pages from context and build navigation links
+  const pages = usePagesContextSafe();
+  const navLinks = useHeaderNavigation(pages);
 
   const cart = useCartStore((s) => s.cart);
   const cartItemsCount =
@@ -40,7 +47,7 @@ const HeaderDesktop = () => {
           </div>
 
           <div className="flex items-center gap-[30px]">
-            {NavLinks.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
@@ -50,7 +57,7 @@ const HeaderDesktop = () => {
                     : "text-foreground"
                 }`}
               >
-                {link.name[locale as keyof typeof link.name]}
+                {locale === "ar" ? link.titleAr : link.titleEn}
               </Link>
             ))}
           </div>

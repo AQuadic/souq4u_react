@@ -11,6 +11,8 @@ export interface GetProductsParams {
   max_price?: number;
   is_featured?: boolean | number;
   is_best_seller?: boolean | number;
+  page?: number;
+  per_page?: number;
 }
 
 export interface ProductImage {
@@ -126,6 +128,8 @@ export async function getProducts(
     sort_order: params?.sort_order,
     min_price: params?.min_price,
     max_price: params?.max_price,
+    page: params?.page ?? 1,
+    per_page: params?.per_page ?? 10,
   };
 
   if (params?.is_featured !== undefined) {
@@ -136,13 +140,16 @@ export async function getProducts(
     paramsPayload.is_best_seller = coerceFlag(params.is_best_seller);
   }
 
-  // `only_discount` can be provided by callers; prefer numeric 1/0.
+  // Send only one discount flag — prefer the one your backend expects
   if (params?.only_discount !== undefined) {
-    paramsPayload.only_discount = coerceFlag(params.only_discount);
+    const discountFlag = coerceFlag(params.only_discount);
+    paramsPayload.only_discount = discountFlag;
+    paramsPayload.is_discount = discountFlag; // mirror same value
   }
 
-  // Note: we intentionally do NOT send `is_discount` anymore.
-  // The backend will derive discount filtering from `only_discount` or other params server-side.
+  // Also provide `is_discount` param as numeric (1/0) as requested by product team.
+  // If callers passed only_discount we mirror it; otherwise default to 0.
+  paramsPayload.is_discount = coerceFlag(params?.only_discount);
 
   const response = await axios.request<Product[]>({
     url: "/products",
