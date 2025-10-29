@@ -16,19 +16,9 @@ const MostViewedSection = () => {
       titleKey={t("Products.mostViewed")}
       titleAlign="center"
       maxItems={8}
-      queryParams={{
-        sort_by: "updated_at",
-        sort_order: "desc",
-        only_discount: 1,
-      }}
-      theme={{
-        gridClassName: "xl:grid-cols-4 grid-cols-2",
-      }}
-      onlyDiscounted={true}
-      viewAllLink="/products?is_discounted=1"
+      queryParams={{ per_page: 8 }}
+      viewAllLink="/products"
       viewAllTextKey={t("Products.viewAllProducts")}
-      showTopRated={true}
-      
     />
   );
 };

@@ -391,7 +391,8 @@ const ProductDetailsPage: React.FC = () => {
             titleAlign={isRtl ? "right" : "left"}
             queryParams={{
               category_id: product?.category?.id ?? product?.category_id ?? 0,
-              pagination: false,
+              pagination: "normal",
+              per_page: 8,
             }}
             queryKey={[
               "recommended",

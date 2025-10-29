@@ -30,10 +30,11 @@ export const YouMayBeInterestedIn: React.FC<YouMayBeInterestedInProps> = ({
         maxItems={maxItems}
         skeletonCount={maxItems}
         queryParams={{
-          pagination: false,
+          pagination: "normal",
           sort_by: "created_at",
           sort_order: "desc",
           is_featured: 1,
+          per_page: 4,
         }}
         queryKey={["products", "featured"]}
         onlyFeatured={true}

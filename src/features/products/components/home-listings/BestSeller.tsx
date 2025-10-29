@@ -12,7 +12,7 @@ const BestSeller = () => {
     <ProductList
       titleKey="bestSellers"
       titleAlign="center"
-      queryParams={{}}
+      queryParams={{ per_page: 8 }}
       onlyDiscounted={false}
       viewAllLink="/products"
       viewAllTextKey="viewAllProducts"

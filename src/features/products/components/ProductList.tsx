@@ -3,7 +3,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { getProducts, Product, GetProductsParams } from "../api/getProduct";
+import {
+  getProducts,
+  Product,
+  GetProductsParams,
+  PaginatedResponse,
+} from "../api/getProduct";
 import ProductCard from "./ProductCard";
 import Arrow from "../icons/Arrow";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -129,12 +134,42 @@ const ProductList: React.FC<ProductListProps> = ({
 
   const finalQueryKey = queryKey || ["products", JSON.stringify(queryParams)];
 
-  const { data, isLoading, error } = useQuery<Product[]>({
+  // Default API query parameters required by the backend
+  const apiDefaults: GetProductsParams = {
+    pagination: "normal",
+    sort_by: "updated_at",
+    sort_order: "desc",
+    page: 1,
+    per_page: 4,
+    only_discount: 0,
+    is_discount: 0,
+  };
+
+  // For home / single-product usages we expect callers to override per_page via
+  // the `queryParams` prop. Merge caller params on top of defaults.
+  const mergedParams: GetProductsParams = {
+    ...apiDefaults,
+    ...queryParams,
+  };
+
+  // If the component consumer passed onlyDiscounted / onlyFeatured flags, prefer them
+  if (onlyDiscounted) mergedParams.only_discount = 1;
+  if (onlyFeatured) mergedParams.is_featured = 1;
+
+  const {
+    data: rawData,
+    isLoading,
+    error,
+  } = useQuery<Product[] | PaginatedResponse<Product>>({
     queryKey: finalQueryKey,
-    queryFn: () => getProducts(queryParams),
+    queryFn: () => getProducts(mergedParams),
   });
 
-  let processedProducts = data || [];
+  // Normalize the API response to an array of products. The API may return
+  // a plain array or a paginated object { data, links, meta } depending on
+  // the `pagination` query param. Handle both shapes here.
+  const raw = rawData as any;
+  let processedProducts: Product[] = Array.isArray(raw) ? raw : raw?.data ?? [];
 
   if (excludeProductIds && excludeProductIds.length > 0) {
     processedProducts = processedProducts.filter(

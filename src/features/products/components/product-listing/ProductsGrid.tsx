@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getProducts, Product } from "../../api/getProduct";
+import { getProducts, Product, PaginatedResponse } from "../../api/getProduct";
 import { getPriceRange } from "../../api/getPriceRange";
 import ProductCard from "../ProductCard";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -28,14 +28,6 @@ const ProductsGrid: React.FC = () => {
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const searchQuery = searchParams.get("search") ?? undefined;
-  const categoryIdFromUrl = searchParams.get("category_id");
-
-  React.useEffect(() => {
-    if (categoryIdFromUrl && filters.categoryId !== Number(categoryIdFromUrl)) {
-      setCategory(Number(categoryIdFromUrl));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryIdFromUrl]);
 
   // Fetch price range from API
   const { data: priceRangeData } = useQuery<{
@@ -47,28 +39,47 @@ const ProductsGrid: React.FC = () => {
     staleTime: 60000, // Cache for 1 minute
   });
 
-  const { data, isLoading, isFetching, error } = useQuery<Product[], Error>({
-    queryKey: ["products", filters, searchQuery],
+  const {
+    data: rawData,
+    isLoading,
+    isFetching,
+    error,
+  } = useQuery<Product[] | PaginatedResponse<Product>, Error>({
+    queryKey: ["products", filters, searchQuery, currentPage],
     queryFn: () =>
       getProducts({
         q: searchQuery,
-        pagination: false,
-        sort_by: filters.sortBy,
-        sort_order: filters.sortOrder,
-        only_discount: filters.onlyDiscount,
+        // use server-side normal pagination
+        pagination: "normal",
+        sort_by: filters.sortBy ?? "updated_at",
+        sort_order: filters.sortOrder ?? "desc",
+        only_discount: filters.onlyDiscount ?? 0,
         category_id: filters.categoryId,
         min_price: filters.minPrice,
         max_price: filters.maxPrice,
+        page: currentPage,
+        per_page: 4,
       }),
     staleTime: 5000,
   });
 
-  // Calculate pagination
-  const totalProducts = data?.length ?? 0;
-  const totalPages = Math.ceil(totalProducts / itemsPerPage);
+  // Normalize API response (can be plain array or paginated object)
+  const raw = rawData as any;
+  const productsArray: Product[] = Array.isArray(raw) ? raw : raw?.data ?? [];
+  const meta = !Array.isArray(raw) ? raw?.meta : undefined;
+
+  // Derive pagination values. When server returns paginated meta, use it.
+  const perPageFromServer = meta?.per_page ?? itemsPerPage;
+  const totalProducts = meta?.total ?? productsArray.length;
+  const totalPages = Math.max(1, Math.ceil(totalProducts / perPageFromServer));
+
+  // If server returned paginated data, `productsArray` is already the current
+  // page's items. If not, slice locally for client-side pagination.
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentProducts = data?.slice(startIndex, endIndex) ?? [];
+  const currentProducts = meta
+    ? productsArray
+    : productsArray.slice(startIndex, endIndex);
 
   // Reset to page 1 when filters change
   React.useEffect(() => {
@@ -191,7 +202,7 @@ const ProductsGrid: React.FC = () => {
             </>
           )}
 
-          {!isLoading && data && data.length === 0 && (
+          {!isLoading && productsArray && productsArray.length === 0 && (
             <p className="text-center dark:text-[#FDFDFD] mt-8">
               {t("ProductsGrid.noProducts")}
             </p>

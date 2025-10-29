@@ -13,15 +13,9 @@ const HomeTryApp = () => {
     <section className="container flex justify-between items-center max-sm:flex-col gap-6">
       <div>
         <h3 className="text-2xl font-bold sm:text-[40px]">
-          {title.split(" ").map((part, i) =>
-            part === "Eshhaar" ? (
-              <span key={`brand-${i}`} className="text-main">
-                {part}{" "}
-              </span>
-            ) : (
-              <React.Fragment key={`text-${i}`}>{part} </React.Fragment>
-            )
-          )}
+          {title.split(" ").map((part, i) => (
+            <React.Fragment key={`text-${i}`}>{part} </React.Fragment>
+          ))}
         </h3>
         <p className="max-w-[545px] text-xl sm:text-2xl my-6 sm:my-10 text-main-gray">
           {description.split("\n").map((line, idx) => (

@@ -5,14 +5,15 @@ export interface GetProductsParams {
   sort_by?: "id" | "price" | "created_at" | "updated_at";
   sort_order?: "asc" | "desc";
   only_discount?: boolean | number;
-  pagination?: boolean;
+  pagination?: boolean | "normal";
+  page?: number;
+  per_page?: number;
+  is_discount?: boolean | number;
   category_id?: number;
   min_price?: number;
   max_price?: number;
   is_featured?: boolean | number;
   is_best_seller?: boolean | number;
-  page?: number;
-  per_page?: number;
 }
 
 export interface ProductImage {
@@ -105,9 +106,34 @@ export interface Product {
   };
 }
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  links: {
+    first?: string | null;
+    last?: string | null;
+    prev?: string | null;
+    next?: string | null;
+  };
+  meta: {
+    current_page: number;
+    from: number | null;
+    last_page: number;
+    links: Array<{
+      url: string | null;
+      label: string;
+      page: number | null;
+      active: boolean;
+    }>;
+    path: string;
+    per_page: number;
+    to: number | null;
+    total: number;
+  };
+}
+
 export async function getProducts(
   params?: GetProductsParams
-): Promise<Product[]> {
+): Promise<Product[] | PaginatedResponse<Product>> {
   if (params?.sort_by && !params.sort_order) {
     throw new Error("sort_order is required when sort_by is provided");
   }
@@ -120,38 +146,42 @@ export async function getProducts(
     return v ? 1 : 0;
   }
 
+  // Enforce server-side "normal" pagination for product listing requests.
+  // Default sort to `updated_at` desc and default to page 1 / 4 items per page.
   const paramsPayload: Record<string, unknown> = {
-    pagination: params?.pagination ?? false,
+    pagination: "normal",
     category_id: params?.category_id,
     q: params?.q,
-    sort_by: params?.sort_by,
-    sort_order: params?.sort_order,
+    sort_by: params?.sort_by ?? "updated_at",
+    sort_order: params?.sort_order ?? "desc",
     min_price: params?.min_price,
     max_price: params?.max_price,
     page: params?.page ?? 1,
-    per_page: params?.per_page ?? 10,
+    per_page: params?.per_page ?? 4,
+    // send explicit discount flags (default 0)
+    is_discount: coerceFlag(params?.is_discount),
   };
 
-  if (params?.is_featured !== undefined) {
+  if (typeof params?.is_featured !== "undefined") {
     paramsPayload.is_featured = coerceFlag(params.is_featured);
   }
 
-  if (params?.is_best_seller !== undefined) {
+  if (typeof params?.is_best_seller !== "undefined") {
     paramsPayload.is_best_seller = coerceFlag(params.is_best_seller);
   }
 
-  // Send only one discount flag — prefer the one your backend expects
-  if (params?.only_discount !== undefined) {
-    const discountFlag = coerceFlag(params.only_discount);
-    paramsPayload.only_discount = discountFlag;
-    paramsPayload.is_discount = discountFlag; // mirror same value
+  // `only_discount` can be provided by callers; prefer numeric 1/0.
+  if (typeof params?.only_discount !== "undefined") {
+    paramsPayload.only_discount = coerceFlag(params.only_discount);
+  } else {
+    // default to 0 when not provided
+    paramsPayload.only_discount = 0;
   }
 
-  // Also provide `is_discount` param as numeric (1/0) as requested by product team.
-  // If callers passed only_discount we mirror it; otherwise default to 0.
-  paramsPayload.is_discount = coerceFlag(params?.only_discount);
+  // Note: we intentionally do NOT send `is_discount` anymore.
+  // The backend will derive discount filtering from `only_discount` or other params server-side.
 
-  const response = await axios.request<Product[]>({
+  const response = await axios.request<Product[] | PaginatedResponse<Product>>({
     url: "/products",
     method: "GET",
     params: paramsPayload,
