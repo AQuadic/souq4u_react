@@ -397,17 +397,16 @@ const Footer = () => {
               <img
                 src="/logo.png"
                 alt="Logo"
-                width={64}
-                height={64}
+                width={92}
+                height={48}
                 className="object-contain py-2"
               />
-              <h1 className="text-2xl lg:text-[40px] font-semibold text-main font-anton-sc">
-                Souq<span className="text-main-orange">4</span>U
-              </h1>
             </div>
 
             <p className="text-base lg:text-lg font-normal leading-[150%] max-w-[340px] mx-auto lg:mx-0 mb-6">
-              &quot;{t("Footer.footerDescribtion")}&quot;
+              {locale === "ar"
+                ? "ابقَ على اطلاع مع Souq4U — عروض حصرية وتوصيل سريع إلى باب منزلك."
+                : "Stay updated with Souq4U — exclusive deals and fast delivery to your door."}
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-3">
