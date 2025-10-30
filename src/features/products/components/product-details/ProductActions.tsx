@@ -73,13 +73,13 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   // shortDescription,
   // description,
 }) => {
-  const {t} = useTranslation("Common");
+  const { t } = useTranslation("Common");
   const [loading, setLoading] = useState(false);
   const isAuthenticated = useIsAuthenticated();
   const toast = useToast();
   const queryClient = useQueryClient();
   const [favorite, setFavorite] = useState(product.is_favorite);
-  
+
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
 
@@ -150,7 +150,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         <motion.button
           onClick={onAddToCart}
           disabled={!isInStock || isAddingToCart}
-          className={`w-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden bg-main`}
+          className={`w-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden bg-main rounded-lg`}
           whileHover={{ scale: isInStock && !isAddingToCart ? 1.02 : 1 }}
           whileTap={{ scale: isInStock && !isAddingToCart ? 0.98 : 1 }}
           animate={isAddingToCart ? { scale: [1, 1.05, 1] } : {}}
@@ -163,7 +163,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             className="flex items-center justify-center"
           >
             <p className="text-white text-lg font-bold leading-[100%]">
-              {!isInStock ? t("outOfStock") : t("Products.addToCart") }
+              {!isInStock ? t("outOfStock") : t("Products.addToCart")}
             </p>
           </motion.div>
 

@@ -35,7 +35,7 @@ export const ProductQuantitySelector: React.FC<
 
   return (
     <div
-      className={`w-full ${theme.quantitySelector.height} ${theme.quantitySelector.rounded} flex items-center justify-around bg-popover text-popover-foreground border border-input`}
+      className={`w-full ${theme.quantitySelector.height} ${theme.quantitySelector.rounded} flex items-center justify-around bg-popover text-popover-foreground border border-input rounded-lg`}
     >
       <button
         onClick={handleDecrease}
