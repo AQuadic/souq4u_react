@@ -46,7 +46,9 @@ export const ProductQuantitySelector: React.FC<
         <Minus />
       </button>
 
-      <p className="text-foreground text-2xl font-semibold">{quantity}</p>
+      <p className="text-foreground text-2xl font-semibold text-main">
+        {quantity}
+      </p>
 
       <button
         onClick={handleIncrease}
