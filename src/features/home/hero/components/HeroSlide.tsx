@@ -21,14 +21,22 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ slide }) => {
     slide.en_image?.responsive_urls?.[0] ||
     "/hero/hero-slide-image.png";
 
+  // split the slide name into first word and the rest
+  const rawName = (slide.name || "").trim();
+  const nameParts = rawName ? rawName.split(/\s+/) : [];
+  const firstWord = nameParts.length ? nameParts[0] : "";
+  const rest = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+
   return (
     <div
-      className="bg-cover rounded-2xl bg-center bg-no-repeat text-white flex flex-col items-center justify-center w-full min-h-[400px] sm:h-[500px] px-4 py-12 sm:py-0"
+      className="bg-cover rounded-4xl bg-center bg-no-repeat text-white flex flex-col items-center justify-center w-full min-h-[400px] sm:h-[500px] px-4 py-12 sm:py-0"
       style={{ backgroundImage: `url(${imageUrl})` }}
     >
       <div className="w-full flex flex-col items-center text-center max-w-[768px]">
         <h1 className="text-3xl sm:text-4xl md:text-[48px] font-bold leading-tight sm:leading-tight mb-4 sm:mb-6">
-          <span className="text-main">{slide.name}</span>
+          {firstWord ? <span className="text-main">{firstWord}</span> : null}
+          {rest ? <span className="text-white"> {rest}</span> : null}
+          {/* if name is empty, render nothing inside h1 */}
         </h1>
 
         {/* <p className="text-sm sm:text-base md:text-lg font-medium sm:font-bold mb-6 sm:mb-10 px-4 sm:px-0 leading-relaxed">
