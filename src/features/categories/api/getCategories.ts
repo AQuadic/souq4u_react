@@ -21,6 +21,10 @@ export interface Category {
   children_count?: number;
   image?: {
     file_name: string;
+    url?: string;
+    uuid?: string;
+    mime_type?: string;
+    responsive_urls?: string[];
   } | null;
 }
 
