@@ -59,6 +59,7 @@
     "productDetails": "Product Details",
     "subscribeUs": "Subscribe to us"
   },
+  "recommendedForYou": "Recommended For You",
   "Toasts": {
     "invalidRequest": "Invalid request. Please check your information and try again.",
     "pleaseLogin": "Please log in to continue.",

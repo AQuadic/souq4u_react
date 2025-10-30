@@ -18,7 +18,6 @@ import {
   ProductInfo,
   ProductPricing,
   ProductActions,
-  ProductDescription,
 } from "./product-details";
 import {
   useTranslatedText,
@@ -333,11 +332,6 @@ const ProductDetailsPage: React.FC = () => {
             shortDescription={shortDescription}
           />
 
-          <ProductDescription
-            shortDescription={shortDescription}
-            description={description}
-          />
-
           <ProductPricing
             hasDiscount={selectedVariant?.has_discount ?? false}
             finalPrice={
@@ -356,6 +350,8 @@ const ProductDetailsPage: React.FC = () => {
             stockCount={stockCount}
             isInStock={isInStock}
             hasUnlimitedStock={hasUnlimitedStock}
+            shortDescription={shortDescription}
+            description={description}
           />
 
           <ProductActions
