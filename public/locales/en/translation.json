@@ -93,6 +93,8 @@
     "rating": "Rating",
     "reviews": "Reviews",
     "description": "Description",
+    "noReviewsYet": "No reviews yet",
+    "beTheFirst": "Be the first to review this product",
     "specifications": "Specifications",
     "relatedProducts": "Related Products",
     "productDetails": "Product Details",

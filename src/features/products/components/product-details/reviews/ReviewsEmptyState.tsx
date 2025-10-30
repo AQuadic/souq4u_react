@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 const ReviewsEmptyState = () => {
-  const { t } = useTranslation("Products");
+  const { t } = useTranslation();
   return (
     <section className="flex flex-col items-center">
       <img
