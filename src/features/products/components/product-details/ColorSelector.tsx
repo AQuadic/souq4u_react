@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ColorValue {
   valueId: number;
@@ -33,6 +34,7 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
     showLabel: false,
   },
 }) => {
+  const { t } = useTranslation();
   console.log("ColorSelector rendering:", {
     attributeId,
     attributeName,
@@ -95,7 +97,7 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
 
       {theme.showLabel && selectedValue && (
         <p className="mt-2 text-sm text-muted-foreground">
-          Selected: {selectedValue}
+          {t("Common.selected")}: {selectedValue}
         </p>
       )}
     </div>
