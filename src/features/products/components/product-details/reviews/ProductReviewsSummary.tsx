@@ -126,7 +126,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
 
                   <div className="w-full rounded-full h-3 bg-slate-200 dark:bg-white/10 overflow-hidden">
                     <motion.div
-                      className="h-full bg-red-600 rounded-full"
+                      className="h-full bg-main rounded-full"
                       initial={{ width: 0 }}
                       whileInView={{ width: `${w}%` }}
                       viewport={{ once: true, amount: 0.4 }}
