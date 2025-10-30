@@ -5,7 +5,7 @@ function authRequestInterceptor(config: {
   headers: { [key: string]: string };
 }) {
   // Check if we're in browser environment
-  const isBrowser = typeof window !== "undefined";
+  const isBrowser = globalThis.window !== undefined;
 
   let token: string | undefined;
   let language: string = "en"; // Default to English
@@ -14,8 +14,8 @@ function authRequestInterceptor(config: {
     // Browser environment - use js-cookie
     token = Cookies.get("souq4u-token");
 
-    // Get language from URL in browser
-    language = window.location.pathname.includes("ar") ? "ar" : "en";
+    // Get language from localStorage (set by i18next)
+    language = localStorage.getItem("i18nextLng") || "en";
   } else {
     // SSR environment - extract from request headers if available
     const cookieHeader = config.headers.cookie;
