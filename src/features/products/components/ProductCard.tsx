@@ -120,7 +120,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Link
       to={`/products/${product.id}`}
-      className="shadow-md hover:shadow-lg rounded-3xl md:py-4 w-full sm:w-[276px] md:h-[480px] flex flex-col border"
+      className="rounded-3xl md:py-4 w-full sm:w-[276px] md:h-[455px] flex flex-col bg-[#F7F7F7]"
     >
       <div className="  dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl p-4 relative  transition-shadow duration-300 ">
         <div className="flex items-center justify-between">
@@ -171,6 +171,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           )}
 
+
           {/* Out of Stock Overlay */}
           {isOutOfStock && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 lg:w-[70%] w-full bg-black/80 rounded-lg lg:px-4 py-2 flex items-center justify-center">
@@ -201,10 +202,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </p>
 
         <div className=" md:mt-auto">
-          <div className="mt-[18px] flex lg:flex-row flex-col lg:items-center gap-2  justify-between ">
-            <h2 className="text-main text-base font-bold leading-4">
+          <div className="mt-[18px] flex lg:flex-row flex-col lg:items-center gap-2 ">
+            <h2 className="text-[#121212] text-base font-bold leading-4">
               {formatPrice(product.variants?.[0]?.final_price ?? 0)}{" "}
-              <span className="font-normal">{t("Common.currency")}</span>
+              <span className="font-normal text-[8px]">{t("Common.currency")}</span>
             </h2>
 
             {product.variants?.[0]?.has_discount && discountPercentage > 0 && (
@@ -214,7 +215,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   <span className="font-normal">{t("Common.currency")}</span>
                 </h2>
 
-                <div className="w-[59px] h-5 border border-[#3D9BE9] rounded-[8px] flex items-center justify-center">
+                <div className="w-[59px] h-5 border border-[#C50000] text-[#C50000] rounded-[8px] flex items-center justify-center">
                   <h2 className=" text-xs font-normal leading-3">
                     {parseFloat(discountPercentage.toFixed(1))} %
                   </h2>
