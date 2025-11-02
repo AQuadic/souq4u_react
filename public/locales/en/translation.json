@@ -359,7 +359,10 @@
     "errorGeneric": "An error occurred. Please try again later.",
     "errorNameRequired": "Name is required",
     "errorPhoneRequired": "Phone is required",
-    "errorMessageRequired": "message is required"
+    "errorMessageRequired": "message is required",
+    "errorNameTooShort": "Name must be at least 3 characters.",
+    "errorPhoneInvalid": "Please enter a valid phone number.",
+    "errorMessageTooShort": "Message must be at least 10 characters."
   },
   "Header": {
     "switchLanguage": "Switch Language",

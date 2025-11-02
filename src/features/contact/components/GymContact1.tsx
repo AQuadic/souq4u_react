@@ -20,14 +20,7 @@ const GymContact1 = () => {
     number: "",
   });
 
-  const [form, setForm] = useState<{
-    name: string;
-    email: string;
-    city: string;
-    type: string;
-    title: string;
-    message: string;
-  }>({
+  const [form, setForm] = useState({
     name: "",
     email: "",
     city: "",
@@ -38,9 +31,11 @@ const GymContact1 = () => {
 
   const [errors, setErrors] = useState<{
     name?: string;
+    email?: string;
     phone?: string;
     message?: string;
   }>({});
+
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
@@ -53,11 +48,41 @@ const GymContact1 = () => {
   const validate = () => {
     const newErrors: typeof errors = {};
 
-    if (!form.name.trim()) newErrors.name = t("Contact.errorNameRequired");
-    if (!phoneValue.number.trim())
+    // ✅ Name Validation
+    if (!form.name.trim()) {
+      newErrors.name = t("Contact.errorNameRequired");
+    } else if (!/^[\p{L}\s]+$/u.test(form.name.trim())) {
+      newErrors.name = t("Contact.errorNameLettersOnly");
+    } else if (form.name.trim().length < 2) {
+      newErrors.name = t("Contact.errorNameTooShort");
+    } else if (form.name.trim().length > 100) {
+      newErrors.name = t("Contact.errorNameTooLong");
+    }
+
+    // ✅ Email Validation (optional)
+    if (form.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.email.trim())) {
+        newErrors.email = t("Contact.errorEmailInvalid");
+      }
+    }
+
+    // ✅ Phone Validation (Egypt format)
+    const phoneDigits = phoneValue.number.replace(/\D/g, "");
+    if (!phoneDigits) {
       newErrors.phone = t("Contact.errorPhoneRequired");
-    if (!form.message.trim())
+    } else if (!/^0?(10|11|12|15)[0-9]{8}$/.test(phoneDigits)) {
+      newErrors.phone = t("Contact.errorPhoneInvalid");
+    }
+
+    // ✅ Message Validation
+    if (!form.message.trim()) {
       newErrors.message = t("Contact.errorMessageRequired");
+    } else if (form.message.trim().length < 10) {
+      newErrors.message = t("Contact.errorMessageTooShort");
+    } else if (form.message.trim().length > 1000) {
+      newErrors.message = t("Contact.errorMessageTooLong");
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -79,6 +104,7 @@ const GymContact1 = () => {
 
     const response = await postSuggestion(payload);
     setLoading(false);
+
     if (response.success) {
       toast.success(t("Contact.success"));
       setForm({
@@ -104,6 +130,7 @@ const GymContact1 = () => {
       onSubmit={handleSubmit}
       className="md:w-[576px] w-full h-full md:bg-white md:dark:bg-[#242529] rounded-3xl p-4"
     >
+      {/* Name */}
       <div>
         <label
           htmlFor="name"
@@ -126,6 +153,7 @@ const GymContact1 = () => {
         )}
       </div>
 
+      {/* Email */}
       <div className="mt-2.5">
         <label
           htmlFor="email"
@@ -136,17 +164,22 @@ const GymContact1 = () => {
             {t("Contact.optional")}
           </span>
         </label>
-
         <input
           type="email"
           name="email"
           placeholder={t("Contact.emailPlaceholder")}
           value={form.email}
           onChange={handleChange}
-          className="w-full h-14 border rounded-[8px] mt-1 px-4 text-gray-700 dark:text-[#C0C0C0] border-gray-300 dark:border-[#C0C0C0] bg-white dark:bg-transparent"
+          className={`w-full h-14 border rounded-[8px] mt-1 px-4 text-gray-700 dark:text-[#C0C0C0] border-gray-300 dark:border-[#C0C0C0] bg-white dark:bg-transparent ${
+            errors.email ? "border-red-500" : ""
+          }`}
         />
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+        )}
       </div>
 
+      {/* Phone */}
       <div className="mt-2.5">
         <label
           htmlFor="phone"
@@ -171,6 +204,7 @@ const GymContact1 = () => {
         )}
       </div>
 
+      {/* Message */}
       <div className="mt-2.5">
         <label
           htmlFor="message"
@@ -192,6 +226,7 @@ const GymContact1 = () => {
         )}
       </div>
 
+      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
