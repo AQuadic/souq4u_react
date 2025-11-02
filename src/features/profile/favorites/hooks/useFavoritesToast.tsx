@@ -1,11 +1,11 @@
 "use client";
 
 import { useToast } from "@/shared/components/ui/toast";
-// import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 export const useFavoritesToast = () => {
   const toast = useToast();
-  // const t = useTranslations("Products");
+  const {t} = useTranslation("Products");
 
   return {
     /**
@@ -33,7 +33,7 @@ export const useFavoritesToast = () => {
      * Show error toast for login requirement
      */
     loginRequired: () => {
-      toast.error(("loginRequiredForFavorites"));
+      toast.error(t("Products.loginRequiredForFavorites"));
     },
   };
 };
