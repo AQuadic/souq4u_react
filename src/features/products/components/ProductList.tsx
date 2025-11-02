@@ -48,7 +48,7 @@ export interface ProductListProps {
 }
 
 const defaultTheme: Required<ProductListTheme> = {
-  containerClassName: "container md:py-[88px] py-8",
+  containerClassName: "container py-8",
   titleClassName:
     "text-main md:text-[32px] text-2xl font-normal leading-[100%] uppercase font-anton-sc",
   gridClassName: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
