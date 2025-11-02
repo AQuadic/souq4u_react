@@ -3,6 +3,7 @@
 import { Button } from "@/shared/components/ui/button";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface HeroSlideProps {
   slide: {
@@ -15,17 +16,20 @@ interface HeroSlideProps {
 }
 
 const HeroSlide: React.FC<HeroSlideProps> = ({ slide }) => {
-  const imageUrl =
-    slide.en_image?.url ||
-    slide.ar_image?.url ||
-    slide.en_image?.responsive_urls?.[0] ||
-    "/hero/hero-slide-image.png";
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language || "en";
 
-  // split the slide name into first word and the rest
+  const imageUrl =
+    currentLang === "ar"
+      ? slide.ar_image?.url || slide.ar_image?.responsive_urls?.[0]
+      : slide.en_image?.url || slide.en_image?.responsive_urls?.[0] ||
+        slide.ar_image?.url || "/hero/hero-slide-image.png";
+
+  // split name into words
   const rawName = (slide.name || "").trim();
   const nameParts = rawName ? rawName.split(/\s+/) : [];
-  const firstWord = nameParts.length ? nameParts[0] : "";
-  const rest = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+  const firstWord = nameParts[0] || "";
+  const rest = nameParts.slice(1).join(" ");
 
   return (
     <div
