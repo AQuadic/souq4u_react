@@ -32,6 +32,8 @@ import {
 import LoginForm from "@/features/auth/components/LoginForm";
 import { Dialog, DialogContent, DialogHeader } from "../../ui/dialog";
 import { getPhoneValidationError } from "@/shared/utils/phoneValidationHelper";
+import { getStoreSetting } from "../api/store";
+import { useQuery } from "@tanstack/react-query";
 
 const socialIcons = [
   { Icon: Facebook, href: "https://facebook.com" },
@@ -386,6 +388,11 @@ const Footer = () => {
     }
   };
 
+  const { data: sloganSetting, isLoading: sloganLoading, error: sloganError } = useQuery({
+    queryKey: ["storeSetting", "Slogan"],
+    queryFn: () => getStoreSetting("Slogan"),
+  });
+
   return (
     <div>
       <FooterContactInfo />
@@ -404,9 +411,13 @@ const Footer = () => {
             </div>
 
             <p className="text-base lg:text-lg font-normal leading-[150%] max-w-[340px] mx-auto lg:mx-0 mb-6">
-              {locale === "ar"
-                ? "ابقَ على اطلاع مع Souq4U — عروض حصرية وتوصيل سريع إلى باب منزلك."
-                : "Stay updated with Souq4U — exclusive deals and fast delivery to your door."}
+              {sloganLoading
+                ? (locale === "ar" ? "جارِ التحميل..." : "Loading...")
+                : sloganError
+                  ? (locale === "ar" ? "حدث خطأ أثناء تحميل الشعار." : "Failed to load slogan.")
+                  : typeof sloganSetting?.value === "object"
+                    ? sloganSetting?.value[locale as "en" | "ar"]
+                    : sloganSetting?.value || ""}
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-3">
