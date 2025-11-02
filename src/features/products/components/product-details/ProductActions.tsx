@@ -86,8 +86,8 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
     if (!isAuthenticated) {
       // use product namespace translation key; fall back to common or literal
       const loginMsg =
-        t("loginRequiredToFavorite") ||
-        t("loginRequiredToFavorite") ||
+        t("Products.loginRequiredForFavorites") ||
+        t("Products.loginRequiredForFavorites") ||
         "You must be logged in to add favorites";
       toast.error(loginMsg);
       return;
