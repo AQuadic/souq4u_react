@@ -65,7 +65,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
       <div
         className={cn(
           "flex items-center gap-4 mb-6",
-          language === "ar" ? "flex-row-reverse" : "flex-row"
+          // language === "ar" ? "flex-row-reverse" : "flex-row"
         )}
       >
         <button
@@ -85,9 +85,16 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
             {language === "ar" ? "تتبع الطلب" : "Tracking Order"}
           </h1>
           <p className="text-muted-foreground dark:text-white/70 text-sm">
-            {language === "ar"
-              ? `طلب رقم #${order.code}`
-              : `Order #${order.code}`}
+            {language === "ar" ? (
+              <>
+                طلب رقم{" "}
+                <span dir="ltr" style={{ unicodeBidi: "bidi-override" }}>
+                  #{order.code}
+                </span>
+              </>
+            ) : (
+              <>Order #{order.code}</>
+            )}
           </p>
         </div>
       </div>
@@ -96,14 +103,14 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
       <div className="bg-card dark:bg-white/5 backdrop-blur-sm border border-border dark:border-white/10 rounded-2xl p-4 sm:p-6 mb-6">
         <div
           className={cn(
-            "flex items-center justify-between mb-4 flex-col sm:flex-row gap-4 sm:gap-0",
-            language === "ar" && "sm:flex-row-reverse"
+            "flex items-center justify-between mb-4  gap-4 sm:gap-0",
+            // language === "ar" && "sm:flex-row-reverse"
           )}
         >
           <div
             className={cn(
               "flex items-center gap-3",
-              language === "ar" && "flex-row-reverse"
+              // language === "ar" && "flex-row-reverse"
             )}
           >
             <div
@@ -161,7 +168,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
                 "flex gap-4 p-4 rounded-xl",
                 "bg-accent/50 dark:bg-white/5",
                 "flex-col sm:flex-row sm:items-center",
-                language === "ar" && "sm:flex-row-reverse"
+                // language === "ar" && "sm:flex-row-reverse"
               )}
             >
               {/* Product Image */}
@@ -218,7 +225,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
                 <div
                   className={cn(
                     "flex items-center gap-4 mt-2 justify-center sm:justify-start",
-                    language === "ar" && "sm:justify-end"
+                    // language === "ar" && "sm:justify-end"
                   )}
                 >
                   <span className="text-muted-foreground dark:text-white/70 text-xs sm:text-sm">
@@ -262,7 +269,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
           <div
             className={cn(
               "flex items-start gap-3",
-              language === "ar" && "flex-row-reverse"
+              // language === "ar" && "flex-row-reverse"
             )}
           >
             <MapPin
@@ -282,7 +289,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
           <div
             className={cn(
               "flex items-start gap-3",
-              language === "ar" && "flex-row-reverse"
+              // language === "ar" && "flex-row-reverse"
             )}
           >
             <Phone
@@ -293,7 +300,10 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
               <p className="text-muted-foreground dark:text-white/70 text-sm">
                 {language === "ar" ? "رقم الهاتف" : "Phone Number"}
               </p>
-              <p className="text-foreground dark:text-white text-sm sm:text-base">
+              <p
+                className="text-foreground dark:text-white text-sm sm:text-base"
+                dir="ltr"
+              >
                 {order.phone_national}
               </p>
             </div>
@@ -303,7 +313,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
             <div
               className={cn(
                 "flex items-start gap-3",
-                language === "ar" && "flex-row-reverse"
+                // language === "ar" && "flex-row-reverse"
               )}
             >
               <Mail
@@ -324,7 +334,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
           <div
             className={cn(
               "flex items-start gap-3",
-              language === "ar" && "flex-row-reverse"
+              // language === "ar" && "flex-row-reverse"
             )}
           >
             <Package
@@ -415,7 +425,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
         <div
           className={cn(
             "flex items-center gap-3",
-            language === "ar" && "flex-row-reverse"
+            // language === "ar" && "flex-row-reverse"
           )}
         >
           <CreditCard
@@ -435,7 +445,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
         <div
           className={cn(
             "flex items-center gap-3 mt-4",
-            language === "ar" && "flex-row-reverse"
+            // language === "ar" && "flex-row-reverse"
           )}
         >
           <Calendar
@@ -457,7 +467,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
       <div className="mt-8 text-center">
         <button
           onClick={onBack}
-          className="px-6 py-3 bg-accent hover:bg-accent/80 dark:bg-white/10 dark:hover:bg-white/20 text-foreground dark:text-white font-medium rounded-full transition-colors text-sm sm:text-base"
+          className="px-6 py-3 bg-accent hover:bg-accent/80 dark:bg-white/10 dark:hover:bg-white/20 text-foreground dark:text-white font-medium rounded-full transition-colors text-sm sm:text-base cursor-pointer"
         >
           {language === "ar" ? "تتبع طلب آخر" : "Track Another Order"}
         </button>
