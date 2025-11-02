@@ -187,7 +187,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
         // toast.success(t("newVerificationCodeSent"));
       } catch (error) {
         console.error("Resend verification failed:", error);
-        toast.error(t("failedToSendCode"));
+        toast.error(t("Auth.failedToSendCode"));
       }
     }
   }, [loginData, t, toast]);
