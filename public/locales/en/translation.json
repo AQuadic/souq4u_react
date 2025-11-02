@@ -405,6 +405,7 @@
   "Profile": {
     "title": "My Profile",
     "account": "My Account",
+    "email": "Email",
     "phone": "Phone",
     "updateSuccess": "Profile updated successfully!",
     "updateFailed": "Failed to update profile",
