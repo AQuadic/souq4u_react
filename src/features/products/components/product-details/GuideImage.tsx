@@ -31,7 +31,7 @@ const GuideImage: React.FC<GuideImageProps> = ({ guideImage }) => {
 
         <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
-            <DialogTitle>{t('Products.guideImage')}</DialogTitle>
+            <DialogTitle className="ltr:text-left rtl:text-right">{t('Products.guideImage')}</DialogTitle>
             </DialogHeader>
 
             <div className="flex justify-center items-center">
