@@ -9,6 +9,7 @@ import { getSlider } from "../api/getSlider";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../style/hero-slider.css";
+import Spinner from "@/shared/components/icons/Spinner";
 
 const MainHero = () => {
   const { data, isLoading, isError } = useQuery({
@@ -36,8 +37,8 @@ const MainHero = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px] sm:h-[500px]">
-        <p className="text-gray-500">Loading...</p>
+      <div className="flex items-center justify-center py-8">
+        <Spinner />
       </div>
     );
   }
