@@ -117,7 +117,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
             // Login successful - stop polling immediately
             stopPolling();
             loginUser(response.user, response.token);
-            toast.success(t("loginSuccess"), { duration: 8000 });
+            toast.success(t("Auth.loginSuccess"), { duration: 8000 });
             setStep("login");
             setIsDialogOpen(false); // Close the dialog
             return;
