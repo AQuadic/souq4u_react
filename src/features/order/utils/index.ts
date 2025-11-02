@@ -93,9 +93,10 @@ export const getCountryCodeFromPhone = (phoneCode: string): string => {
  * Formats currency amount
  */
 export const formatCurrency = (
-  amount: number,
+  amount?: number | null,
   currency: string = "ج.م"
 ): string => {
+  if (amount == null || isNaN(amount)) return `- ${currency}`;
   return `${amount.toLocaleString()} ${currency}`;
 };
 

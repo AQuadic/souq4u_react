@@ -23,6 +23,7 @@ import NotificationsPage from "./features/notifications/NotificationsPage";
 import OrderTrackingPage from "./features/profile/orders/tracking/OrderTrackingPage";
 import { ToastContainer } from "./shared/components/ui/toast";
 import SubscribeModalProvider from "./shared/components/modals/SubscribeModalProvider";
+import { MainTracking } from "./features/order";
 
 // Home Page Component
 function HomePage() {
@@ -83,6 +84,7 @@ function App() {
               <Route path="cart" element={<MainCart />} />
               <Route path="checkout" element={<MainCheckout />} />
               <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="track-order" element={<MainTracking />} />
             </Route>
           </Routes>
         </SubscribeModalProvider>
