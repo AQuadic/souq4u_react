@@ -27,7 +27,7 @@ import { ProductImageGallery } from "./product-details/ProductImageGallery";
 import ProductDetailsSkeleton from "./ProductDetailsSkeleton";
 import { ProductForCart } from "@/features/cart/types";
 import ProductList from "./ProductList";
-import RecentlyViewedProducts from "./RecentlyViewedProducts";
+// import RecentlyViewedProducts from "./RecentlyViewedProducts";
 import { useRecentlyViewedStore } from "../stores/recently-viewed-store";
 import { useTranslation } from "react-i18next";
 import MainProductReviews from "./product-details/reviews/MainProductReviews";
@@ -405,10 +405,10 @@ const ProductDetailsPage: React.FC = () => {
             }}
           />
 
-          <RecentlyViewedProducts
+          {/* <RecentlyViewedProducts
             currentProductId={product.id}
             titleAlign={isRtl ? "right" : "left"}
-          />
+          /> */}
         </>
       )}
     </div>
