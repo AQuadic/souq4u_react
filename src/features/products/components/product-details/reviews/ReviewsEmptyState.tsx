@@ -10,10 +10,10 @@ const ReviewsEmptyState = () => {
         width={88}
         height={55}
       />
-      <p className="text-[32px] font-medium leading-[150%] mt-6">
+      <p className="text-[32px] font-normal leading-[150%] mt-6">
         {t("Products.noReviewsYet")}
       </p>
-      <p className="text-[32px] font-medium leading-[150%] mt-6">
+      <p className="text-[32px] font-normal leading-[150%] mt-6">
         {t("Products.beTheFirst")}
       </p>
     </section>
