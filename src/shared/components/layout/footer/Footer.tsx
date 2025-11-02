@@ -432,18 +432,21 @@ const Footer = () => {
             <div className="flex flex-col gap-4">
               <Link
                 to="/"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
                 {t("Navigation.home")}
               </Link>
               <Link
                 to="/products"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
                 {t("Navigation.products")}
               </Link>
               <Link
                 to="/contact"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
                 {t("Contact.title")}
