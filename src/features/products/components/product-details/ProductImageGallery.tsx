@@ -250,6 +250,10 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   const galleryRef = useRef<HTMLDivElement>(null);
   const [isRtl, setIsRtl] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
   const {t} = useTranslation("Products");
 
   // Detect RTL direction
@@ -323,9 +327,16 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isExpanded && e.key === "Escape") {
-        setIsExpanded(false);
+        if (isZoomed) {
+          setIsZoomed(false);
+          setImagePosition({ x: 0, y: 0 });
+        } else {
+          setIsExpanded(false);
+        }
         return;
       }
+
+      if (isZoomed) return;
 
       if (e.key === "ArrowLeft") {
         if (isRtl) {
@@ -344,7 +355,39 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isRtl, goToNext, goToPrevious, isExpanded]);
+  }, [isRtl, goToNext, goToPrevious, isExpanded, isZoomed]);
+
+  const handleImageClick = () => {
+    if (!isDragging) {
+      if (isZoomed) {
+        setIsZoomed(false);
+        setImagePosition({ x: 0, y: 0 });
+      } else {
+        setIsZoomed(true);
+      }
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isZoomed) {
+      setIsDragging(false);
+      setDragStart({ x: e.clientX - imagePosition.x, y: e.clientY - imagePosition.y });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isZoomed && e.buttons === 1) {
+      setIsDragging(true);
+      setImagePosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setTimeout(() => setIsDragging(false), 0);
+  };
 
   return (
     <div
@@ -516,10 +559,21 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
       {isExpanded && (
         <div 
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
-          onClick={() => setIsExpanded(false)}
+          onClick={() => {
+            if (isZoomed) {
+              setIsZoomed(false);
+              setImagePosition({ x: 0, y: 0 });
+            } else {
+              setIsExpanded(false);
+            }
+          }}
         >
           <button
-            onClick={() => setIsExpanded(false)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsZoomed(false);
+              setIsExpanded(false);
+            }}
             className="absolute top-4 right-4 z-50 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Close full screen"
           >
@@ -539,20 +593,42 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
           </button>
 
           <div 
-            className="relative w-full h-full flex items-center justify-center p-4"
+            className="relative w-full h-full flex items-center justify-center p-4 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={
-                displayImages[currentIndex].url || "/placeholder-product.jpg"
-              }
-              alt={displayImages[currentIndex].alt || productName}
-              width={1200}
-              height={1200}
-              className="max-w-full max-h-full object-contain"
-            />
+            <div
+              className={`relative ${isZoomed ? 'cursor-move' : 'cursor-pointer'}`}
+              onClick={handleImageClick}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              style={{ 
+                width: "100%", 
+                height: "100%",
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center"
+              }}
+            >
+              <img
+                src={
+                  displayImages[currentIndex].url || "/placeholder-product.jpg"
+                }
+                alt={displayImages[currentIndex].alt || productName}
+                width={1200}
+                height={1200}
+                className="object-contain transition-transform duration-300 select-none"
+                draggable="false"
+                style={{
+                  transform: isZoomed ? `scale(1.5) translate(${imagePosition.x / 1.5}px, ${imagePosition.y / 1.5}px)` : 'scale(1)',
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                }}
+              />
+            </div>
 
-            {totalImages > 1 && (
+            {!isZoomed && totalImages > 1 && (
               <>
                 <button
                   onClick={(e) => {
