@@ -34,7 +34,7 @@ const ProductRatingCount: React.FC<Props> = ({
   };
 
   return (
-    <div className="mt-1 flex items-center gap-3 text-sm text-slate-900 dark:text-white">
+    <div className="mt-6 flex items-center gap-3 text-sm text-slate-900 dark:text-white">
       {/* Stars (visual only - consistent with ProductReviewsSummary) */}
       <div className="flex items-center gap-1 text-yellow-400">
         {[1, 2, 3, 4, 5].map((s) => (
@@ -48,7 +48,7 @@ const ProductRatingCount: React.FC<Props> = ({
       <button
         type="button"
         onClick={handleClick}
-        className="text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300 focus:outline-none"
+        className="text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300 focus:outline-none mt-2"
         aria-label={t("Products.reviews")}
       >
         ({isLoading ? "..." : `${total} ${t("Products.reviews")}`})

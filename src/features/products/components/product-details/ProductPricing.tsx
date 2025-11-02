@@ -48,7 +48,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
               }`}
             >
               {formatPrice(finalPrice)}{" "}
-              <span className="font-normal">{currency}</span>
+              <span className="font-normal text-xl">{currency}</span>
             </h2>
             <div className="flex items-center gap-4">
               <h2
@@ -66,7 +66,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
                 )}
               </h2>
               {discountPercentage && (
-                <div className="w-[59px] h-5 border border-red-500 rounded-xs flex items-center justify-center bg-white dark:bg-transparent">
+                <div className="w-[59px] h-5 border border-red-500 rounded-[4px] flex items-center justify-center bg-white dark:bg-transparent">
                   <h2 className="text-red-500 dark:text-[#FDFDFD] text-xs font-normal leading-3">
                     {discountPercentage}%
                   </h2>
