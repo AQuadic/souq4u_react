@@ -122,7 +122,8 @@
       "heading": "Review Summary",
       "starsLabel": "stars"
     },
-    "tapToExpand": "Tap to expand"
+    "tapToExpand": "Tap to expand",
+    "topRated": "Top rated"
   },
   "ProductsGrid": {
     "home": "Home",
