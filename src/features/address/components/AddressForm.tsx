@@ -222,18 +222,19 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       {/* City Selection */}
       <div>
         <label htmlFor="city" className="mb-2 block">
-          {t("city")} <span className="text-red-500">*</span>
+          {t("AddressForm.city")} <span className="text-red-500">*</span>
         </label>
         <Select
           value={formData.city_id}
           onValueChange={(value) => handleInputChange("city_id", value)}
         >
-          <SelectTrigger className="w-full   :  border border-slate-200  ">
+          <SelectTrigger className="w-full   :  border border-slate-200  " dir={i18n.language === "ar" ? "rtl" : "ltr"}>
             <SelectValue
               placeholder={citiesLoading ? t("AddressForm.loadingCities") : t("AddressForm.selectCity")}
+              dir={i18n.language === "ar" ? "rtl" : "ltr"}
             />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent dir={i18n.language === "ar" ? "rtl" : "ltr"}>
             {cities?.map((city: City) => (
               <SelectItem key={city.id} value={city.id.toString()}>
                 {getTranslated(city.name)}
@@ -378,7 +379,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               !formData.area_id ||
               !formData.details.trim()
             }
-            className="flex-1 px-4 py-2 bg-main hover:bg-main rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex-1 px-4 py-2 text-white bg-main hover:bg-main rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {(() => {
               if (
