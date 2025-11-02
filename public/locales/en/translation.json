@@ -125,7 +125,8 @@
     "tapToExpand": "Tap to expand",
     "topRated": "Top rated",
     "guideImage": "Guide image",
-    "close": "Close"
+    "close": "Close",
+    "off": "off"
   },
   "ProductsGrid": {
     "home": "Home",

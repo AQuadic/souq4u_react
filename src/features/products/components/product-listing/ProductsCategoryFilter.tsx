@@ -41,7 +41,7 @@ const ProductsCategoryFilter: React.FC<ProductsCategoryFilterProps> = ({ setCate
   return (
     <section className="w-[276px] h-auto dark:bg-[#242529] bg-[#FDFDFD] overflow-y-auto mx-auto">
       <h1 className="md:text-2xl text-base font-semibold leading-[100%] p-4 ltr:border-l-4 rtl:border-r-4 border-main">
-        {t("categories")}
+        {t("Products.categories")}
       </h1>
       <div className="w-full h-px dark:bg-[#FDFDFD] bg-[#EAEAEA]"></div>
 
