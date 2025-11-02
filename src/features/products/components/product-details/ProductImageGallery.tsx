@@ -42,6 +42,7 @@ interface ImageItem {
   id: number;
   url: string;
   alt?: string;
+  responsive_urls?: string[];
 }
 
 interface ProductImageGalleryProps {
@@ -325,7 +326,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
         setIsExpanded(false);
         return;
       }
-      
+
       if (e.key === "ArrowLeft") {
         if (isRtl) {
           goToNext();
@@ -363,10 +364,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             vertical
           />
           <div className="flex-1 relative">
-            <div 
-              onClick={() => setIsExpanded(true)}
-              className="cursor-zoom-in"
-            >
+            <div onClick={() => setIsExpanded(true)} className="cursor-pointer">
               <MainGallery
                 displayImages={displayImages}
                 currentIndex={currentIndex}
@@ -391,28 +389,102 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
           <div className="relative">
             <div 
               onClick={() => setIsExpanded(true)}
-              className="cursor-zoom-in"
+              className="cursor-pointer relative group"
             >
-              <MainGallery
-                displayImages={displayImages}
-                currentIndex={currentIndex}
-                totalImages={totalImages}
-                productName={productName}
-                isRtl={isRtl}
-                goToNext={goToNext}
-                goToPrevious={goToPrevious}
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={isFavorite}
-                galleryRef={galleryRef}
-                handleTouchStart={handleTouchStart}
-                handleTouchMove={handleTouchMove}
-                handleTouchEnd={handleTouchEnd}
-                showSideThumbnails={showSideThumbnails}
-              />
+              <div className="transition-opacity duration-300 group-hover:opacity-70">
+                <div
+                  ref={galleryRef}
+                  className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[590px] overflow-hidden rounded-lg"
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  <div className="w-full h-full relative">
+                    {displayImages.map((img, index) => {
+                      const isActive = index === currentIndex;
+                      const prevIndex =
+                        (currentIndex - 1 + totalImages) % totalImages;
+                      const nextIndex = (currentIndex + 1) % totalImages;
+                      const eagerLoad =
+                        isActive || index === prevIndex || index === nextIndex;
+
+                      return (
+                        <div
+                          key={`main-${img.id}-${index}`}
+                          className={`absolute inset-0 flex items-center justify-center transition-none ${
+                            isActive
+                              ? "opacity-100 z-10"
+                              : "opacity-0 z-0 pointer-events-none"
+                          }`}
+                        >
+                          <img
+                            src={img.url || "/placeholder-product.jpg"}
+                            alt={img.alt || productName}
+                            width={584}
+                            height={590}
+                            className="w-full h-full object-contain"
+                            loading={eagerLoad ? "eager" : "lazy"}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={onToggleFavorite}
+                    className="absolute top-0 right-3 z-20 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 md:hidden"
+                    aria-label={
+                      isFavorite ? "Remove from favorites" : "Add to favorites"
+                    }
+                  >
+                    {isFavorite ? <ResFav /> : <ResUnFav />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <span className="text-white text-lg sm:text-xl font-medium bg-black/60 px-4 py-2 rounded-full">
+                  {t('Products.tapToExpand')}
+                </span>
+              </div>
             </div>
-            <div className="absolute left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm pointer-events-none">
-              {t('Products.tapToExpand')}
-            </div>
+
+            {totalImages > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // isRtl ? goToNext() : goToPrevious();
+                  }}
+                  className={`absolute top-1/2 -translate-y-1/2 ${
+                    isRtl ? "right-4" : "left-4"
+                  } z-20 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  aria-label={isRtl ? "Next image" : "Previous image"}
+                >
+                  {isRtl ? (
+                    <ChevronRightIcon className="w-6 h-6 text-gray-700" />
+                  ) : (
+                    <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
+                  )}
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // isRtl ? goToPrevious() : goToNext();
+                  }}
+                  className={`absolute top-1/2 -translate-y-1/2 ${
+                    isRtl ? "left-4" : "right-4"
+                  } z-20 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  aria-label={isRtl ? "Previous image" : "Next image"}
+                >
+                  {isRtl ? (
+                    <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
+                  ) : (
+                    <ChevronRightIcon className="w-6 h-6 text-gray-700" />
+                  )}
+                </button>
+              </>
+            )}
           </div>
           <Thumbnails
             displayImages={displayImages}
@@ -451,8 +523,18 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             className="absolute top-4 right-4 z-50 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Close full screen"
           >
-            <svg className="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
 
@@ -461,7 +543,9 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={displayImages[currentIndex].url || "/placeholder-product.jpg"}
+              src={
+                displayImages[currentIndex].url || "/placeholder-product.jpg"
+              }
               alt={displayImages[currentIndex].alt || productName}
               width={1200}
               height={1200}
