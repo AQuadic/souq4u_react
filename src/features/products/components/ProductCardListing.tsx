@@ -35,7 +35,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
     product.name as MultilingualText | string | undefined,
     "Product Name"
   );
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Prepare translated category name safely
   const categoryName = product.category?.name as
@@ -190,7 +190,9 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
 
                 <div className="px-2 h-5 border border-[#C50000] text-[#C50000] rounded-[8px] flex items-center justify-center">
                   <h2 className=" text-xs font-normal leading-3 uppercase">
-                    {parseFloat(discountPercentage.toFixed(1))}% {t('Products.off')}
+                    {i18n.dir() === "rtl"
+                      ? `${t("Products.off")} ${parseFloat(discountPercentage.toFixed(1))}%`
+                      : `${parseFloat(discountPercentage.toFixed(1))}% ${t("Products.off")}`}
                   </h2>
                 </div>
               </div>
