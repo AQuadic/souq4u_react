@@ -29,7 +29,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
   shortDescription,
   description,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const formatPrice = (price: number) =>
     price.toLocaleString("en-US", { maximumFractionDigits: 0 });
@@ -66,9 +66,11 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
                 )}
               </h2>
               {discountPercentage && (
-                <div className="w-[59px] h-5 border border-red-500 rounded-[4px] flex items-center justify-center bg-white dark:bg-transparent">
-                  <h2 className="text-red-500 dark:text-[#FDFDFD] text-xs font-normal leading-3">
-                    {discountPercentage}%
+                <div className="px-2 h-5 border border-[#C50000] text-[#C50000] rounded-[8px] flex items-center justify-center">
+                  <h2 className=" text-xs font-normal leading-3 uppercase">
+                    {i18n.dir() === "rtl"
+                      ? `${t("Products.off")} ${parseFloat(discountPercentage.toFixed(1))}%`
+                      : `${parseFloat(discountPercentage.toFixed(1))}% ${t("Products.off")}`}
                   </h2>
                 </div>
               )}
