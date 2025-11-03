@@ -389,7 +389,7 @@ const Footer = () => {
   };
 
   const { data: storeData, isLoading, error } = useQuery({
-    queryKey: ["storeData"],
+    queryKey: ["store-setting", "social"],
     queryFn: () => getStoreSetting(),
   });
 
@@ -417,7 +417,7 @@ const Footer = () => {
                   ? (locale === "ar"
                       ? "حدث خطأ أثناء تحميل التفاصيل."
                       : "Failed to load details.")
-                  : storeData?.details || ""}
+                  : storeData?.slogan || ""}
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-3">

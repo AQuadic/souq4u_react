@@ -1,24 +1,18 @@
 import { axios } from "@/shared/lib/axios";
 
-export interface StoreSocialSettings {
-  email?: string;
-  facebook?: string;
-  instagram?: string;
-  twitter?: string;
-  location?: {
-    lat?: number;
-    lng?: number;
+export interface StoreSettings {
+  social?: {
+    email?: string;
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    location?: { lat?: number; lng?: number };
+    [key: string]: any;
   };
-  [key: string]: any;
+  slogan?: string;
 }
 
-export const getStoreSetting = async (): Promise<StoreSocialSettings> => {
-  const response = await axios.get(`/store/setting`, {
-    params: { key: "social" },
-  });
-
-  // response.data.social contains the actual info
-  const social = response.data?.social ?? {};
-
-  return social;
+export const getStoreSetting = async (key: string = "social"): Promise<any> => {
+  const response = await axios.get(`/store/setting`, { params: { key } });
+  return response.data?.[key] ?? {};
 };

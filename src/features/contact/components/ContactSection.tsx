@@ -18,13 +18,13 @@ const ContactSection = () => {
   // const lng = lngRaw ? Number(lngRaw) : null;
   const { t } = useTranslation();
 
-  const { data, isLoading } = useQuery({
+  const { data: socialData, isLoading } = useQuery({
     queryKey: ["store-setting", "social"],
-    queryFn: () => getStoreSetting(),
+    queryFn: () => getStoreSetting("social"),
   });
 
-  const lat = data?.location?.lat ?? null;
-  const lng = data?.location?.lng ?? null;
+  const lat = socialData?.location?.lat ?? null;
+  const lng = socialData?.location?.lng ?? null;
 
   return (
     <section className="container md:py-12">
