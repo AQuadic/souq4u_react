@@ -472,6 +472,7 @@ const Footer = () => {
             </h2>
             <div className="flex flex-col gap-4">
               <Link
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 to="/track-order"
                 className=" text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
               >
@@ -479,13 +480,17 @@ const Footer = () => {
               </Link>
               <Link
                 to="/profile/account"
-                onClick={handleAccountClick}
-                className=" text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200 cursor-pointer"
+                onClick={(e) => {
+                  handleAccountClick?.(e);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200 cursor-pointer"
               >
                 {t("Footer.myAccount")}
               </Link>
               {dynamicLinks.map((link) => (
                 <Link
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                   key={link.href}
                   to={link.href}
                   className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
