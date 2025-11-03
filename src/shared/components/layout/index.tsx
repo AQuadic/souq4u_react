@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Outlet } from "react-router-dom";
 import HeaderBanner from "./header/HeaderBanner";
 import HeaderDesktop from "./header/HeaderDesktop";
@@ -7,8 +7,12 @@ import Footer from "./footer/Footer";
 import { CartInitializer } from "@/features/cart";
 import { AuthInitializer } from "@/features/auth";
 import MobileNavigation from "./header/MobileNavigation";
+import { useScrollRestoration } from "@/shared/components/layout/useScrollRestoration";
 
 const Layout = () => {
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  useScrollRestoration(scrollContainerRef, { storageKeyPrefix: "main-scroll" });
+
   return (
     <div className="flex flex-col min-h-screen">
       <AuthInitializer />
@@ -23,7 +27,10 @@ const Layout = () => {
       <MobileHeader />
 
       {/* Main Content - pages will be rendered here */}
-      <main className="flex-1">
+      <main
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto relative"
+      >
         <Outlet />
       </main>
 
