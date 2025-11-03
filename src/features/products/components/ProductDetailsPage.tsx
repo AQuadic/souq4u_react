@@ -377,7 +377,7 @@ const ProductDetailsPage: React.FC = () => {
       {/* Reviews Section - Full Width */}
       {!!product?.id && (
         <div id="product-reviews" className="w-full mt-12">
-          <MainProductReviews productId={product.id} />
+          <MainProductReviews productId={product.id} product={product} />
         </div>
       )}
 

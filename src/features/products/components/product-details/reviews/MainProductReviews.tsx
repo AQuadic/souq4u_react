@@ -10,9 +10,19 @@ import ReviewsEmptyState from "./ReviewsEmptyState";
 
 interface Props {
   productId: number;
+  product?: {
+    images?: Array<{
+      url?: string;
+      responsive_urls?: string[];
+    }>;
+    name?: string | {
+      ar?: string;
+      en?: string;
+    };
+  };
 }
 
-const MainProductReviews: React.FC<Props> = ({ productId }) => {
+const MainProductReviews: React.FC<Props> = ({ productId, product }) => {
   const { t } = useTranslation();
   const { data } = useQuery({
     queryKey: ["productReviews", productId],
@@ -44,7 +54,7 @@ const MainProductReviews: React.FC<Props> = ({ productId }) => {
     <div className="mt-6">
       <h3 className="font-bold text-[32px] mb-4">{t("Products.reviews")}</h3>
       <div className="flex gap-6 max-sm:flex-col">
-        <ProductReviewsSummary reviewable_id={productId} />
+        <ProductReviewsSummary reviewable_id={productId} product={product} />
         <ProductReviewsListing reviews={reviews} />
       </div>
     </div>

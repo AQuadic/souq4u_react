@@ -1,4 +1,4 @@
-import Star from "@/features/products/icons/Star";
+import Star from "@/features/products/icons/FilledStar";
 import React from "react";
 
 interface Props {
