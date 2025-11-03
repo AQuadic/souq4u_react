@@ -168,6 +168,14 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
       >
         {t("Auth.continueAsGuest")}
       </Link>
+
+      <div className="w-full h-px bg-[#A9A9A9] my-8"></div>
+      <div className="dark:text-[#F1F1F1] text-lg font-normal leading-[100%] text-center">
+        Powered by {""}
+        <Link to="https://cloudwa.net/" target="_blank">
+          (CloudWa)
+        </Link>
+      </div>
     </form>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { ResendResponse } from "@/features/auth/api/resend";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 // import { Link } from "@/i18n/navigation";
 
 interface LoginData {
@@ -90,7 +91,7 @@ export const VerificationForm = ({
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full h-12 md:h-14 bg-main rounded-full md:rounded-[112px] mt-4 md:mt-6   text-base md:text-lg font-bold mx-auto flex items-center justify-center transition-opacity hover:opacity-90"
+          className="w-full h-12 md:h-14 text-white bg-main rounded-full md:rounded-[112px] mt-4 md:mt-6   text-base md:text-lg font-bold mx-auto flex items-center justify-center transition-opacity hover:opacity-90"
         >
           {t("Auth.openWhatsApp")}
         </a>
@@ -106,6 +107,14 @@ export const VerificationForm = ({
       >
         {t("Auth.generateNewCode")}
       </button>
+
+      <div className="w-full h-px bg-[#A9A9A9] my-8"></div>
+      <div className="dark:text-[#F1F1F1] text-lg font-normal leading-[100%] text-center">
+        Powered by {""}
+        <Link to="https://cloudwa.net/" target="_blank">
+          (CloudWa)
+        </Link>
+      </div>
     </section>
   );
 };
