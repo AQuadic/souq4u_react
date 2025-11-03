@@ -6,7 +6,6 @@ import { Product } from "../api/getProduct";
 import TopRated from "../icons/TopRated";
 import Favorite from "../icons/Favorite";
 import Unfavorite from "../icons/Unfavorite";
-import Star from "../icons/Star";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useTranslatedText,
@@ -16,6 +15,7 @@ import { addFavorite } from "@/features/profile/favorites/api/postFavorites";
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard";
 import { useFavoritesToast } from "@/features/profile/favorites/hooks/useFavoritesToast";
 import { Link } from "react-router-dom";
+import Star from "../icons/FilledStar";
 
 interface ProductCardProps {
   product: Product;
