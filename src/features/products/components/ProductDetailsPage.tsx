@@ -88,8 +88,26 @@ const ProductDetailsPage: React.FC = () => {
         ? (product.name as { en: string; ar: string }).en
         : product?.name || "Product";
 
-    // Use product images (default behavior)
-    if (product?.images && Array.isArray(product.images)) {
+    if (selectedVariant?.images && Array.isArray(selectedVariant.images) && selectedVariant.images.length > 0) {
+      selectedVariant.images.forEach(
+        (image: { id?: number; url?: string }, index: number) => {
+          if (image?.url) {
+            const isDuplicate = images.some(
+              (existing) => existing.url === image.url
+            );
+            if (!isDuplicate) {
+              images.push({
+                id: image.id || index + 2000,
+                url: image.url,
+                alt: `${productNameStr} - Variant Image ${index + 1}`,
+              });
+            }
+          }
+        }
+      );
+    }
+    
+    if (images.length === 0 && product?.images && Array.isArray(product.images)) {
       product.images.forEach(
         (image: { id?: number; url?: string }, index: number) => {
           if (image?.url) {
@@ -109,7 +127,7 @@ const ProductDetailsPage: React.FC = () => {
     }
 
     return images;
-  }, [product]);
+  }, [product, selectedVariant]);
 
   useEffect(() => {
     if (!product?.variants?.length) return;
