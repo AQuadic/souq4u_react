@@ -48,7 +48,7 @@ const ProductRatingCount: React.FC<Props> = ({
       {/* Stars (visual only - consistent with ProductReviewsSummary) */}
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((s) => {
-          const filled = s <= Math.round(average);
+          const filled = total === 0 ? true : s <= Math.round(average);
           return (
             <span
               key={s}
