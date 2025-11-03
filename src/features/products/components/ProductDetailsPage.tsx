@@ -49,6 +49,7 @@ const ProductDetailsPage: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const addProductId = useRecentlyViewedStore((state) => state.addProductId);
+  const cart = useCartStore((s) => s.cart);
 
   const {
     data: product,
@@ -88,7 +89,11 @@ const ProductDetailsPage: React.FC = () => {
         ? (product.name as { en: string; ar: string }).en
         : product?.name || "Product";
 
-    if (selectedVariant?.images && Array.isArray(selectedVariant.images) && selectedVariant.images.length > 0) {
+    if (
+      selectedVariant?.images &&
+      Array.isArray(selectedVariant.images) &&
+      selectedVariant.images.length > 0
+    ) {
       selectedVariant.images.forEach(
         (image: { id?: number; url?: string }, index: number) => {
           if (image?.url) {
@@ -106,8 +111,12 @@ const ProductDetailsPage: React.FC = () => {
         }
       );
     }
-    
-    if (images.length === 0 && product?.images && Array.isArray(product.images)) {
+
+    if (
+      images.length === 0 &&
+      product?.images &&
+      Array.isArray(product.images)
+    ) {
       product.images.forEach(
         (image: { id?: number; url?: string }, index: number) => {
           if (image?.url) {
@@ -154,6 +163,13 @@ const ProductDetailsPage: React.FC = () => {
     }
   }, [product, selectedVariantId]);
 
+  // Reset quantity to 1 when variant changes (don't sync with cart)
+  // This way the quantity selector always represents "how many to add"
+  useEffect(() => {
+    if (!product || !selectedVariant) return;
+    setQuantity(1);
+  }, [product, selectedVariant?.id]);
+
   const productForCart: ProductForCart | null =
     product && selectedVariant
       ? {
@@ -173,7 +189,6 @@ const ProductDetailsPage: React.FC = () => {
   });
 
   const isAuthenticated = useIsAuthenticated();
-  const cart = useCartStore((s) => s.cart);
   const cartToast = useCartToast();
   const { t } = useTranslation("Cart");
 
@@ -221,10 +236,15 @@ const ProductDetailsPage: React.FC = () => {
         it.variant.product_id === product.id &&
         it.variant?.id === selectedVariant.id
     );
-    const existingQty = existingItem?.quantity ?? 0;
+    const isUpdating = !!existingItem;
+    const existingQuantity = existingItem?.quantity ?? 0;
 
-    const totalQuantity = existingQty + quantity;
+    // Calculate total quantity to send to API
+    // When product exists in cart: add the new quantity to existing
+    // When product is new: just send the selected quantity
+    const totalQuantity = isUpdating ? existingQuantity + quantity : quantity;
 
+    // Check stock availability against total quantity
     if (
       selectedVariant?.is_stock &&
       totalQuantity > (selectedVariant?.stock ?? 0)
@@ -243,8 +263,9 @@ const ProductDetailsPage: React.FC = () => {
 
       if (result.success) {
         cartToast.addedToCart(translatedProductName, {
-          quantity,
+          quantity: totalQuantity,
           variant: variantInfo,
+          isUpdate: isUpdating,
         });
         return;
       }
@@ -295,6 +316,13 @@ const ProductDetailsPage: React.FC = () => {
   const hasUnlimitedStock = selectedVariant?.is_stock === false;
   const isOutOfStock = selectedVariant?.is_out_of_stock === true;
   const isInStock = !isOutOfStock && (hasUnlimitedStock || stockCount > 0);
+
+  // Check if current variant is already in cart
+  const isInCart = !!cart?.items?.find(
+    (it) =>
+      it.variant.product_id === product?.id &&
+      it.variant?.id === selectedVariant?.id
+  );
 
   const variantMatchesAttributes = (
     variant: { attributes?: ProductAttribute[] },
@@ -381,6 +409,7 @@ const ProductDetailsPage: React.FC = () => {
             hasUnlimitedStock={hasUnlimitedStock}
             stockCount={stockCount}
             isAddingToCart={isAddingToCart}
+            isInCart={isInCart}
             onQuantityChange={setQuantity}
             onAttributeChange={handleAttributeChange}
             onAddToCart={handleAddToCart}

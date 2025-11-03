@@ -21,9 +21,7 @@ export const useCartToast = () => {
     variant,
   }: CartToastOptions) => {
     const variantText = variant ? ` (${variant})` : "";
-    const productLabel = `${productName}${variantText}${
-      quantity > 1 ? ` (${quantity}x)` : ""
-    }`;
+    const productLabel = `${productName}${variantText}`;
 
     const message = t("Cart.addToCartSentence", { product: productLabel });
 
@@ -44,15 +42,53 @@ export const useCartToast = () => {
     });
   };
 
+  const showUpdateCartSuccess = ({
+    productName,
+    quantity = 1,
+    variant,
+  }: CartToastOptions) => {
+    const variantText = variant ? ` (${variant})` : "";
+    const productLabel = `${productName}${variantText}`;
+    const quantityText = quantity > 1 ? `${quantity}x` : `${quantity}`;
+
+    const message = t("Cart.updateCartSentence", {
+      product: productLabel,
+      quantity: quantityText,
+    });
+
+    toast.success(message, {
+      action: (
+        <Link
+          to="/cart"
+          className="text-white underline text-sm font-medium hover:no-underline"
+          onClick={() => {
+            console.log("View cart clicked");
+          }}
+        >
+          {t("Cart.viewCart")}
+        </Link>
+      ),
+      duration: 5000,
+    });
+  };
+
   const addedToCart = (
     productName: string,
-    opts?: { quantity?: number; variant?: string }
+    opts?: { quantity?: number; variant?: string; isUpdate?: boolean }
   ) => {
-    showAddToCartSuccess({
-      productName,
-      quantity: opts?.quantity ?? 1,
-      variant: opts?.variant,
-    });
+    if (opts?.isUpdate) {
+      showUpdateCartSuccess({
+        productName,
+        quantity: opts?.quantity ?? 1,
+        variant: opts?.variant,
+      });
+    } else {
+      showAddToCartSuccess({
+        productName,
+        quantity: opts?.quantity ?? 1,
+        variant: opts?.variant,
+      });
+    }
   };
 
   const showAddToCartError = (message?: string | Error) => {
