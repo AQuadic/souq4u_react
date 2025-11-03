@@ -384,7 +384,7 @@ const ProductDetailsPage: React.FC = () => {
       {!!product?.id && (
         <>
           <ProductList
-            titleKey="recommendedForYou"
+            titleKey={t("Products.recommendedForYou")}
             titleAlign={isRtl ? "right" : "left"}
             queryParams={{
               category_id: product?.category?.id ?? product?.category_id ?? 0,
