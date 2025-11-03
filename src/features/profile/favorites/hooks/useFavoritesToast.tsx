@@ -12,14 +12,14 @@ export const useFavoritesToast = () => {
      * Show success toast when item is added to favorites
      */
     addedToFavorites: () => {
-      toast.success(("addedToFavorites"), { duration: 3000 });
+      toast.success(t("Products.addedToFavorites"), { duration: 3000 });
     },
 
     /**
      * Show success toast when item is removed from favorites
      */
     removedFromFavorites: () => {
-      toast.success(("removedFromFavorites"), { duration: 3000 });
+      toast.success(t("Products.removedFromFavorites"), { duration: 3000 });
     },
 
     /**
