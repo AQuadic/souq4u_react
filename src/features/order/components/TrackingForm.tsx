@@ -106,7 +106,7 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
             htmlFor="order-code"
             className={cn(
               "text-sm font-medium text-foreground block",
-              currentLang === "ar" ? "text-right" : " "
+              currentLang === "ar" ? "text-right" : "text-left"
             )}
           >
             {currentLang === "ar" ? "رمز الطلب" : "Order Code"}{" "}
@@ -147,7 +147,7 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
             htmlFor="contact-info"
             className={cn(
               "text-sm font-medium text-foreground block",
-              currentLang === "ar" ? "text-right" : " "
+              currentLang === "ar" ? "text-right" : "text-left"
             )}
           >
             {currentLang === "ar"
