@@ -25,6 +25,7 @@ import OrderTrackingPage from "./features/profile/orders/tracking/OrderTrackingP
 import { ToastContainer } from "./shared/components/ui/toast";
 import SubscribeModalProvider from "./shared/components/modals/SubscribeModalProvider";
 import { MainTracking } from "./features/order";
+import EditAddress from "./features/profile/addresses/components/EditAddress";
 
 // Home Page Component
 function HomePage() {
@@ -82,7 +83,7 @@ function App() {
                   <Route path="addresses/add" element={<AddAddressPage />} />
                   <Route
                     path="addresses/edit/:id"
-                    element={<AddAddressPage />}
+                    element={<EditAddress />}
                   />
                 </Route>
 
