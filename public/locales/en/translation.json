@@ -207,7 +207,7 @@
     "failedToAdd": "Failed to add item to cart",
     "updatedQuantity": "Updated {productName} quantity to {quantity}",
     "failedUpdateQuantity": "Failed to update {productName} quantity",
-    "removedFromCart": "{productName} removed from cart",
+    "removedFromCart": "Removed {{productName}} from the cart",
     "failedRemoveFromCart": "Failed to remove {productName}",
     "couponAppliedSuccess": "Coupon applied successfully",
     "couponApplyError": "Failed to apply coupon",
