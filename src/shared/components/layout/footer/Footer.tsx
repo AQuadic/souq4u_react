@@ -417,7 +417,9 @@ const Footer = () => {
                   ? (locale === "ar"
                       ? "حدث خطأ أثناء تحميل التفاصيل."
                       : "Failed to load details.")
-                  : storeData?.slogan || ""}
+                  : locale === "ar"
+                    ? storeData?.slogan?.ar
+                    : storeData?.slogan?.en || ""}
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-3">
