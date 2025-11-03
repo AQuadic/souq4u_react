@@ -388,9 +388,9 @@ const Footer = () => {
     }
   };
 
-  const { data: sloganSetting, isLoading: sloganLoading, error: sloganError } = useQuery({
-    queryKey: ["storeSetting", "Slogan"],
-    queryFn: () => getStoreSetting("Slogan"),
+  const { data: storeData, isLoading, error } = useQuery({
+    queryKey: ["storeData"],
+    queryFn: () => getStoreSetting(),
   });
 
   return (
@@ -411,13 +411,13 @@ const Footer = () => {
             </div>
 
             <p className="text-base lg:text-lg font-normal leading-[150%] max-w-[340px] mx-auto lg:mx-0 mb-6">
-              {sloganLoading
+              {isLoading
                 ? (locale === "ar" ? "جارِ التحميل..." : "Loading...")
-                : sloganError
-                  ? (locale === "ar" ? "حدث خطأ أثناء تحميل الشعار." : "Failed to load slogan.")
-                  : typeof sloganSetting?.value === "object"
-                    ? sloganSetting?.value[locale as "en" | "ar"]
-                    : sloganSetting?.value || ""}
+                : error
+                  ? (locale === "ar"
+                      ? "حدث خطأ أثناء تحميل التفاصيل."
+                      : "Failed to load details.")
+                  : storeData?.details || ""}
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-3">
