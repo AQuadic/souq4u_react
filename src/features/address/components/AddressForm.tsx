@@ -301,12 +301,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       {showSaveOption && (
         <div>
           <label htmlFor="title" className="mb-2 block">
-            {t("title")} <span className="text-red-500">*</span>
+            {t("AddressForm.title")} <span className="text-red-500">*</span>
           </label>
           <Input
             id="title"
             type="text"
-            placeholder={t("titlePlaceholder")}
+            placeholder={t("AddressForm.titlePlaceholder")}
             value={formData.title}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               handleInputChange("title", e.target.value)
