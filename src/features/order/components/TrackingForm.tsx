@@ -190,8 +190,8 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
           disabled={isLoading}
           className={cn(
             "w-full h-12 sm:h-14 font-medium rounded-full transition-all duration-200 text-sm sm:text-base",
-            "bg-primary text-primary-foreground",
-            "hover:bg-primary/90 active:scale-98",
+            "bg-main text-primary-foreground",
+            "hover:bg-main/90 active:scale-98",
             "dark:bg-white dark:text-black dark:hover:bg-white/90",
             "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary disabled:active:scale-100",
             "dark:disabled:hover:bg-white",
