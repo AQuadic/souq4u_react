@@ -160,21 +160,24 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
             value={contactValue}
             onChange={(newValue: ContactInputValue) => {
               setContactValue(newValue);
-              // Clear error when user changes input
               if (errors.contactInfo) {
                 setErrors((prev) => ({ ...prev, contactInfo: undefined }));
               }
             }}
-            emailPlaceholder={
-              currentLang === "ar"
-                ? "أدخل عنوان بريدك الإلكتروني"
-                : "Enter your email address"
-            }
-            phonePlaceholder={
-              currentLang === "ar"
-                ? "أدخل رقم هاتفك"
-                : "Enter your phone number"
-            }
+            placeholder={{
+              email:
+                currentLang === "ar"
+                  ? "أدخل عنوان بريدك الإلكتروني"
+                  : "Enter your email address",
+              phone:
+                currentLang === "ar"
+                  ? "أدخل رقم هاتفك"
+                  : "Enter your phone number",
+              default:
+                currentLang === "ar"
+                  ? "أدخل بريدك الإلكتروني أو رقم هاتفك"
+                  : "Enter your email or phone number",
+            }}
             error={errors.contactInfo}
             disabled={isLoading}
             language={currentLang}
