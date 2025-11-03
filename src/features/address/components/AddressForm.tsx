@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useCities, useAreas, useCreateAddress } from "../hooks";
+import { useCities, useAreas, useCreateAddress, useUpdateAddress } from "../hooks";
 import type { AddressFormData, City, Area } from "../types";
 import { Input } from "@/shared/components/ui/input";
 import {
@@ -15,9 +15,13 @@ import {
   PhoneInput,
   PhoneValue,
 } from "@/shared/components/compound/PhoneInput";
-import { getCountryByCode } from "@/shared/constants/countries";
+import {
+  getCountryByCode,
+  getCountryByIso2,
+} from "@/shared/constants/countries";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useTranslation } from "react-i18next";
+import { handleApiError } from "@/shared/utils/errorHandler";
 
 interface AddressFormProps {
   initialData?: Partial<AddressFormData>;
@@ -25,6 +29,7 @@ interface AddressFormProps {
   onCancel?: () => void;
   showSaveOption?: boolean;
   isEditing?: boolean;
+  addressId?: number;
   onImmediateCheckout?: (data: AddressFormData) => void;
   onShippingUpdate?: (cityId: string, areaId: string) => void;
   isCheckout?: boolean;
@@ -40,6 +45,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   onCancel,
   showSaveOption = true,
   isEditing = false,
+  addressId,
   onImmediateCheckout,
   onShippingUpdate,
   isCheckout = false,
@@ -68,7 +74,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     formData.city_id || null
   );
   const createAddressMutation = useCreateAddress();
+  const updateAddressMutation = useUpdateAddress();
   const [phone, setPhone] = useState<PhoneValue>({ code: "20", number: "" });
+  const [phoneError, setPhoneError] = useState<string>("");
   const {t, i18n} = useTranslation("AddressForm");
   const locale = i18n.language;
   const { t: common } = useTranslation("Common");
@@ -77,11 +85,76 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   const getTranslated = (names: { en?: string; ar?: string }) =>
     names?.[localeShort] ?? names?.en ?? "";
 
+  const getPhoneMinLength = (countryCode: string): number => {
+    const country = getCountryByCode(countryCode);
+    const iso2 = country?.iso2?.toUpperCase() || countryCode.toUpperCase();
+
+    switch (iso2) {
+      case "EG": // Egypt
+        return 10;
+      case "SA": // Saudi Arabia
+        return 9;
+      case "AE": // UAE
+        return 9;
+      case "US": // USA
+        return 10;
+      case "GB": // UK
+        return 10;
+      case "FR": // France
+        return 9;
+      default:
+        return 8; // Default minimum
+    }
+  };
+
+  const validatePhone = (phoneNumber: string, countryCode: string): string => {
+    if (!phoneNumber?.trim()) {
+      return "";
+    }
+
+    const minLength = getPhoneMinLength(countryCode);
+    const cleanNumber = phoneNumber.replace(/[^\d]/g, "");
+
+    if (cleanNumber.length < minLength) {
+      return t("phoneMinLength", { minLength });
+    }
+
+    return "";
+  };
+
+  const handlePhoneChange = (newPhone: PhoneValue) => {
+    setPhone(newPhone);
+    // Validate phone when it changes
+    const error = validatePhone(newPhone.number, newPhone.code);
+    setPhoneError(error);
+  };
+
   // Initialize phone from initialData when editing
   useEffect(() => {
     if (initialData?.phone) {
-      // Parse the phone number (format: +20123456789)
+      // Parse the phone number
       const phoneStr = initialData.phone;
+
+      // If we have phone_country (ISO2 code like "EG"), use it to get the country code
+      if (initialData.phone_country) {
+        const country = getCountryByIso2(initialData.phone_country);
+        if (country?.phone?.[0]) {
+          const countryCode = country.phone[0];
+          // Remove + if present
+          const cleanPhone = phoneStr.startsWith("+")
+            ? phoneStr.substring(1)
+            : phoneStr;
+
+          // If phone starts with country code, remove it to get just the number
+          if (cleanPhone.startsWith(countryCode)) {
+            const number = cleanPhone.substring(countryCode.length);
+            setPhone({ code: countryCode, number });
+            return;
+          }
+        }
+      }
+
+      // Fallback: try to parse from phone string
       if (phoneStr.startsWith("+")) {
         const withoutPlus = phoneStr.substring(1);
         // Try to extract country code (assume 1-3 digits)
@@ -92,9 +165,11 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           const number = withoutPlus.substring(code.length);
           setPhone({ code, number });
         }
+      } else {
+        setPhone({ code: "20", number: phoneStr });
       }
     }
-  }, [initialData?.phone]);
+  }, [initialData?.phone, initialData?.phone_country]);
 
   const handleInputChange = (
     field: keyof AddressFormData,
@@ -121,16 +196,24 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
   // Effect to notify parent of form data changes (for checkout flow)
   useEffect(() => {
-    if (onFormDataChange) {
-      onFormDataChange(formData, phone);
-    }
+    if (onFormDataChange) onFormDataChange(formData, phone);
   }, [formData, phone, onFormDataChange]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate phone number
+    const phoneValidationError = validatePhone(phone.number, phone.code);
+    if (phoneValidationError) {
+      setPhoneError(phoneValidationError);
+      return;
+    }
+
+    // For guest checkout, title is not required
+    const isTitleRequired = showSaveOption;
+
     if (
-      !formData.title.trim() ||
+      (isTitleRequired && !formData.title.trim()) ||
       !formData.city_id ||
       !formData.area_id ||
       !formData.details.trim() ||
@@ -139,24 +222,52 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       return;
     }
 
+    // Normalize phone number (remove leading 0 if present)
     let normalizedPhone = phone.number.trim();
     if (normalizedPhone.startsWith("0")) {
       normalizedPhone = normalizedPhone.substring(1);
     }
-    const fullPhone = `+${phone.code}${normalizedPhone}`;
+    // Send phone without + sign: just countryCode + number (e.g., "201028814701")
+    const fullPhone = `${phone.code}${normalizedPhone}`;
+
+    // For guest checkout, set a default title if none provided
+    const finalTitle = formData.title.trim() || "Guest Address";
 
     const payload = {
       ...formData,
+      title: finalTitle,
       phone: fullPhone,
-      phone_country: getCountryByCode(phone.code)?.iso2 || "EG", // ✅ ISO2 not dial code
+      phone_country: getCountryByCode(phone.code)?.iso2 || "EG",
       lat: 0,
       lng: 0,
     };
 
     try {
-      if (showSaveOption && formData.saveAddress) {
+      // Handle editing existing address
+      if (isEditing && addressId) {
+        await updateAddressMutation.mutateAsync({
+          id: addressId,
+          data: {
+            title: finalTitle,
+            city_id: formData.city_id,
+            country_id: formData.country_id || "1",
+            area_id: formData.area_id,
+            details: formData.details,
+            zipcode: formData.zipcode,
+            location: formData.location,
+            lat: 0,
+            lng: 0,
+            phone: fullPhone,
+            phone_country: getCountryByCode(phone.code)?.iso2 || "EG",
+            email: formData.email || "",
+            user_name: formData.user_name || "",
+          },
+        });
+        onSubmit(payload);
+      } else if (showSaveOption && formData.saveAddress) {
+        // Create new address with save option
         await createAddressMutation.mutateAsync({
-          title: formData.title,
+          title: finalTitle,
           city_id: formData.city_id,
           country_id: formData.country_id || "1", // Default to Egypt for now
           area_id: formData.area_id,
@@ -178,29 +289,33 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       }
     } catch (error) {
       console.error("Failed to save address:", error);
-      onSubmit(payload);
+      // Show error toast to user
+      handleApiError(error, "Failed to save address");
+      // Don't call onSubmit if there was an error
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Address Title */}
-      <div>
-        <label htmlFor="title" className="mb-2 block">
-          {t("AddressForm.title")} <span className="text-red-500">*</span>
-        </label>
-        <Input
-          id="title"
-          type="text"
-          placeholder={t("AddressForm.titlePlaceholder")}
-          value={formData.title}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleInputChange("title", e.target.value)
-          }
-          className="   border border-slate-200  "
-          required
-        />
-      </div>
+      {/* Address Title - Only show for logged-in users (not guest checkout) */}
+      {showSaveOption && (
+        <div>
+          <label htmlFor="title" className="mb-2 block">
+            {t("title")} <span className="text-red-500">*</span>
+          </label>
+          <Input
+            id="title"
+            type="text"
+            placeholder={t("titlePlaceholder")}
+            value={formData.title}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleInputChange("title", e.target.value)
+            }
+            className="   border border-slate-200  "
+            required
+          />
+        </div>
+      )}
 
       {/* User Name */}
       <div>
@@ -278,11 +393,14 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </label>
         <PhoneInput
           value={phone}
-          onChange={setPhone}
+          onChange={handlePhoneChange}
           placeholder={t("AddressForm.phonePlaceholder")}
           language={locale as "en" | "ar"}
           radius="md"
         />
+        {phoneError && (
+          <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+        )}
       </div>
 
       {/* Address Details */}
@@ -339,7 +457,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       </div>
 
       {/* Save Address Option */}
-      {showSaveOption && (
+      {showSaveOption && !isEditing && (
         <div className="flex items-center space-x-2">
           <input
             id="saveAddress"
@@ -374,6 +492,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               (showSaveOption &&
                 formData.saveAddress &&
                 createAddressMutation.isPending) ||
+              (isEditing && updateAddressMutation.isPending) ||
               !formData.title?.trim() ||
               !formData.city_id ||
               !formData.area_id ||
@@ -382,6 +501,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             className="flex-1 px-4 py-2 text-white bg-main hover:bg-main rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {(() => {
+              if (isEditing && updateAddressMutation.isPending)
+                return t("saving");
               if (
                 showSaveOption &&
                 formData.saveAddress &&
