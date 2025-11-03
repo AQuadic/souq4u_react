@@ -368,12 +368,13 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             value={formData.area_id || ""}
             onValueChange={(value) => handleInputChange("area_id", value)}
           >
-            <SelectTrigger className="w-full   :  border border-slate-200  ">
+            <SelectTrigger className="w-full   :  border border-slate-200  " dir={i18n.language === "ar" ? "rtl" : "ltr"}>
               <SelectValue
                 placeholder={areasLoading ? t("AddressForm.loadingAreas") : t("AddressForm.selectArea")}
+                dir={i18n.language === "ar" ? "rtl" : "ltr"}
               />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent dir={i18n.language === "ar" ? "rtl" : "ltr"}>
               {areas?.map((area: Area) => (
                 <SelectItem key={area.id} value={area.id.toString()}>
                   {getTranslated(area.name)}
@@ -502,14 +503,14 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           >
             {(() => {
               if (isEditing && updateAddressMutation.isPending)
-                return t("saving");
+                return t("AddressForm.saving");
               if (
                 showSaveOption &&
                 formData.saveAddress &&
                 createAddressMutation.isPending
               )
-                return t("saving");
-              if (isEditing) return t("updateAddress");
+                return t("AddressForm.saving");
+              if (isEditing) return t("AddressForm.updateAddress");
               // If in checkout mode and not saving address, show "Checkout"
               if (isCheckout && !formData.saveAddress)
                 return common("Cart.checkout");
