@@ -205,7 +205,7 @@
     "addToCartSentence": "Product added to your cart",
     "viewCart": "View Cart",
     "failedToAdd": "Failed to add item to cart",
-    "updatedQuantity": "Updated {productName} quantity to {quantity}",
+    "updatedQuantity": "Updated {{productName}} quantity to {{quantity}}",
     "failedUpdateQuantity": "Failed to update {productName} quantity",
     "removedFromCart": "Removed {{productName}} from the cart",
     "failedRemoveFromCart": "Failed to remove {productName}",
