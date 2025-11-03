@@ -597,7 +597,13 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className={`relative ${isZoomed ? 'cursor-move' : 'cursor-pointer'}`}
+              className={`relative ${
+                isZoomed
+                  ? isDragging
+                    ? 'cursor-move'
+                    : 'cursor-zoom-out'
+                  : 'cursor-zoom-in'
+              }`}
               onClick={handleImageClick}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
