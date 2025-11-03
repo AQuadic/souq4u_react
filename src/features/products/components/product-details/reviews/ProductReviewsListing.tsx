@@ -35,7 +35,7 @@ const ProductReviewsListing: React.FC<Props> = ({ reviews }) => {
   };
 
   return (
-    <section>
+    <section className="w-full">
       {reviews.map((r, idx) => {
         const item = r as Record<string, unknown>;
         const key = (item.id ?? item._id ?? idx) as string | number;
