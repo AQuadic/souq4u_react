@@ -5,8 +5,10 @@ import React from "react";
 // import { useTranslations } from "next-intl";
 import MainContactForm from "./MainContactForm";
 import { Link } from "react-router-dom";
-import MapWithSkeleton from "@/shared/components/ui/MapWithSkeleton";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import MapWithSkeleton from "@/shared/components/ui/MapWithSkeleton";
+import { getStoreSetting } from "@/shared/components/layout/api/store";
 
 const ContactSection = () => {
   // const config = useConfig();
@@ -14,9 +16,15 @@ const ContactSection = () => {
   // const lngRaw = config?.address?.location?.lng ?? null;
   // const lat = latRaw ? Number(latRaw) : null;
   // const lng = lngRaw ? Number(lngRaw) : null;
-  const [t] = useTranslation();
+  const { t } = useTranslation();
 
-  // const storeType = config?.store_type;
+  const { data, isLoading } = useQuery({
+    queryKey: ["store-setting", "social"],
+    queryFn: () => getStoreSetting(),
+  });
+
+  const lat = data?.location?.lat ?? null;
+  const lng = data?.location?.lng ?? null;
 
   return (
     <section className="container md:py-12">
@@ -32,7 +40,13 @@ const ContactSection = () => {
       <div className="md:mt-12 flex lg:flex-row flex-col-reverse items-center justify-between gap-4">
         <div className="flex flex-col md:w-[592px] w-full">
           <div className="md:h-[562px] h-[530px] rounded-2xl overflow-hidden shadow-lg">
-            <MapWithSkeleton className="w-full h-full" />
+            {isLoading ? (
+              <div className="flex items-center justify-center h-full text-gray-500">
+                {t("Common.loadingMap")}
+              </div>
+            ) : (
+              <MapWithSkeleton lat={lat} lng={lng} className="w-full h-full" />
+            )}
           </div>
         </div>
 
