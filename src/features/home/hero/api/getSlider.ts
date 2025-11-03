@@ -10,6 +10,9 @@ export interface SliderImage {
 export interface Slider {
   id: number;
   name: string;
+  title: string;
+  description: string;
+  text_button: string;
   url: string;
   en_image?: SliderImage;
   ar_image?: SliderImage;

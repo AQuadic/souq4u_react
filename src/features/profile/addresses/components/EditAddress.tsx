@@ -20,7 +20,7 @@ const EditAddress = () => {
   const fromCheckout = searchParams.get("from") === "checkout";
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [initialData, setInitialData] = useState<Partial<AddressFormData> | undefined>(undefined);
 
   useEffect(() => {
@@ -48,9 +48,12 @@ const EditAddress = () => {
           email: addr.email || "",
           user_name: addr.user_name || "",
         });
-      } catch (err) {
-        console.error("Failed to fetch address:", err);
-        setError(err?.message || "Failed to fetch address");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Failed to fetch address");
+        }
       } finally {
         setLoading(false);
       }
