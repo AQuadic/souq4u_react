@@ -497,7 +497,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // isRtl ? goToNext() : goToPrevious();
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    isRtl ? goToNext() : goToPrevious();
                   }}
                   className={`absolute top-1/2 -translate-y-1/2 ${
                     isRtl ? "right-4" : "left-4"
@@ -513,7 +514,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // isRtl ? goToPrevious() : goToNext();
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    isRtl ? goToPrevious() : goToNext();
                   }}
                   className={`absolute top-1/2 -translate-y-1/2 ${
                     isRtl ? "left-4" : "right-4"
@@ -639,7 +641,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // isRtl ? goToNext() : goToPrevious();
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    isRtl ? goToNext() : goToPrevious();
                   }}
                   className={`absolute top-1/2 -translate-y-1/2 ${
                     isRtl ? "right-4" : "left-4"
@@ -655,7 +658,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // isRtl ? goToPrevious() : goToNext();
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    isRtl ? goToPrevious() : goToNext();
                   }}
                   className={`absolute top-1/2 -translate-y-1/2 ${
                     isRtl ? "left-4" : "right-4"
