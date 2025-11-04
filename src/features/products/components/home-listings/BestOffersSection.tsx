@@ -15,8 +15,13 @@ const BestOffersSection = () => {
       titleKey={t("Products.bestOffers")}
       titleAlign="center"
       maxItems={8}
-      queryParams={{ per_page: 8 }}
-      onlyDiscounted={false}
+      queryParams={{
+        per_page: 8,
+        is_discount: true, 
+        sort_by: "updated_at",
+        sort_order: "desc",
+      }}
+      onlyDiscounted={true}
       viewAllLink="/products"
       viewAllTextKey={t("Products.viewAllProducts")}
     />
