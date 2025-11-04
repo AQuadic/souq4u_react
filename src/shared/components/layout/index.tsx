@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import HeaderBanner from "./header/HeaderBanner";
 import HeaderDesktop from "./header/HeaderDesktop";
 import MobileHeader from "./header/MobileHeader";
@@ -11,7 +11,15 @@ import { useScrollRestoration } from "@/shared/components/layout/useScrollRestor
 
 const Layout = () => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const location = useLocation();
   useScrollRestoration(scrollContainerRef, { storageKeyPrefix: "main-scroll" });
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [location.pathname]);
 
   return (
     <div className="flex flex-col min-h-screen">
