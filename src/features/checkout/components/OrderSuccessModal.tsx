@@ -96,17 +96,18 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
                         item.product_name.en}
                     </p>
                     <p className="dark:text-[#C0C0C0] text-xs">
-                      {t("Common.Qty")} {item.quantity}
+                      {t("Common.Qty")} {item.quantity ?? 0}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="dark:text-white font-medium">
-                      {item.final_price.toLocaleString()} {t("Common.currency")}
+                      {(item.final_price ?? 0).toLocaleString()}{" "}
+                      {t("Common.currency")}
                     </p>
                     {item.discount_amount > 0 && (
                       <p className="text-green-400 text-xs">
-                        -{item.discount_amount.toLocaleString()} {t("Common.currency")}{" "}
-                        {t("Common.saved")}
+                        -{(item.discount_amount ?? 0).toLocaleString()}{" "}
+                        {t("Common.currency")} {t("Common.saved")}
                       </p>
                     )}
                   </div>
@@ -124,14 +125,15 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
               <div className="flex justify-between">
                 <span className="dark:text-[#C0C0C0]">{t("Common.subtotal")}</span>
                 <span className="dark:text-white">
-                  {order.sub_total.toLocaleString()} {t("Common.currency")}
+                  {(order.sub_total ?? 0).toLocaleString()} {t("Common.currency")}
                 </span>
               </div>
               {order.discount_amount > 0 && (
                 <div className="flex justify-between">
                   <span className="dark:text-[#C0C0C0]">{t("Common.discount")}</span>
                   <span className="text-green-400">
-                    -{order.discount_amount.toLocaleString()} {t("Common.currency")}
+                    -{(order.discount_amount ?? 0).toLocaleString()}{" "}
+                    {t("Common.currency")}
                   </span>
                 </div>
               )}
@@ -144,20 +146,20 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
               <div className="flex justify-between">
                 <span className="dark:text-[#C0C0C0]">{t("Common.tax")}</span>
                 <span className="dark:text-white">
-                  {order.tax.toLocaleString()} {t("Common.currency")}
+                  {(order.tax ?? 0).toLocaleString()} {t("Common.currency")}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="dark:text-[#C0C0C0]">{t("Common.shipping")}</span>
                 <span className="dark:text-white">
-                  {order.shipping.toLocaleString()} {t("Common.currency")}
+                  {(order.shipping ?? 0).toLocaleString()} {t("Common.currency")}
                 </span>
               </div>
               <div className="w-full h-px bg-[#C0C0C0] my-2"></div>
               <div className="flex justify-between">
                 <span className="font-semibold">{t("Common.total")}</span>
                 <span className="font-bold text-lg">
-                  {order.total.toLocaleString()} {t("Common.currency")}
+                  {(order.total ?? 0).toLocaleString()} {t("Common.currency")}
                 </span>
               </div>
             </div>
