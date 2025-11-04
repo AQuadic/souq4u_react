@@ -17,7 +17,7 @@ const MostViewedSection = () => {
       titleAlign="center"
       maxItems={8}
       queryParams={{ per_page: 8, is_most_view: true }}
-      viewAllLink="/products"
+      viewAllLink="/products?is_most_view=true" 
       viewAllTextKey={t("Products.viewAllProducts")}
     />
   );

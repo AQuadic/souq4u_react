@@ -59,6 +59,7 @@ const ProductsGrid: React.FC = () => {
         sort_by: filters.sortBy ?? "updated_at",
         sort_order: filters.sortOrder ?? "desc",
         only_discount: filters.onlyDiscount ?? 0,
+        is_most_view: filters.is_most_view ?? 0,
         category_id: activeCategoryId,
         min_price: filters.minPrice,
         max_price: filters.maxPrice,
