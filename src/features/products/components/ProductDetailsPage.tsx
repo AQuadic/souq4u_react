@@ -62,12 +62,11 @@ const ProductDetailsPage: React.FC = () => {
   });
 
   useEffect(() => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-}, [productId]);
-
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [productId]);
 
   // Track product view
   useEffect(() => {
@@ -97,6 +96,7 @@ const ProductDetailsPage: React.FC = () => {
         ? (product.name as { en: string; ar: string }).en
         : product?.name || "Product";
 
+    // Priority 1: Use variant-specific images if available
     if (
       selectedVariant?.images &&
       Array.isArray(selectedVariant.images) &&
@@ -105,46 +105,37 @@ const ProductDetailsPage: React.FC = () => {
       selectedVariant.images.forEach(
         (image: { id?: number; url?: string }, index: number) => {
           if (image?.url) {
-            const isDuplicate = images.some(
-              (existing) => existing.url === image.url
-            );
-            if (!isDuplicate) {
-              images.push({
-                id: image.id || index + 2000,
-                url: image.url,
-                alt: `${productNameStr} - Variant Image ${index + 1}`,
-              });
-            }
+            images.push({
+              id: image.id || index + 2000,
+              url: image.url,
+              alt: `${productNameStr} - Variant Image ${index + 1}`,
+            });
           }
         }
       );
     }
-
-    if (
-      images.length === 0 &&
-      product?.images &&
-      Array.isArray(product.images)
-    ) {
+    // Priority 2: Fallback to product images if no variant images
+    else if (product?.images && Array.isArray(product.images)) {
       product.images.forEach(
         (image: { id?: number; url?: string }, index: number) => {
           if (image?.url) {
-            const isDuplicate = images.some(
-              (existing) => existing.url === image.url
-            );
-            if (!isDuplicate) {
-              images.push({
-                id: image.id || index + 1000,
-                url: image.url,
-                alt: `${productNameStr} - Image ${index + 1}`,
-              });
-            }
+            images.push({
+              id: image.id || index + 1000,
+              url: image.url,
+              alt: `${productNameStr} - Image ${index + 1}`,
+            });
           }
         }
       );
     }
 
     return images;
-  }, [product, selectedVariant]);
+  }, [
+    product?.images,
+    product?.name,
+    selectedVariant?.images,
+    selectedVariant?.id,
+  ]);
 
   useEffect(() => {
     if (!product?.variants?.length) return;
@@ -332,36 +323,51 @@ const ProductDetailsPage: React.FC = () => {
       it.variant?.id === selectedVariant?.id
   );
 
-  const variantMatchesAttributes = (
+  const getVariantAttributeValue = (
     variant: { attributes?: ProductAttribute[] },
-    attributes: SelectedAttributes
-  ): boolean => {
-    return Object.entries(attributes).every(([attrId, attrValue]) => {
-      return variant.attributes?.some((attr: ProductAttribute) => {
-        if (attr.attribute?.id !== Number(attrId)) return false;
-        const locale =
-          typeof window !== "undefined"
-            ? document.documentElement.lang || "en"
-            : "en";
-        const valueObj = attr.value?.value as
-          | Record<string, string>
-          | undefined;
-        const displayValue = valueObj?.[locale] || valueObj?.en || "";
-        return displayValue === attrValue;
-      });
-    });
+    attributeId: number
+  ): string | null => {
+    const attr = variant.attributes?.find(
+      (a) => a.attribute?.id === attributeId
+    );
+    if (!attr?.value?.value) return null;
+
+    const locale =
+      typeof window !== "undefined"
+        ? document.documentElement.lang || "en"
+        : "en";
+    const valueObj = attr.value.value as Record<string, string> | undefined;
+    return valueObj?.[locale] || valueObj?.en || "";
   };
 
   const handleAttributeChange = (attributeId: number, value: string) => {
-    const newAttributes = { ...selectedAttributes, [attributeId]: value };
-    setSelectedAttributes(newAttributes);
+    // Find the best matching variant for this specific attribute value
+    const matchingVariants = product?.variants?.filter((variant) => {
+      const variantValue = getVariantAttributeValue(variant, attributeId);
+      return variantValue === value;
+    });
 
-    const matchingVariant = product?.variants?.find((variant) =>
-      variantMatchesAttributes(variant, newAttributes)
-    );
+    if (matchingVariants && matchingVariants.length > 0) {
+      const selectedVariant = matchingVariants[0];
+      setSelectedVariantId(selectedVariant.id);
 
-    if (matchingVariant) {
-      setSelectedVariantId(matchingVariant.id);
+      // Update selected attributes to match the new variant's attributes
+      const newAttributes: SelectedAttributes = {};
+      selectedVariant.attributes?.forEach((attr) => {
+        if (attr.attribute?.id && attr.value?.value) {
+          const locale =
+            typeof window !== "undefined"
+              ? document.documentElement.lang || "en"
+              : "en";
+          const valueObj = attr.value.value as Record<string, string>;
+          const displayValue = valueObj[locale] || valueObj.en || "";
+          if (displayValue) {
+            newAttributes[attr.attribute.id] = displayValue;
+          }
+        }
+      });
+
+      setSelectedAttributes(newAttributes);
     }
   };
 
@@ -372,6 +378,7 @@ const ProductDetailsPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 md:mt-10">
         <div className="w-full">
           <ProductImageGallery
+            key={selectedVariant?.id || "default"}
             images={combinedImages}
             productName={productName}
             isFavorite={isFavorite}

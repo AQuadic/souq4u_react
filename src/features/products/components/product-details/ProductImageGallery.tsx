@@ -254,13 +254,20 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
-  const {t} = useTranslation("Products");
+  const { t } = useTranslation("Products");
 
   // Detect RTL direction
   useEffect(() => {
     const direction = document.documentElement.dir || document.body.dir;
     setIsRtl(direction === "rtl");
   }, []);
+
+  // Reset to first image when images array changes (variant switch)
+  useEffect(() => {
+    setCurrentIndex(0);
+    setIsZoomed(false);
+    setImagePosition({ x: 0, y: 0 });
+  }, [images]);
 
   // If no images provided, use placeholder
   const displayImages =
@@ -371,7 +378,10 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   const handleMouseDown = (e: React.MouseEvent) => {
     if (isZoomed) {
       setIsDragging(false);
-      setDragStart({ x: e.clientX - imagePosition.x, y: e.clientY - imagePosition.y });
+      setDragStart({
+        x: e.clientX - imagePosition.x,
+        y: e.clientY - imagePosition.y,
+      });
     }
   };
 
@@ -430,7 +440,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
       ) : (
         <>
           <div className="relative">
-            <div 
+            <div
               onClick={() => setIsExpanded(true)}
               className="cursor-pointer relative group"
             >
@@ -487,7 +497,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
 
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white text-lg sm:text-xl font-medium bg-black/60 px-4 py-2 rounded-full">
-                  {t('Products.tapToExpand')}
+                  {t("Products.tapToExpand")}
                 </span>
               </div>
             </div>
@@ -559,7 +569,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
       )}
 
       {isExpanded && (
-        <div 
+        <div
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
           onClick={() => {
             if (isZoomed) {
@@ -594,7 +604,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             </svg>
           </button>
 
-          <div 
+          <div
             className="relative w-full h-full flex items-center justify-center p-4 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
@@ -602,21 +612,21 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
               className={`relative ${
                 isZoomed
                   ? isDragging
-                    ? 'cursor-move'
-                    : 'cursor-zoom-out'
-                  : 'cursor-zoom-in'
+                    ? "cursor-move"
+                    : "cursor-zoom-out"
+                  : "cursor-zoom-in"
               }`}
               onClick={handleImageClick}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
-              style={{ 
-                width: "100%", 
+              style={{
+                width: "100%",
                 height: "100%",
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "center"
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <img
@@ -629,7 +639,11 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 className="object-contain transition-transform duration-300 select-none"
                 draggable="false"
                 style={{
-                  transform: isZoomed ? `scale(1.5) translate(${imagePosition.x / 1.5}px, ${imagePosition.y / 1.5}px)` : 'scale(1)',
+                  transform: isZoomed
+                    ? `scale(1.5) translate(${imagePosition.x / 1.5}px, ${
+                        imagePosition.y / 1.5
+                      }px)`
+                    : "scale(1)",
                   maxWidth: "100%",
                   maxHeight: "100%",
                 }}
