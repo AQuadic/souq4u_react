@@ -61,6 +61,14 @@ const ProductDetailsPage: React.FC = () => {
     enabled: !!productId,
   });
 
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}, [productId]);
+
+
   // Track product view
   useEffect(() => {
     if (product?.id) {
