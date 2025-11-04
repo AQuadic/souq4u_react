@@ -103,7 +103,7 @@ const ProductsGrid: React.FC = () => {
   }
 
   return (
-    <section className="container md:py-[88px] py-8">
+    <section className="container md:py-[44px] py-8">
       {/* <h1 className="text-main md:text-[32px] text-2xl font-normal leading-[100%] text-center uppercase font-anton-sc">
         {t("ProductsGrid.title")}
       </h1> */}
