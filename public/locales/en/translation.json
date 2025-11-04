@@ -279,7 +279,8 @@
     "saving": "Saving...",
     "updateAddress": "Update Address",
     "addAddress": "Add Address",
-    "editAddress": "Edit Address"
+    "editAddress": "Edit Address",
+    "phoneMinLength": "Phone number must be at least {{minLength}} digits"
   },
   "BillingDetails": {
     "title": "Billing Details"

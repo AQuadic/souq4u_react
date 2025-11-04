@@ -116,7 +116,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     const cleanNumber = phoneNumber.replace(/[^\d]/g, "");
 
     if (cleanNumber.length < minLength) {
-      return t("phoneMinLength", { minLength });
+      return t("AddressForm.phoneMinLength", { minLength });
     }
 
     return "";
