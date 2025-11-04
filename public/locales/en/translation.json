@@ -450,7 +450,22 @@
     "loadingFav": "Loading favorites...",
     "loadingOrders": "Loading orders...",
     "noAddress": "No Address Yet",
-    "noAddressDes": "Please add your addresses for your better experience"
+    "noAddressDes": "Please add your addresses for your better experience",
+    "reviewSuccess": "Review submitted successfully!",
+    "reviewError": "Failed to submit review",
+    "ratingRequired": "Please select a rating",
+    "language": "Language",
+    "darkMode": "Dark Mode",
+    "privacy": "Privacy policy",
+    "terms": "Terms & Conditions",
+    "contactUs": "Contact us",
+    "myAccount": "My Account",
+    "accountInfo": "Account Info",
+    "changeEmail": "Change E-mail",
+    "saveAddress": "Save Address",
+    "enterEmail": "Enter new email",
+    "password": "Password",
+    "save": "Save"
   },
   "Orders": {
     "orders": "Orders",

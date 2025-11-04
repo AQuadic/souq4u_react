@@ -71,7 +71,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
               />
               <div className="mx-4 flex flex-col justify-between h-full">
                 <span className="dark:text-[#C0C0C0] md:text-base text-xs font-poppins">
-                  ID: #{order.id}
+                  {t("Common.orderCode")} <span dir="ltr">#{item.code}</span>
                 </span>
                 <h2 className="dark:text-[#FDFDFD] md:text-2xl text-base font-bold leading-[100%] md:mt-6 mt-4">
                   {productName}
