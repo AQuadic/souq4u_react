@@ -142,15 +142,15 @@ export const useCartToast = () => {
   };
 
   const showCouponApplyError = () => {
-    toast.error(t("couponApplyError"), { duration: 5000 });
+    toast.error(t("Cart.couponApplyError"), { duration: 5000 });
   };
 
   const showCouponClearSuccess = () => {
-    toast.success(t("couponRemovedSuccess"), { duration: 3000 });
+    toast.success(t("Cart.couponRemovedSuccess"), { duration: 3000 });
   };
 
   const showCouponClearError = () => {
-    toast.error(t("couponRemoveError"), { duration: 5000 });
+    toast.error(t("Cart.couponRemoveError"), { duration: 5000 });
   };
 
   const loginRequired = () => {
