@@ -1,20 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   getNotifications,
   Notification as NotificationType,
 } from "@/shared/components/layout/header/notifications/api/getNotifications";
 import { markNotificationAsRead } from "@/shared/components/layout/header/notifications/api/markNotificationAsRead";
-import { markNotificationAsUnread } from "@/shared/components/layout/header/notifications/api/markNotificationAsUnread";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import Spinner from "@/shared/components/icons/Spinner";
 
 export default function NotificationsPage() {
   const { t, i18n } = useTranslation("Notifications");
   const locale = i18n.language || "en";
   const isArabic = locale.startsWith("ar");
-
+  const navigate = useNavigate();
+  const [, setOpen] = useState(false);
 
   const {
     data: notifications = [],
@@ -28,21 +30,26 @@ export default function NotificationsPage() {
 
   const handleNotificationClick = async (n: NotificationType) => {
     try {
-      if (!n.read_at) {
-        await markNotificationAsRead(n.id.toString());
+      await markNotificationAsRead(n.id.toString());
+
+      setOpen(false);
+
+      if (n.order_id) {
+        navigate(`/profile/orders/tracking/${n.order_id}`);
       } else {
-        await markNotificationAsUnread(n.id.toString());
+        navigate("/notifications");
       }
+
       await refetch();
     } catch (error) {
-      console.error("Error toggling notification:", error);
+      console.error("Error marking notification as read:", error);
     }
   };
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center py-20 text-gray-400">
-        {t("loading")}...
+      <div>
+        <Spinner />
       </div>
     );
 
@@ -86,16 +93,16 @@ export default function NotificationsPage() {
                       ${
                         n.read_at
                           ? "bg-transparent border-none text-black"
-                          : "bg-[#D7D7D7] border-[#D7D7D7] hover:bg-[#cfcfcf] text-black"
+                          : "bg-[#C5C5C5] border-[#D7D7D7] hover:bg-[#cfcfcf] text-black"
                       }`}
                   >
                     <div className="relative px-4">
                       <img
-                        src={n.image?.url || "/images/header/logo.png"}
-                        alt="User"
-                        width={50}
-                        height={50}
-                        className="rounded-full"
+                        src={"/logo.png"}
+                        alt="Notification"
+                        className={`w-[50px] h-[50px] object-cover rounded-full ${
+                          n.read_at ? "opacity-70" : ""
+                        }`}
                       />
                       {!n.read_at && (
                         <span className="absolute top-5 ltr:left-0 rtl:right-0 h-2 w-2 rounded-full bg-main" />
@@ -103,18 +110,10 @@ export default function NotificationsPage() {
                     </div>
 
                     <div className="flex-1 flex items-center justify-between gap-2">
-                      <p
-                        className={`text-sm font-medium leading-[150%] truncate ${
-                          n.read_at ? "text-black" : "text-black"
-                        }`}
-                      >
+                      <p className="text-sm font-medium leading-[150%] truncate text-black">
                         {isArabic ? n.body?.ar : n.body?.en}
                       </p>
-                      <span
-                        className={`text-xs whitespace-nowrap ${
-                          n.read_at ? "text-[#A1A1A1]" : "text-gray-700"
-                        }`}
-                      >
+                      <span className="text-xs whitespace-nowrap text-[#A1A1A1]">
                         {new Date(n.created_at).toLocaleString(locale, {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -140,17 +139,15 @@ export default function NotificationsPage() {
                     className={`flex items-center gap-3 px-4 py-2 cursor-pointer border-b transition
                       ${
                         n.read_at
-                          ? "bg-transparent hover:bg-[#2b2c2f] text-white"
-                          : "bg-[#D7D7D7] hover:bg-[#cfcfcf] text-black"
+                          ? "bg-transparent text-white"
+                          : "bg-[#C5C5C5] hover:bg-[#cfcfcf] text-black"
                       }`}
                   >
                     <div className="relative px-2">
                       <img
-                        src={n.image?.url || "/images/header/logo.png"}
-                        alt="User"
-                        width={50}
-                        height={50}
-                        className={`rounded-full ${
+                        src={"/logo.png"}
+                        alt="Notification"
+                        className={`w-[50px] h-[50px] object-cover rounded-full ${
                           n.read_at ? "opacity-70" : ""
                         }`}
                       />
@@ -160,18 +157,10 @@ export default function NotificationsPage() {
                     </div>
 
                     <div className="flex-1 flex items-center justify-between gap-2">
-                      <p
-                        className={`text-sm font-medium leading-[150%] truncate ${
-                          n.read_at ? "text-gray-300" : "text-black"
-                        }`}
-                      >
+                      <p className="text-sm font-medium leading-[150%] truncate text-black">
                         {isArabic ? n.body?.ar : n.body?.en}
                       </p>
-                      <span
-                        className={`text-xs whitespace-nowrap ${
-                          n.read_at ? "text-[#A1A1A1]" : "text-gray-700"
-                        }`}
-                      >
+                      <span className="text-xs whitespace-nowrap text-[#A1A1A1]">
                         {new Date(n.created_at).toLocaleString(locale, {
                           hour: "2-digit",
                           minute: "2-digit",
