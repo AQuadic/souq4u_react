@@ -13,6 +13,7 @@ export interface GetProductsParams {
   max_price?: number;
   is_featured?: boolean | number;
   is_best_seller?: boolean | number;
+  is_most_view?: boolean | number;
 }
 
 export interface ProductImage {
@@ -165,6 +166,10 @@ export async function getProducts(
 
   if (typeof params?.is_best_seller !== "undefined") {
     paramsPayload.is_best_seller = coerceFlag(params.is_best_seller);
+  }
+
+  if (typeof params?.is_most_view !== "undefined") {
+    paramsPayload.is_most_view = coerceFlag(params.is_most_view);
   }
 
   // `only_discount` can be provided by callers; prefer numeric 1/0.
