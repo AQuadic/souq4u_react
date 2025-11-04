@@ -11,6 +11,7 @@ interface CartPageSummaryProps {
   totalProducts?: number;
   shippingCost?: number;
   taxes?: number;
+  discount?: number;
   total?: number;
   appliedCoupon?: string | null;
   isCouponLoading?: boolean;
@@ -24,6 +25,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
   totalProducts = 0,
   shippingCost = 0,
   taxes = 0,
+  discount = 0,
   total = 0,
   appliedCoupon,
   isCouponLoading = false,
@@ -158,6 +160,17 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
             </span>
             <span className="text-gray-900 dark:text-white font-medium">
               {taxes.toLocaleString()} {t("currency")}
+            </span>
+          </div>
+        )}
+
+        {discount > 0 && (
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 dark:text-white text-sm">
+              {t("Cart.discount")}
+            </span>
+            <span className="text-green-600 dark:text-green-400 font-medium">
+              -{discount.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}

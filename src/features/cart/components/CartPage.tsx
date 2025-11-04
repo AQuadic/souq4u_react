@@ -93,6 +93,7 @@ export const CartPage: React.FC = () => {
   const subtotal = calculations.subtotal;
   const taxes = calculations.tax;
   const shippingCost = calculations.delivery_fees;
+  const discount = calculations.discount;
   const total = calculations.total;
 
   return (
@@ -172,6 +173,7 @@ export const CartPage: React.FC = () => {
                   totalProducts={subtotal}
                   shippingCost={shippingCost}
                   taxes={taxes}
+                  discount={discount}
                   total={total}
                   appliedCoupon={appliedCoupon}
                   isCouponLoading={isCouponLoading}
