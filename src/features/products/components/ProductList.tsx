@@ -142,7 +142,6 @@ const ProductList: React.FC<ProductListProps> = ({
     page: 1,
     per_page: 4,
     only_discount: 0,
-    is_discount: 0,
   };
 
   // For home / single-product usages we expect callers to override per_page via

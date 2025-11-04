@@ -17,7 +17,6 @@ const BestOffersSection = () => {
       maxItems={8}
       queryParams={{
         per_page: 8,
-        is_discount: true, 
         sort_by: "updated_at",
         sort_order: "desc",
       }}

@@ -8,7 +8,6 @@ export interface GetProductsParams {
   pagination?: boolean | "normal";
   page?: number;
   per_page?: number;
-  is_discount?: boolean | number;
   category_id?: number;
   min_price?: number;
   max_price?: number;
@@ -158,8 +157,6 @@ export async function getProducts(
     max_price: params?.max_price,
     page: params?.page ?? 1,
     per_page: params?.per_page ?? 4,
-    // send explicit discount flags (default 0)
-    is_discount: coerceFlag(params?.is_discount),
   };
 
   if (typeof params?.is_featured !== "undefined") {
