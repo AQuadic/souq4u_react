@@ -14,7 +14,7 @@ import {
   Notification as NotificationType,
 } from "./api/getNotifications";
 import { markNotificationAsRead } from "./api/markNotificationAsRead";
-import { markNotificationAsUnread } from "./api/markNotificationAsUnread";
+// import { markNotificationAsUnread } from "./api/markNotificationAsUnread";
 import { Link, useNavigate } from "react-router-dom";
 import Notifications from "../icons/Notifications";
 import { useTranslation } from "react-i18next";
@@ -39,11 +39,7 @@ export default function NotificationDropdown() {
 
   const handleNotificationClick = async (n: NotificationType) => {
     try {
-      if (!n.read_at) {
-        await markNotificationAsRead(n.id.toString());
-      } else {
-        await markNotificationAsUnread(n.id.toString());
-      }
+      await markNotificationAsRead(n.id.toString());
 
       setOpen(false);
 
@@ -55,7 +51,7 @@ export default function NotificationDropdown() {
 
       await refetch();
     } catch (error) {
-      console.error("Error toggling notification:", error);
+      console.error("Error marking notification as read:", error);
     }
   };
 
