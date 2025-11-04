@@ -28,6 +28,11 @@ const ProductsGrid: React.FC = () => {
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const searchQuery = searchParams.get("search") ?? undefined;
+  const categoryIdFromUrl = searchParams.get("category_id");
+
+  const activeCategoryId = categoryIdFromUrl 
+    ? parseInt(categoryIdFromUrl) 
+    : filters.categoryId;
 
   // Fetch price range from API
   const { data: priceRangeData } = useQuery<{
@@ -45,7 +50,7 @@ const ProductsGrid: React.FC = () => {
     isFetching,
     error,
   } = useQuery<Product[] | PaginatedResponse<Product>, Error>({
-    queryKey: ["products", filters, searchQuery, currentPage],
+    queryKey: ["products", filters, searchQuery, currentPage, activeCategoryId],
     queryFn: () =>
       getProducts({
         q: searchQuery,
@@ -54,7 +59,7 @@ const ProductsGrid: React.FC = () => {
         sort_by: filters.sortBy ?? "updated_at",
         sort_order: filters.sortOrder ?? "desc",
         only_discount: filters.onlyDiscount ?? 0,
-        category_id: filters.categoryId,
+        category_id: activeCategoryId,
         min_price: filters.minPrice,
         max_price: filters.maxPrice,
         page: currentPage,
@@ -84,7 +89,7 @@ const ProductsGrid: React.FC = () => {
   // Reset to page 1 when filters change
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [filters, searchQuery]);
+  }, [filters, searchQuery, activeCategoryId]);
 
   if (error) {
     return (
