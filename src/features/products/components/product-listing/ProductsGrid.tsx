@@ -14,10 +14,12 @@ import ProductCardListing from "../ProductCardListing";
 import { useProductFilters } from "../../hooks/useProductFilters";
 import ProductsCategoryFilter from "./ProductsCategoryFilter";
 import ProductsPagination from "@/shared/components/pagenation/ProductsPagenation";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 
 const ProductsGrid: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate()
   const [view, setView] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -29,6 +31,9 @@ const ProductsGrid: React.FC = () => {
   const searchParams = new URLSearchParams(search);
   const searchQuery = searchParams.get("search") ?? undefined;
   const categoryIdFromUrl = searchParams.get("category_id");
+
+  const mostViewParam = searchParams?.get("is_most_view");
+  const isMostViewedActive = mostViewParam === "1" || mostViewParam === "true";
 
   const activeCategoryId = categoryIdFromUrl 
     ? parseInt(categoryIdFromUrl) 
@@ -108,6 +113,17 @@ const ProductsGrid: React.FC = () => {
     );
   }
 
+  const handleRemoveMostViewed = () => {
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    params.delete("is_most_view");
+
+    const newUrl = params.toString()
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+
+    navigate(newUrl);
+  };
+
   return (
     <section className="container md:py-[44px] py-8">
       {/* <h1 className="text-main md:text-[32px] text-2xl font-normal leading-[100%] text-center uppercase font-anton-sc">
@@ -120,6 +136,23 @@ const ProductsGrid: React.FC = () => {
           { label: t("Products.title") },
         ]}
       />
+
+    {isMostViewedActive && (
+      <div className="mt-6 flex items-center gap-2">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 dark:bg-main/20 rounded-full border border-main/30">
+          <span className="text-sm font-medium text-main">
+            {t("Products.mostViewedProducts") || "Most Viewed Products"}
+          </span>
+          <button
+            onClick={handleRemoveMostViewed}
+            className="hover:bg-main/20 rounded-full p-1 transition-colors"
+            aria-label="Remove most viewed filter"
+          >
+            <X className="w-4 h-4 text-main" />
+          </button>
+        </div>
+      </div>
+    )}
 
       <div className="flex lg:flex-row flex-col gap-8 mt-10">
         <div>
