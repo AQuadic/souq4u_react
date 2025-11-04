@@ -99,7 +99,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
         {styles.icon}
         <div>
           <p className={`${styles.text} text-base font-normal leading-[100%]`}>
-            {locale === "ar" ? order.status : t(normalizedStatus)}
+            {t(`Orders.${normalizedStatus}`)}
           </p>
 
           <p className="dark:text-[#C0C0C0] text-sm font-normal leading-[100%] mt-2">

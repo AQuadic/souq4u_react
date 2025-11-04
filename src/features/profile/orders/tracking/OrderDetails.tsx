@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
 import { Order } from "../api/getOrdersById";
 import { cancelOrder } from "../api/cancelOrder";
 import { useTranslation } from "react-i18next";
@@ -11,44 +10,28 @@ import { canCancelOrder } from "../utils/orderStatus";
 
 type OrderDetailsProps = {
   order: Order;
+  refetch?: () => void;
 };
 
-const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
+const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
   const { t, i18n } = useTranslation("Orders");
   const locale = i18n.language;
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [toCancelId, setToCancelId] = useState<number | null>(null);
-  const queryClient = useQueryClient();
 
   const handleCancel = async (orderId: number) => {
     try {
       setLoadingId(orderId);
       const res = await cancelOrder({ order_id: orderId });
       toast.success(res.message || "Order cancelled successfully");
-      try {
-        await queryClient.invalidateQueries({ queryKey: ["orders"] });
-      } catch (err) {
-        // non-fatal
-        console.warn("Failed to invalidate orders query", err);
+
+      if (refetch) {
+        await refetch();
       }
-    } catch (error: unknown) {
-      // Narrow unknown to structured error with possible response message
-      if (typeof error === "object" && error !== null) {
-        const maybe = error as Record<string, unknown>;
-        const response = maybe["response"] as
-          | Record<string, unknown>
-          | undefined;
-        const data = response?.["data"] as Record<string, unknown> | undefined;
-        const message = data?.["message"] || maybe["message"];
-        if (typeof message === "string") {
-          toast.error(message);
-        } else {
-          toast.error("Failed to cancel order");
-        }
-      } else {
+
+    } catch {
         toast.error("Failed to cancel order");
-      }
     } finally {
       setLoadingId(null);
       setIsDialogOpen(false);
@@ -133,7 +116,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                     }}
                   >
                     {loadingId === order.id
-                      ? "Cancelling..."
+                      ? t("Orders.cancel")
                       : t("Orders.cancel")}
                   </button>
 
@@ -149,16 +132,13 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                         <div className="rounded-3xl border-none bg-white dark:bg-[#121216] shadow-xl">
                           <div className="px-6 pt-6">
                             <h2 className="text-center leading-[150%] text-gray-900 dark:text-gray-100 text-2xl font-medium">
-                              {t("confirm", { defaultValue: "Confirm" })}
+                              {t("Orders.confirm", { defaultValue: "Confirm" })}
                             </h2>
                           </div>
 
                           <div className="px-6 mt-4 text-center">
                             <p className="text-sm text-gray-700 dark:text-gray-300">
-                              {t("confirmDelete", {
-                                defaultValue:
-                                  "Are you sure you want to cancel this order?",
-                              })}
+                              {t("Orders.confirmCancel")}
                             </p>
                           </div>
 
@@ -167,19 +147,19 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                               onClick={() =>
                                 toCancelId && handleCancel(toCancelId)
                               }
-                              aria-label={t("confirm", {
+                              aria-label={t("Orders.confirm", {
                                 defaultValue: "Confirm",
                               })}
                               className="w-[140px] h-12 rounded-[8px] bg-main hover:bg-main text-white text-base font-medium cursor-pointer transition-colors"
                             >
-                              {t("confirm", { defaultValue: "Confirm" })}
+                              {t("Orders.confirm", { defaultValue: "Confirm" })}
                             </button>
                             <button
                               onClick={() => setIsDialogOpen(false)}
                               aria-label={t("no")}
                               className="w-[140px] h-12 rounded-[8px] border border-gray-300 dark:border-gray-700 text-base font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
                             >
-                              {t("cancel", { defaultValue: "Cancel" })}
+                              {t("Orders.cancel", { defaultValue: "Cancel" })}
                             </button>
                           </div>
                         </div>

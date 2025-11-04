@@ -478,6 +478,7 @@
     "addOrder": "Please add your order for your better experience",
     "cancel": "Cancel",
     "confirmCancel": "Are you sure you want to cancel this order?",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "cancelling": "Cancelling"
   }
 }
