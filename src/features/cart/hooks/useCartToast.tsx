@@ -133,12 +133,12 @@ export const useCartToast = () => {
   };
 
   const showItemRemoveError = (productName: string) => {
-    const message = t("failedRemoveFromCart", { productName });
+    const message = t("Cart.failedRemoveFromCart", { productName });
     toast.error(message, { duration: 5000 });
   };
 
   const showCouponApplySuccess = () => {
-    toast.success(t("couponAppliedSuccess"), { duration: 3000 });
+    toast.success(t("Cart.couponAppliedSuccess"), { duration: 3000 });
   };
 
   const showCouponApplyError = () => {
@@ -162,7 +162,7 @@ export const useCartToast = () => {
   };
 
   const failedToAddToCart = (message?: string) => {
-    toast.error(message || t("failedToAdd") || "Failed to add item to cart", {
+    toast.error(message || t("Cart.failedToAdd") || "Failed to add item to cart", {
       duration: 5000,
     });
   };
