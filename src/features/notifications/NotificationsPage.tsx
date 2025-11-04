@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   getNotifications,
@@ -8,12 +8,15 @@ import {
 } from "@/shared/components/layout/header/notifications/api/getNotifications";
 import { markNotificationAsRead } from "@/shared/components/layout/header/notifications/api/markNotificationAsRead";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import Spinner from "@/shared/components/icons/Spinner";
 
 export default function NotificationsPage() {
   const { t, i18n } = useTranslation("Notifications");
   const locale = i18n.language || "en";
   const isArabic = locale.startsWith("ar");
-
+  const navigate = useNavigate();
+  const [, setOpen] = useState(false);
 
   const {
     data: notifications = [],
@@ -28,6 +31,15 @@ export default function NotificationsPage() {
   const handleNotificationClick = async (n: NotificationType) => {
     try {
       await markNotificationAsRead(n.id.toString());
+
+      setOpen(false);
+
+      if (n.order_id) {
+        navigate(`/profile/orders/tracking/${n.order_id}`);
+      } else {
+        navigate("/notifications");
+      }
+
       await refetch();
     } catch (error) {
       console.error("Error marking notification as read:", error);
@@ -36,8 +48,8 @@ export default function NotificationsPage() {
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center py-20 text-gray-400">
-        {t("loading")}...
+      <div>
+        <Spinner />
       </div>
     );
 
