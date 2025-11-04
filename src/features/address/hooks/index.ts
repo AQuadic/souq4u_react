@@ -55,11 +55,7 @@ export const useCreateAddress = () => {
       toast.success("Address created successfully");
       queryClient.invalidateQueries({ queryKey: ["addresses"] });
     },
-    onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to create address"
-      );
-    },
+    // onError removed - let the component handle error display
   });
 };
 
@@ -74,11 +70,7 @@ export const useUpdateAddress = () => {
       toast.success("Address updated successfully");
       queryClient.invalidateQueries({ queryKey: ["addresses"] });
     },
-    onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to update address"
-      );
-    },
+    // onError removed - let the component handle error display
   });
 };
 
