@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useCities, useAreas, useCreateAddress, useUpdateAddress } from "../hooks";
+import {
+  useCities,
+  useAreas,
+  useCreateAddress,
+  useUpdateAddress,
+} from "../hooks";
 import type { AddressFormData, City, Area } from "../types";
 import { Input } from "@/shared/components/ui/input";
 import {
@@ -21,7 +26,7 @@ import {
 } from "@/shared/constants/countries";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useTranslation } from "react-i18next";
-import { handleApiError } from "@/shared/utils/errorHandler";
+import { useToast } from "@/shared/components/ui/toast";
 
 interface AddressFormProps {
   initialData?: Partial<AddressFormData>;
@@ -77,9 +82,11 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   const updateAddressMutation = useUpdateAddress();
   const [phone, setPhone] = useState<PhoneValue>({ code: "20", number: "" });
   const [phoneError, setPhoneError] = useState<string>("");
-  const {t, i18n} = useTranslation("AddressForm");
+  const [apiErrors, setApiErrors] = useState<Record<string, string[]>>({});
+  const { t, i18n } = useTranslation("AddressForm");
   const locale = i18n.language;
   const { t: common } = useTranslation("Common");
+  const toast = useToast();
   // derive short locale (en | ar) and helper to pick translated name
   const localeShort = (locale || "en").split("-")[0] as "en" | "ar";
   const getTranslated = (names: { en?: string; ar?: string }) =>
@@ -124,6 +131,16 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
   const handlePhoneChange = (newPhone: PhoneValue) => {
     setPhone(newPhone);
+
+    // Clear API error for phone when user starts typing
+    if (apiErrors.phone) {
+      setApiErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.phone;
+        return newErrors;
+      });
+    }
+
     // Validate phone when it changes
     const error = validatePhone(newPhone.number, newPhone.code);
     setPhoneError(error);
@@ -175,6 +192,15 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     field: keyof AddressFormData,
     value: string | boolean
   ) => {
+    // Clear API error for this field when user starts typing
+    if (apiErrors[field]) {
+      setApiErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+
     setFormData((prev) => {
       const newData = { ...prev, [field]: value };
 
@@ -243,6 +269,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     };
 
     try {
+      // Clear previous API errors
+      setApiErrors({});
+
       // Handle editing existing address
       if (isEditing && addressId) {
         await updateAddressMutation.mutateAsync({
@@ -287,10 +316,66 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       } else {
         onSubmit(payload);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to save address:", error);
-      // Show error toast to user
-      handleApiError(error, "Failed to save address");
+
+      let serverErrors: Record<string, string[]> | undefined;
+      let serverMessage: string | undefined;
+
+      // Try to extract API errors from the error object
+      if (error && typeof error === "object") {
+        // Check if it's a direct axios error with response
+        if ("response" in error) {
+          const axiosError = error as {
+            response?: {
+              data?: {
+                errors?: Record<string, string[]>;
+                message?: string;
+              };
+            };
+          };
+          serverErrors = axiosError.response?.data?.errors;
+          serverMessage = axiosError.response?.data?.message;
+        }
+        // Check if the error has a cause (from axios interceptor)
+        else if ("cause" in error) {
+          const causeError = (error as { cause?: unknown }).cause;
+          if (
+            causeError &&
+            typeof causeError === "object" &&
+            "response" in causeError
+          ) {
+            const axiosError = causeError as {
+              response?: {
+                data?: {
+                  errors?: Record<string, string[]>;
+                  message?: string;
+                };
+              };
+            };
+            serverErrors = axiosError.response?.data?.errors;
+            serverMessage = axiosError.response?.data?.message;
+          }
+        }
+      }
+
+      // Set inline errors for form fields
+      if (serverErrors) {
+        setApiErrors(serverErrors);
+
+        // If phone error exists, also set it in phoneError state
+        if (serverErrors.phone) {
+          setPhoneError(serverErrors.phone[0]);
+        }
+      }
+
+      // Show custom toast with only the message
+      if (serverMessage) {
+        toast.error(serverMessage, { duration: 5000 });
+      } else {
+        toast.error("Failed to save address", { duration: 5000 });
+      }
+
       // Don't call onSubmit if there was an error
     }
   };
@@ -314,6 +399,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             className="   border border-slate-200  "
             required
           />
+          {apiErrors.title && (
+            <p className="text-red-500 text-sm mt-1">{apiErrors.title[0]}</p>
+          )}
         </div>
       )}
 
@@ -332,6 +420,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           }
           className="  :  border border-slate-200  "
         />
+        {apiErrors.user_name && (
+          <p className="text-red-500 text-sm mt-1">{apiErrors.user_name[0]}</p>
+        )}
       </div>
 
       {/* City Selection */}
@@ -343,9 +434,16 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           value={formData.city_id}
           onValueChange={(value) => handleInputChange("city_id", value)}
         >
-          <SelectTrigger className="w-full   :  border border-slate-200  " dir={i18n.language === "ar" ? "rtl" : "ltr"}>
+          <SelectTrigger
+            className="w-full   :  border border-slate-200  "
+            dir={i18n.language === "ar" ? "rtl" : "ltr"}
+          >
             <SelectValue
-              placeholder={citiesLoading ? t("AddressForm.loadingCities") : t("AddressForm.selectCity")}
+              placeholder={
+                citiesLoading
+                  ? t("AddressForm.loadingCities")
+                  : t("AddressForm.selectCity")
+              }
               dir={i18n.language === "ar" ? "rtl" : "ltr"}
             />
           </SelectTrigger>
@@ -357,6 +455,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             ))}
           </SelectContent>
         </Select>
+        {apiErrors.city_id && (
+          <p className="text-red-500 text-sm mt-1">{apiErrors.city_id[0]}</p>
+        )}
       </div>
       {/* Area Selection (placed right under City) */}
       {formData.city_id && (
@@ -368,9 +469,16 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             value={formData.area_id || ""}
             onValueChange={(value) => handleInputChange("area_id", value)}
           >
-            <SelectTrigger className="w-full   :  border border-slate-200  " dir={i18n.language === "ar" ? "rtl" : "ltr"}>
+            <SelectTrigger
+              className="w-full   :  border border-slate-200  "
+              dir={i18n.language === "ar" ? "rtl" : "ltr"}
+            >
               <SelectValue
-                placeholder={areasLoading ? t("AddressForm.loadingAreas") : t("AddressForm.selectArea")}
+                placeholder={
+                  areasLoading
+                    ? t("AddressForm.loadingAreas")
+                    : t("AddressForm.selectArea")
+                }
                 dir={i18n.language === "ar" ? "rtl" : "ltr"}
               />
             </SelectTrigger>
@@ -382,6 +490,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               ))}
             </SelectContent>
           </Select>
+          {apiErrors.area_id && (
+            <p className="text-red-500 text-sm mt-1">{apiErrors.area_id[0]}</p>
+          )}
         </div>
       )}
 
@@ -419,6 +530,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           className="w-full min-h-[100px] px-3 py-2 border rounded-md outline-none focus:ring-2 focus:ring-red-500   :  border-slate-200  "
           required
         />
+        {apiErrors.details && (
+          <p className="text-red-500 text-sm mt-1">{apiErrors.details[0]}</p>
+        )}
       </div>
 
       {/* Zipcode */}
@@ -436,6 +550,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           }
           className="  :  border border-slate-200  "
         />
+        {apiErrors.zipcode && (
+          <p className="text-red-500 text-sm mt-1">{apiErrors.zipcode[0]}</p>
+        )}
       </div>
 
       {/* Location is hidden for now; lat/lng will be sent as zeros */}
@@ -455,6 +572,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           }
           className="  :  border border-slate-200  "
         />
+        {apiErrors.email && (
+          <p className="text-red-500 text-sm mt-1">{apiErrors.email[0]}</p>
+        )}
       </div>
 
       {/* Save Address Option */}

@@ -81,10 +81,7 @@ function App() {
                   <Route path="favorites" element={<MyFavorites />} />
                   <Route path="addresses" element={<SaveAddress />} />
                   <Route path="addresses/add" element={<AddAddressPage />} />
-                  <Route
-                    path="addresses/edit/:id"
-                    element={<EditAddress />}
-                  />
+                  <Route path="addresses/edit/:id" element={<EditAddress />} />
                 </Route>
 
                 <Route path="cart" element={<MainCart />} />
