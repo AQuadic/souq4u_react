@@ -184,7 +184,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         {discount > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("discount")}
+              {t("Cart.discount")}
             </span>
             <span className="font-medium text-green-600 dark:text-green-400">
               -{discount.toLocaleString()} {common("Common.currency")}
