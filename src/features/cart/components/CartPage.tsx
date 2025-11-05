@@ -64,6 +64,9 @@ export const CartPage: React.FC = () => {
       price: item.variant.final_price,
       quantity: item.quantity,
       image: item.image?.url || "/placeholder-product.svg",
+      stock: item.variant.stock,
+      is_stock: item.variant.is_stock,
+      attributes: item.variant.attributes,
       // pass the whole multilingual value object (or string) so child can translate based on locale
       size: (() => {
         const attr = item.variant.attributes.find((a) => {
