@@ -35,6 +35,22 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
 
   const { order } = orderData;
 
+  const getTranslatedStatus = (status: string) => {
+  const statusKey =
+    status as
+      | "pending"
+      | "PreOrder"
+      | "confirmed"
+      | "ready_for_shipping"
+      | "in_shipping"
+      | "completed"
+      | "cancelled"
+      | "processing"
+      | "shipping";
+  return t(`Orders.${statusKey}`);
+};
+
+
   return (
     <Dialog open={isOpen}>
       <DialogContent
@@ -65,8 +81,8 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
               </div>
               <div className="flex justify-between">
                 <span className="dark:text-[#C0C0C0]">{t("Common.status")}</span>
-                <span className="text-yellow-400 capitalize font-medium">
-                  {order.status}
+                <span className="text-yellow-400 font-medium">
+                  {getTranslatedStatus(order.status)}
                 </span>
               </div>
               <div className="flex justify-between">
