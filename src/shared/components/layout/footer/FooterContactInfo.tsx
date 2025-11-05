@@ -40,7 +40,7 @@ const FooterContactInfo = () => {
 
   return (
     <section className="bg-main mt-[60px] sm:mt-[120px]">
-      <div className="container flex lg:flex-row flex-col items-center justify-center lg:gap-4 py-[60px]">
+      <div className="container flex lg:flex-row flex-col items-center justify-center lg:gap-4 py-[20px]">
 
         {hasLocation && (
           <>
