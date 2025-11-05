@@ -63,7 +63,7 @@ const ProductsCategoryFilter = ({
       <div className="w-full h-px dark:bg-[#FDFDFD] bg-[#EAEAEA]"></div>
 
       <div className="p-2">
-        {isLoading && <p className="text-sm text-gray-400">{t("loading")}</p>}
+        {isLoading && <p className="text-sm text-gray-400">{t("Common.loading")}</p>}
         {isError && <p className="text-sm text-red-400">{error.message}</p>}
 
         <Accordion
