@@ -48,8 +48,8 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
     },
     ready_for_shipping: {
       icon: <ReadyForShipping />,
-      bg: "bg-[#FFA50024]",
-      text: "text-[#FFA500]",
+      bg: "bg-[#3D9BE924]",
+      text: "text-[#3D9BE9]",
     },
     in_shipping: {
       icon: <InShipping />,
