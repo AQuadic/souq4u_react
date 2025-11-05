@@ -121,8 +121,13 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                       orderId={order.id}
                       productId={productId}
                       orderStatus={order.status}
-                      isReviewed={order.is_reviewed}
-                      onReviewSuccess={() => {
+                      isReviewed={item.is_reviewed}
+                      onReviewSuccess={(productId) => {
+                        order.orderItems = order.orderItems.map((i) =>
+                          i.variant?.product_id === productId
+                            ? { ...i, is_reviewed: true }
+                            : i
+                        );
                         queryClient.invalidateQueries({ queryKey: ["order", order.id] });
                       }}
                     />
