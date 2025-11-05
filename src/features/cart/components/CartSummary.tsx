@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 interface CartSummaryProps {
   subtotal: number;
   tax: number;
+  totalDiscount: number;
   total: number;
   onClose: () => void;
 }
@@ -14,6 +15,7 @@ interface CartSummaryProps {
 export const CartSummary: React.FC<CartSummaryProps> = ({
   subtotal,
   tax,
+  totalDiscount,
   total,
   onClose,
 }) => {
@@ -41,6 +43,15 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
             <span className=" text-sm">{t("Cart.tax")}</span>
             <span className=" text-sm">
               {tax.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
+        {/* Discount */}
+        {totalDiscount > 0 && (
+          <div className="flex items-center justify-between">
+            <span className=" text-sm">{t("Cart.discount")}</span>
+            <span className="text-green-600 dark:text-green-400 text-sm">
+              -{totalDiscount.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}

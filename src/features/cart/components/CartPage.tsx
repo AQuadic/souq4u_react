@@ -26,7 +26,7 @@ export const CartPage: React.FC = () => {
   } = useCartOperations();
 
   const handleUpdateQuantity = (itemId: string, quantity: number) => {
-    return updateItemQuantity(parseInt(itemId), quantity);
+    return updateItemQuantity(Number.parseInt(itemId), quantity);
   };
 
   const handleRemoveItem = (itemId: string) => {
@@ -89,6 +89,9 @@ export const CartPage: React.FC = () => {
     delivery_fees: 0,
     total: 0,
     discount: 0,
+    total_discount: 0,
+    product_discount: 0,
+    addons: 0,
   };
 
   const totalItems =
@@ -96,7 +99,7 @@ export const CartPage: React.FC = () => {
   const subtotal = calculations.subtotal;
   const taxes = calculations.tax;
   const shippingCost = calculations.delivery_fees;
-  const discount = calculations.discount;
+  const totalDiscount = calculations.total_discount;
   const total = calculations.total;
 
   return (
@@ -176,7 +179,7 @@ export const CartPage: React.FC = () => {
                   totalProducts={subtotal}
                   shippingCost={shippingCost}
                   taxes={taxes}
-                  discount={discount}
+                  totalDiscount={totalDiscount}
                   total={total}
                   appliedCoupon={appliedCoupon}
                   isCouponLoading={isCouponLoading}

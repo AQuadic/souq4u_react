@@ -15,7 +15,7 @@ export interface CheckoutSummaryData {
   subtotal: number;
   totalProducts: number;
   taxes: number;
-  discount: number;
+  totalDiscount: number;
   discountPercentage: number;
   total: number;
   shipping?: number;
@@ -36,7 +36,7 @@ export const useCheckoutCartSummary = () => {
         subtotal: 0,
         totalProducts: 0,
         taxes: 0,
-        discount: 0,
+        totalDiscount: 0,
         discountPercentage: 0,
         total: 0,
         shipping: 0,
@@ -62,16 +62,19 @@ export const useCheckoutCartSummary = () => {
       delivery_fees: 0,
       total: 0,
       discount: 0,
+      total_discount: 0,
+      product_discount: 0,
+      addons: 0,
     };
 
     const subtotal = calculations.subtotal;
     const taxes = calculations.tax;
-    const discount = calculations.discount;
+    const totalDiscount = calculations.total_discount;
     const total = calculations.total;
 
     const totalProducts = subtotal;
     const discountPercentage =
-      subtotal > 0 ? Math.round((discount / subtotal) * 100) : 0;
+      subtotal > 0 ? Math.round((totalDiscount / subtotal) * 100) : 0;
 
     return {
       items,
@@ -79,7 +82,7 @@ export const useCheckoutCartSummary = () => {
       subtotal,
       totalProducts,
       taxes,
-      discount,
+      totalDiscount,
       discountPercentage,
       total,
       shipping: calculations.delivery_fees,
