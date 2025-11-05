@@ -473,13 +473,15 @@ const Footer = () => {
               {t("Footer.help")}
             </h2>
             <div className="flex flex-col gap-4">
-              <Link
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                to="/track-order"
-                className=" text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
-              >
-                {t("Footer.trackOrder")}
-              </Link>
+              {!isAuth && (
+                <Link
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  to="/track-order"
+                  className=" text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
+                >
+                  {t("Footer.trackOrder")}
+                </Link>
+              )}
               <Link
                 to="/profile/account"
                 onClick={(e) => {
