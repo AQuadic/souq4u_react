@@ -367,7 +367,11 @@
     "errorMessageRequired": "message is required",
     "errorNameTooShort": "Name must be at least 3 characters.",
     "errorPhoneInvalid": "Please enter a valid phone number.",
-    "errorMessageTooShort": "Message must be at least 10 characters."
+    "errorMessageTooShort": "Message must be at least 10 characters.",
+    "errorNameLettersOnly": "Only Arabic or English letters are allowed.",
+    "errorNameTooLong": "Name must not exceed 100 characters.",
+    "errorEmailInvalid": "Invalid email format.",
+    "errorMessageTooLong": "Message must not exceed 1000 characters."
   },
   "Header": {
     "switchLanguage": "Switch Language",
