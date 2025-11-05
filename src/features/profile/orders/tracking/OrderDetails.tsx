@@ -2,36 +2,49 @@
 
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { Order } from "../api/getOrdersById";
 import { cancelOrder } from "../api/cancelOrder";
 import { useTranslation } from "react-i18next";
 import ProductReviewDialog from "../ProductReviewDialog";
-import { canCancelOrder } from "../utils/orderStatus";
 
 type OrderDetailsProps = {
   order: Order;
   refetch?: () => void;
 };
 
-const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
+const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
   const { t, i18n } = useTranslation("Orders");
   const locale = i18n.language;
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [toCancelId, setToCancelId] = useState<number | null>(null);
+  const queryClient = useQueryClient();
 
-  const handleCancel = async (orderId: number) => {
+  const handleCancel = async (orderItemId: number) => {
     try {
-      setLoadingId(orderId);
-      const res = await cancelOrder({ order_id: orderId });
-      toast.success(res.message || "Order cancelled successfully");
+      setLoadingId(orderItemId);
+      const res = await cancelOrder({ order_item_id: orderItemId });
+      toast.success(
+        res.message ||
+          t("cancelSuccess", { defaultValue: "Order cancelled successfully" })
+      );
+      // Invalidate and refetch to refresh both details and list views
+      await queryClient.invalidateQueries({ queryKey: ["orders"] });
+      await queryClient.invalidateQueries({ queryKey: ["order", order.id] });
 
-      if (refetch) {
-        await refetch();
-      }
-
-    } catch {
-        toast.error("Failed to cancel order");
+      // ✅ Force reload to reflect the new status immediately in UI
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null
+          ? (error as any)?.response?.data?.message ||
+            (error as any)?.message ||
+            t("cancelFailed", { defaultValue: "Failed to cancel order" })
+          : t("cancelFailed", { defaultValue: "Failed to cancel order" });
+      toast.error(message);
     } finally {
       setLoadingId(null);
       setIsDialogOpen(false);
@@ -56,19 +69,30 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
         const productId =
           item.variant?.product_id || item.productable?.product_id;
 
+        const itemStatus = item.status?.toLowerCase() || "";
+
         return (
           <div
             key={item.id}
             className="w-full border border-[#C0C0C0] rounded-3xl mt-6 flex justify-between items-center min-h-[120px] md:min-h-[174px] py-4"
           >
             <div className="flex items-center px-4 h-full">
-              <img
-                src={productImage}
-                alt={productName}
-                width={142}
-                height={142}
-                className="md:w-[142px] w-20 md:h-[142px] h-20 rounded-lg"
-              />
+              <div className="relative">
+                <img
+                  src={productImage}
+                  alt={productName}
+                  width={142}
+                  height={142}
+                  className="md:w-[142px] w-20 md:h-[142px] h-20 rounded-lg object-cover"
+                />
+
+                {["cancelled", "ملغي"].includes(itemStatus) && (
+                  <span className="absolute top-2 left-2 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full shadow">
+                    {t("cancelled", { defaultValue: "Cancelled" })}
+                  </span>
+                )}
+              </div>
+
               <div className="mx-4 flex flex-col justify-between h-full">
                 <span className="dark:text-[#C0C0C0] md:text-base text-xs font-poppins">
                   {t("Common.orderCode")} <span dir="ltr">#{item.code}</span>
@@ -98,6 +122,9 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
                       productId={productId}
                       orderStatus={order.status}
                       isReviewed={order.is_reviewed}
+                      onReviewSuccess={() => {
+                        queryClient.invalidateQueries({ queryKey: ["order", order.id] });
+                      }}
                     />
                   </div>
                 )}
@@ -105,22 +132,23 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
             </div>
 
             <div className="flex flex-col items-end gap-2 pr-4">
-              {canCancelOrder(order.status) && (
+              {["pending", "معلق"].includes(order.status?.toLowerCase() || "") &&
+              !["cancelled", "ملغي"].includes(itemStatus) && (
                 <>
                   <button
                     type="button"
                     className="text-main text-base font-normal leading-[100%] px-4 py-8 cursor-pointer hover:underline"
                     onClick={() => {
-                      setToCancelId(order.id);
+                      setToCancelId(item.id);
                       setIsDialogOpen(true);
                     }}
                   >
-                    {loadingId === order.id
+                    {loadingId === item.id
                       ? t("Orders.cancel")
                       : t("Orders.cancel")}
                   </button>
 
-                  {isDialogOpen && toCancelId === order.id && (
+                  {isDialogOpen && toCancelId === item.id && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center">
                       <button
                         aria-label={t("no")}
@@ -138,15 +166,18 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
 
                           <div className="px-6 mt-4 text-center">
                             <p className="text-sm text-gray-700 dark:text-gray-300">
-                              {t("Orders.confirmCancel")}
+                              {t("Orders.confirmDelete", {
+                                defaultValue:
+                                  "Are you sure you want to cancel this order?",
+                              })}
                             </p>
                           </div>
 
                           <div className="flex justify-center gap-4 px-6 py-6">
                             <button
-                              onClick={() =>
-                                toCancelId && handleCancel(toCancelId)
-                              }
+                              onClick={() => {
+                                if (toCancelId) handleCancel(toCancelId);
+                              }}
                               aria-label={t("Orders.confirm", {
                                 defaultValue: "Confirm",
                               })}

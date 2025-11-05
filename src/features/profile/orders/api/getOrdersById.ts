@@ -2,18 +2,36 @@ import { axios } from "@/shared/lib/axios";
 
 export type OrderItem = {
   id: number;
-  code: number,
+  order_id?: number;
+  code?: string;
   final_price: number;
+  price: number;
+  discount_amount?: number;
+  subtotal?: number;
+  total?: number;
   quantity: number;
+  status?: string;
+  created_at?: string;
+  updated_at?: string;
+
   product_name: {
     ar: string;
     en: string;
   };
+
   variant?: {
-    images?: { url: string }[];
+    id?: number;
     product_id?: number;
+    sku?: string;
+    barcode?: string | null;
+    price?: number;
+    discount?: number;
+    has_discount?: boolean;
+    images?: { url: string; responsive_urls?: string[] }[];
   };
+
   productable?: {
+    id?: number;
     product_id?: number;
   };
 };
@@ -42,7 +60,8 @@ export interface Order {
 
   orderItems: OrderItem[];
 
-  is_reviewed: boolean
+  is_reviewed: boolean;
+  delivery_expect?: string | null;
 }
 
 export async function getOrderById(

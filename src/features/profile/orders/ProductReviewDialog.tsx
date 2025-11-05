@@ -14,7 +14,7 @@ import { useToast } from "@/shared/components/ui/toast/toast-store";
 import { sendReview } from "./api/postReviews";
 import { getErrorMessage } from "@/shared/utils/errorHandler";
 import { useTranslation } from "react-i18next";
-import { canReviewOrder } from "./utils/orderStatus";
+// import { canReviewOrder } from "./utils/orderStatus";
 
 type ProductReviewDialogProps = {
   productName?: string;
@@ -22,19 +22,22 @@ type ProductReviewDialogProps = {
   productId: number;
   isReviewed?: boolean;
   orderStatus?: string;
+  onReviewSuccess?: () => void;
 };
 
 const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
-  productName,
+  // productName,
   orderId,
   productId,
   isReviewed = false,
   orderStatus,
+  onReviewSuccess,
 }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [localIsReviewed, setLocalIsReviewed] = useState(isReviewed);
   const { t } = useTranslation("Profile");
   const toast = useToast();
 
@@ -49,7 +52,7 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
 
   const handleSendReview = async () => {
     if (!rating) {
-      toast.error(t("ratingRequired"));
+      toast.error(t("Profile.ratingRequired"));
       return;
     }
 
@@ -64,32 +67,11 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
         comment,
       });
 
-      // Prefer a translated API message when possible.
-      // If the API returns a plain English sentence (not a translation key),
-      // fall back to the localized `reviewSuccess` message.
-      const apiMsg = res && (res as any).message;
-      let displayMsg: string;
-      if (apiMsg && typeof apiMsg === "string") {
-        try {
-          const translated = t(apiMsg);
-          // If translation exists (different from key), use it; otherwise use generic localized message
-          displayMsg =
-            translated && translated !== apiMsg
-              ? translated
-              : t("Profile.reviewSuccess", { product: productName ?? "item" });
-        } catch {
-          displayMsg = t("Profile.reviewSuccess", {
-            product: productName ?? "item",
-          });
-        }
-      } else {
-        displayMsg = t("Profile.reviewSuccess", {
-          product: productName ?? "item",
-        });
-      }
-
-      toast.success(displayMsg);
-
+      toast.success(t("Profile.reviewSuccess"));
+      
+      setLocalIsReviewed(true);
+      onReviewSuccess?.();
+      
       // Reset form and close dialog
       setRating(0);
       setComment("");
@@ -106,11 +88,11 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
   };
 
   // Don't show button if order is not completed
-  if (!canReviewOrder(orderStatus)) {
+  if (!["completed", "مكتمل"].includes(orderStatus?.toLowerCase() || "")) {
     return null;
   }
 
-  if (isReviewed) {
+  if (localIsReviewed) {
     return (
       <button
         disabled
@@ -136,7 +118,6 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
               alt={`smile-${rating || 1}`}
               width={80}
               height={80}
-              className="w-20 h-20"
             />
           </DialogTitle>
           <DialogDescription>
