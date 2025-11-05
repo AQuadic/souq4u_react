@@ -22,7 +22,7 @@ type ProductReviewDialogProps = {
   productId: number;
   isReviewed?: boolean;
   orderStatus?: string;
-  onReviewSuccess?: () => void;
+  onReviewSuccess?: (productId: number) => void;
 };
 
 const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
@@ -70,7 +70,7 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
       toast.success(t("Profile.reviewSuccess"));
       
       setLocalIsReviewed(true);
-      onReviewSuccess?.();
+      onReviewSuccess?.(productId);
       
       // Reset form and close dialog
       setRating(0);

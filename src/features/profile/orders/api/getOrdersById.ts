@@ -13,7 +13,7 @@ export type OrderItem = {
   status?: string;
   created_at?: string;
   updated_at?: string;
-
+  is_reviewed?: boolean,
   product_name: {
     ar: string;
     en: string;
