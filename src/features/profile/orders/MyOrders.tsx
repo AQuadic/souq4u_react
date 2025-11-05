@@ -101,38 +101,43 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                 className="relative w-full md:h-[172px] h-24 dark:bg-[#242529] shadow-md hover:shadow-lg rounded-2xl px-3 my-4"
               >
                 <Link to={`/profile/orders/tracking/${item.order_id}`}>
-                  <div className="flex items-center cursor-pointer h-full">
-                    <img
-                      src={
-                        item.productable?.image?.url || "/placeholder-image.jpg"
-                      }
-                      alt={productName ?? "Product"}
-                      width={156}
-                      height={156}
-                      className="md:w-[156px] w-20 md:h-[156px] h-20"
-                    />
-                    <div className="px-2">
-                      <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
-                        {t("Common.orderCode")} <span dir="ltr">#{item.code}</span>
-                      </p>
-                      <h1 className=" md:text-2xl text-base font-semibold leading-[100%] md:mt-6 mt-4">
-                        {productName}
-                      </h1>
-                      <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%] md:mt-6 mt-3">
-                        {item.created_at
-                          ? (() => {
-                              const dateLocale =
-                                locale === "ar" ? "ar-EG" : "en-GB";
-                              return new Intl.DateTimeFormat(dateLocale, {
-                                weekday: "long",
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "numeric",
-                              }).format(new Date(item.created_at));
-                            })()
-                          : "N/A"}
-                      </p>
+                  <div className="flex items-end justify-between">
+                    <div className="flex items-center cursor-pointer h-full">
+                      <img
+                        src={
+                          item.productable?.image?.url || "/placeholder-image.jpg"
+                        }
+                        alt={productName ?? "Product"}
+                        width={156}
+                        height={156}
+                        className="md:w-[156px] w-20 md:h-[156px] h-20"
+                      />
+                      <div className="px-2">
+                        <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
+                          {t("Common.orderCode")} <span dir="ltr">#{item.code}</span>
+                        </p>
+                        <h1 className=" md:text-2xl text-base font-semibold leading-[100%] md:mt-6 mt-4">
+                          {productName}
+                        </h1>
+                        <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%] md:mt-6 mt-3">
+                          {item.created_at
+                            ? (() => {
+                                const dateLocale =
+                                  locale === "ar" ? "ar-EG" : "en-GB";
+                                return new Intl.DateTimeFormat(dateLocale, {
+                                  weekday: "long",
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                }).format(new Date(item.created_at));
+                              })()
+                            : "N/A"}
+                        </p>
+                      </div>
                     </div>
+                    <div>
+                        <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]" dir="ltr">#{item.order_code}</p>
+                      </div>
                   </div>
                 </Link>
                 {item.status && fmt && (

@@ -15,6 +15,7 @@ export interface OrderItem {
   };
   status?: string | null;
   code?: string | null;
+  order_code?: string | null,
   quantity?: number;
   final_price?: number;
   discount_amount?: number;
