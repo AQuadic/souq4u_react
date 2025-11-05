@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Accordion,
@@ -10,6 +10,7 @@ import {
 } from "@/shared/components/ui/accordion";
 import { ChevronRight, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Category, getCategories } from "@/features/categories/api/getCategories";
 
 const ProductsCategoryFilter = ({
@@ -19,8 +20,21 @@ const ProductsCategoryFilter = ({
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [openItem, setOpenItem] = useState<string | null>(null);
+
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get("category_id");
+    const categoryId = categoryFromUrl ? Number(categoryFromUrl) : null;
+
+    if (categoryId !== selectedCategory) {
+      setSelectedCategory(categoryId);
+      setCategory(categoryId || undefined);
+    }
+  }, [searchParams]);
 
   const {
     data: categories,
@@ -35,6 +49,10 @@ const ProductsCategoryFilter = ({
   const handleClick = (id: number) => {
     setSelectedCategory(id);
     setCategory(id);
+
+    const params = new URLSearchParams(searchParams);
+    params.set("category_id", String(id));
+    navigate({ search: params.toString() });
   };
 
   return (
@@ -162,14 +180,15 @@ const ProductsCategoryFilter = ({
               );
             }
 
+            const isSelected = selectedCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => handleClick(cat.id)}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                  selectedCategory === cat.id
-                    ? "text-main bg-main/10"
-                    : "text-text-gray-300"
+                  isSelected
+                    ? "text-main bg-main/10 font-medium"
+                    : "text-gray-700"
                 }`}
               >
                 <span className="flex items-center gap-2">
