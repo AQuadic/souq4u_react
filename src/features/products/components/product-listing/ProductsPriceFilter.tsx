@@ -63,7 +63,7 @@ const ProductsPriceFilter: React.FC<Props> = ({
             dir={isRtl ? "rtl" : "ltr"}
             min={actualMinPrice}
             max={actualMaxPrice}
-            step={100}
+            step={1}
             value={localRange}
             onValueChange={handleChange}
           />
