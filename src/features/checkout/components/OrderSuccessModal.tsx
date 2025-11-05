@@ -101,10 +101,10 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
                   </div>
                   <div className="text-right">
                     <p className="dark:text-white font-medium">
-                      {(item.final_price ?? 0).toLocaleString()}{" "}
+                      {(item.price ?? 0).toLocaleString()}{" "}
                       {t("Common.currency")}
                     </p>
-                    {item.discount_amount > 0 && (
+                    {(item.discount_amount ?? 0) > 0 && (
                       <p className="text-green-400 text-xs">
                         -{(item.discount_amount ?? 0).toLocaleString()}{" "}
                         {t("Common.currency")} {t("Common.saved")}

@@ -46,6 +46,7 @@ export interface CheckoutResponse {
     tax: number;
     shipping: number;
     orderItems: Array<{
+      price: number;
       id: number;
       product_name: {
         ar: string;
