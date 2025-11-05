@@ -77,7 +77,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
                   {productName}
                 </h2>
                 <p className="text-main md:text-2xl text-base font-bold md:mt-6 mt-2">
-                  {price} <span className="font-normal">{t("Orders.egp")}</span>
+                  {order.sub_total} <span className="font-normal">{t("Orders.egp")}</span>
                 </p>
                 {/* Show days since order */}
                 {/* {order.created_at && (
