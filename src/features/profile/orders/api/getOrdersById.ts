@@ -2,6 +2,7 @@ import { axios } from "@/shared/lib/axios";
 
 export type OrderItem = {
   id: number;
+  code: number,
   final_price: number;
   quantity: number;
   product_name: {

@@ -51,7 +51,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, refetch }) => {
 
         const productImage =
           item.variant?.images?.[0]?.url || "/images/products/productIMG.png";
-        const price = item.final_price;
+        // const price = item.final_price;
 
         const productId =
           item.variant?.product_id || item.productable?.product_id;
