@@ -39,7 +39,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         subtotal: cartWithShipping.data.calculations.subtotal,
         totalProducts: cartWithShipping.data.calculations.subtotal,
         taxes: cartWithShipping.data.calculations.tax,
-        discount: cartWithShipping.data.calculations.discount,
+        totalDiscount: cartWithShipping.data.calculations.total_discount,
         total: cartWithShipping.data.calculations.total,
         shipping: cartWithShipping.data.calculations.delivery_fees,
       }
@@ -50,7 +50,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
     subtotal,
     totalProducts,
     taxes,
-    discount,
+    totalDiscount,
     total,
     shipping,
   } = displayData;
@@ -181,13 +181,13 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
           </div>
         )}
 
-        {discount > 0 && (
+        {totalDiscount > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-600 dark:text-slate-200">
               {t("Cart.discount")}
             </span>
             <span className="font-medium text-green-600 dark:text-green-400">
-              -{discount.toLocaleString()} {common("Common.currency")}
+              -{totalDiscount.toLocaleString()} {common("Common.currency")}
             </span>
           </div>
         )}

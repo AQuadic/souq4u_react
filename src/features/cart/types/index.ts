@@ -47,8 +47,11 @@ export interface CartVariant {
 }
 
 export interface CartCalculations {
-  discount: number;
   subtotal: number;
+  addons: number;
+  product_discount: number;
+  discount: number;
+  total_discount: number;
   tax: number;
   delivery_fees: number;
   total: number;
