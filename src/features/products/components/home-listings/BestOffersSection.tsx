@@ -21,7 +21,7 @@ const BestOffersSection = () => {
         sort_order: "desc",
       }}
       onlyDiscounted={true}
-      viewAllLink="/products"
+      viewAllLink="/products?only_discount=1"
       viewAllTextKey={t("Products.viewAllProducts")}
     />
   );

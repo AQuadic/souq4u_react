@@ -34,6 +34,9 @@ const ProductsGrid: React.FC = () => {
 
   const mostViewParam = searchParams?.get("is_most_view");
   const isMostViewedActive = mostViewParam === "1" || mostViewParam === "true";
+  const onlyDiscountParam = searchParams?.get("only_discount");
+  const isOnlyDiscountedActive = onlyDiscountParam === "1" || onlyDiscountParam === "true";
+
 
   const activeCategoryId = categoryIdFromUrl 
     ? parseInt(categoryIdFromUrl) 
@@ -63,7 +66,7 @@ const ProductsGrid: React.FC = () => {
         pagination: "normal",
         sort_by: filters.sortBy ?? "updated_at",
         sort_order: filters.sortOrder ?? "desc",
-        only_discount: filters.onlyDiscount ?? 0,
+        only_discount: isOnlyDiscountedActive ? 1 : filters.onlyDiscount ?? 0, // 👈 updated
         is_most_view: filters.is_most_view ?? 0,
         category_id: activeCategoryId,
         min_price: filters.minPrice,
@@ -142,6 +145,23 @@ const ProductsGrid: React.FC = () => {
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 dark:bg-main/20 rounded-full border border-main/30">
           <span className="text-sm font-medium text-main">
             {t("Products.mostViewedProducts") || "Most Viewed Products"}
+          </span>
+          <button
+            onClick={handleRemoveMostViewed}
+            className="hover:bg-main/20 rounded-full p-1 transition-colors"
+            aria-label="Remove most viewed filter"
+          >
+            <X className="w-4 h-4 text-main" />
+          </button>
+        </div>
+      </div>
+    )}
+
+      {isOnlyDiscountedActive && (
+      <div className="mt-6 flex items-center gap-2">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 dark:bg-main/20 rounded-full border border-main/30">
+          <span className="text-sm font-medium text-main">
+            {t("Products.bestOffersProducts") || "Most Viewed Products"}
           </span>
           <button
             onClick={handleRemoveMostViewed}

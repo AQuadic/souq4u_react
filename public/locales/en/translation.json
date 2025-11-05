@@ -128,7 +128,8 @@
     "guideImage": "Guide image",
     "close": "Close",
     "off": "off",
-    "mostViewedProducts": "Most viewed products"
+    "mostViewedProducts": "Most viewed products",
+    "bestOffersProducts": "Best offers products"
   },
   "ProductsGrid": {
     "home": "Home",
