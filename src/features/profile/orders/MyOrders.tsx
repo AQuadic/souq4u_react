@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import BackArrow from "@/features/products/icons/BackArrow";
 import { formatOrderStatus } from "@/features/order/utils";
 import ProductsPagination from "@/shared/components/pagenation/ProductsPagenation";
+import { getTranslatedText } from "@/shared/utils/translationUtils";
 
 interface MyOrdersProps {
   showHeader?: boolean;
@@ -119,6 +120,35 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                         <h1 className=" md:text-2xl text-base font-semibold leading-[100%] md:mt-6 mt-4">
                           {productName}
                         </h1>
+                        {Array.isArray(item.variant?.attributes) && item.variant.attributes.length > 0 && (
+                          <div className="flex flex-wrap gap-1 my-4">
+                            {item.variant.attributes.map((attr, index) => {
+                              const attrName = getTranslatedText(attr.attribute?.name, locale);
+                              const attrValue = getTranslatedText(attr.value?.value, locale);
+
+                              const isColorAttr =
+                                attr.attribute?.type === "Color" ||
+                                /(color|colour|لون)/i.test(attrName);
+
+                              return (
+                                <div
+                                  key={index}
+                                  className="flex items-center gap-1 text-xs bg-main/10 text-[var(--color-main)] px-2 py-1 rounded-full"
+                                >
+                                  {isColorAttr && attr.value?.special_value && (
+                                    <span
+                                      className="inline-block w-3 h-3 rounded-full border border-gray-300"
+                                      style={{ backgroundColor: attr.value.special_value }}
+                                    />
+                                  )}
+                                  <span>
+                                    {attrName}: {attrValue}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                         <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%] md:mt-6 mt-3">
                           {item.created_at
                             ? (() => {
