@@ -11,8 +11,9 @@ const HomeCategories = () => {
   const locale = i18n.language || "en";
   const navigate = useNavigate();
   const { data: categories } = useQuery<Category[]>({
-    queryKey: ["categories"],
-    queryFn: async () => await getCategories(),
+    queryKey: ["categories", { parent_only: true, with_children: false }],
+    queryFn: () =>
+      getCategories({ parent_only: true, with_children: false }),
   });
 
   return (
