@@ -66,7 +66,7 @@ const ProductsGrid: React.FC = () => {
         pagination: "normal",
         sort_by: filters.sortBy ?? "updated_at",
         sort_order: filters.sortOrder ?? "desc",
-        only_discount: isOnlyDiscountedActive ? 1 : filters.onlyDiscount ?? 0, // 👈 updated
+        only_discount: isOnlyDiscountedActive ? 1 : filters.onlyDiscount ?? 0,
         is_most_view: filters.is_most_view ?? 0,
         category_id: activeCategoryId,
         min_price: filters.minPrice,
@@ -127,6 +127,17 @@ const ProductsGrid: React.FC = () => {
     navigate(newUrl);
   };
 
+    const handleRemoveIsDiscounted = () => {
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    params.delete("only_discount");
+
+    const newUrl = params.toString()
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+
+    navigate(newUrl);
+  };
+
   return (
     <section className="container md:py-[44px] py-8">
       {/* <h1 className="text-main md:text-[32px] text-2xl font-normal leading-[100%] text-center uppercase font-anton-sc">
@@ -164,7 +175,7 @@ const ProductsGrid: React.FC = () => {
             {t("Products.bestOffersProducts") || "Most Viewed Products"}
           </span>
           <button
-            onClick={handleRemoveMostViewed}
+            onClick={handleRemoveIsDiscounted}
             className="hover:bg-main/20 rounded-full p-1 transition-colors"
             aria-label="Remove most viewed filter"
           >
