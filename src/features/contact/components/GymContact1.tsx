@@ -118,10 +118,11 @@ const GymContact1 = () => {
       setPhoneValue({ code: "EG", number: "" });
       setErrors({});
     } else {
-      const firstError =
+      const errorMessage =
+        response.message ||
         Object.values(response.errors || {})[0]?.[0] ||
         t("Contact.errorGeneric");
-      toast.error(firstError);
+      toast.error(errorMessage);
     }
   };
 
