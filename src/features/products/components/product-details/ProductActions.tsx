@@ -42,7 +42,6 @@ interface ProductActionsProps {
   hasUnlimitedStock?: boolean;
   stockCount?: number;
   isAddingToCart?: boolean;
-  isInCart?: boolean;
   onQuantityChange: (quantity: number) => void;
   onAttributeChange: (attributeId: number, value: string) => void;
   onAddToCart: () => void;
@@ -66,7 +65,6 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   hasUnlimitedStock = false,
   stockCount = 0,
   isAddingToCart = false,
-  isInCart = false,
   onQuantityChange,
   onAttributeChange,
   onAddToCart,
@@ -166,8 +164,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
           >
             <p className="text-white text-lg font-bold leading-[100%]">
               {!isInStock && t("Products.outOfStock")}
-              {isInStock && !isInCart && t("Products.addToCart")}
-              {isInStock && isInCart && t("Products.updateCart")}
+              {isInStock && t("Products.addToCart")}
             </p>
           </motion.div>
 

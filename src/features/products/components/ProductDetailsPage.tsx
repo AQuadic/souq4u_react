@@ -316,13 +316,6 @@ const ProductDetailsPage: React.FC = () => {
   const isOutOfStock = selectedVariant?.is_out_of_stock === true;
   const isInStock = !isOutOfStock && (hasUnlimitedStock || stockCount > 0);
 
-  // Check if current variant is already in cart
-  const isInCart = !!cart?.items?.find(
-    (it) =>
-      it.variant.product_id === product?.id &&
-      it.variant?.id === selectedVariant?.id
-  );
-
   const getVariantAttributeValue = (
     variant: { attributes?: ProductAttribute[] },
     attributeId: number
@@ -424,7 +417,6 @@ const ProductDetailsPage: React.FC = () => {
             hasUnlimitedStock={hasUnlimitedStock}
             stockCount={stockCount}
             isAddingToCart={isAddingToCart}
-            isInCart={isInCart}
             onQuantityChange={setQuantity}
             onAttributeChange={handleAttributeChange}
             onAddToCart={handleAddToCart}
