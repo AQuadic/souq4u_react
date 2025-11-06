@@ -11,8 +11,8 @@ interface HeroSlideProps {
     name: string;
     title: string;
     description: string;
-    text_button: string;
-    url: string;
+    text_button?: string;
+    url?: string;
     en_image?: { url: string; responsive_urls?: string[] };
     ar_image?: { url: string; responsive_urls?: string[] };
   };
@@ -34,7 +34,8 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ slide }) => {
   const restOfTitle = titleParts.slice(1).join(" ");
 
   const description = slide.description || "";
-  const buttonText = slide.text_button || "Buy Now";
+  const buttonText = slide.text_button?.trim();
+  const hasButton = buttonText && slide.url;
 
   return (
     <div
@@ -58,11 +59,13 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ slide }) => {
           </p>
         )}
 
-        <Link to={slide.url}>
-          <Button className="w-full sm:w-[429px] px-4 py-4 sm:py-6 font-bold text-base sm:text-lg">
-            {buttonText}
-          </Button>
-        </Link>
+        {hasButton && (
+          <Link to={slide.url!}>
+            <Button className="w-full sm:w-[429px] px-4 py-4 sm:py-6 font-bold text-base sm:text-lg">
+              {buttonText}
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );
