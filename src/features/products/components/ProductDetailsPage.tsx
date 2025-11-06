@@ -249,7 +249,7 @@ const ProductDetailsPage: React.FC = () => {
       totalQuantity > (selectedVariant?.stock ?? 0)
     ) {
       cartToast.failedToAddToCart(
-        t("onlyXAvailable", { count: selectedVariant?.stock ?? 0 })
+        t("Cart.onlyXAvailable", { count: selectedVariant?.stock ?? 0 })
       );
       return;
     }

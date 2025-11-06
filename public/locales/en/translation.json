@@ -219,7 +219,7 @@
     "couponRemoveError": "Failed to remove coupon",
     "loginRequiredForCart": "Please login to add items to your cart",
     "outOfStock": "Out of stock",
-    "onlyXAvailable": "Only {count} available in stock",
+    "onlyXAvailable": "Only {{count}} available in stock",
     "confirmDelete": "Are you sure you want to delete item?"
   },
   "Checkout": {
