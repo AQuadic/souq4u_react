@@ -4,7 +4,7 @@ import Shipping from "../icons/Shipping";
 import Processing from "../icons/Processing";
 import Cancelled from "../icons/Cancelled";
 import Confirmed from "../icons/Confirmed";
-import ReadyForShipping from "../icons/ReadyForShipping";
+// import ReadyForShipping from "../icons/ReadyForShipping";
 import InShipping from "../icons/InShipping";
 import Completed from "../icons/Completed";
 import PreOrder from "../icons/PreOrder";
@@ -47,7 +47,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
       text: "text-[#03A900]",
     },
     ready_for_shipping: {
-      icon: <ReadyForShipping />,
+      icon: <InShipping />,
       bg: "bg-[#3D9BE924]",
       text: "text-[#3D9BE9]",
     },
