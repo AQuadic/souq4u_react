@@ -3,7 +3,7 @@ import { devtools } from "zustand/middleware";
 import { CartState, Cart } from "../types";
 import { getTranslatedText } from "../../../shared/utils/translationUtils";
 import type { MultilingualText } from "../../../shared/utils/translationUtils";
-import { cartApi, getCouponFromSession } from "../api";
+import { cartApi, getCouponFromSession, clearCouponFromSession } from "../api";
 
 interface CartActions {
   setCart: (cart: Cart) => void;
@@ -79,6 +79,15 @@ export const useCartStore = create<CartStore>()(
 
           // Sync with server to get updated totals (silently)
           await get().syncCartSilently();
+
+          // Check if cart is empty after removal and clear coupon if so
+          const currentCart = get().cart;
+          if (!currentCart || currentCart.items.length === 0) {
+            // Clear coupon from session storage
+            clearCouponFromSession();
+            // Clear coupon from store state
+            set({ appliedCoupon: null });
+          }
         } catch (error) {
           console.error("Failed to remove item from cart:", error);
 
@@ -354,6 +363,12 @@ export const useCartStore = create<CartStore>()(
         };
 
         set({ cart: updatedCart });
+
+        // If cart is now empty, clear the coupon from session storage
+        if (updatedCart.items.length === 0) {
+          clearCouponFromSession();
+          set({ appliedCoupon: null });
+        }
       },
 
       rollbackOptimisticUpdate: (backup) => {
