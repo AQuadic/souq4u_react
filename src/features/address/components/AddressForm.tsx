@@ -293,14 +293,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           },
         });
         onSubmit(payload);
-      } else if (onImmediateCheckout) {
-        // Guest checkout - don't save address to database, just proceed to checkout
-        // The address data will be sent with the checkout request
-        onImmediateCheckout(payload);
-      } else if (!showSaveOption || formData.saveAddress) {
-        // Create new address when:
-        // - showSaveOption is false (always save, like in AddAddressPage)
-        // - OR showSaveOption is true AND user checked the save address checkbox
+      } else if (showSaveOption && formData.saveAddress) {
         await createAddressMutation.mutateAsync({
           title: finalTitle,
           city_id: formData.city_id,
@@ -317,9 +310,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           user_name: formData.user_name,
         });
         onSubmit(payload);
+      } else if (onImmediateCheckout && !formData.saveAddress) {
+        onImmediateCheckout(payload);
       } else {
-        // Fallback: authenticated user didn't check save address checkbox
-        // Just pass the data to parent without saving
         onSubmit(payload);
       }
     } catch (error: unknown) {
