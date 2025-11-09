@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Smile from "../../icons/Smile";
+import { ProductDescription } from "./ProductDescription";
 // import { useTranslations } from "next-intl";
 
 interface ProductPricingProps {
@@ -12,6 +13,8 @@ interface ProductPricingProps {
   stockCount: number;
   isInStock: boolean;
   hasUnlimitedStock?: boolean;
+  shortDescription?: string;
+  description?: string;
 }
 
 export const ProductPricing: React.FC<ProductPricingProps> = ({
@@ -23,8 +26,10 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
   stockCount, // eslint-disable-line @typescript-eslint/no-unused-vars
   isInStock,
   hasUnlimitedStock = false, // eslint-disable-line @typescript-eslint/no-unused-vars
+  shortDescription,
+  description,
 }) => {
-  const {t} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const formatPrice = (price: number) =>
     price.toLocaleString("en-US", { maximumFractionDigits: 0 });
@@ -37,11 +42,13 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
           <>
             <h2
               className={`text-[40px] font-bold leading-4 ${
-                isInStock ? "text-main" : "text-gray-500 dark:text-gray-400"
+                isInStock
+                  ? "text-foreground"
+                  : "text-gray-500 dark:text-gray-400"
               }`}
             >
               {formatPrice(finalPrice)}{" "}
-              <span className="font-normal">{ currency}</span>
+              <span className="font-normal text-xl">{currency}</span>
             </h2>
             <div className="flex items-center gap-4">
               <h2
@@ -54,16 +61,16 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
                 {originalPrice !== undefined && (
                   <>
                     {formatPrice(originalPrice)}{" "}
-                    <span className="font-normal">
-                      { currency}
-                    </span>
+                    <span className="font-normal">{currency}</span>
                   </>
                 )}
               </h2>
               {discountPercentage && (
-                <div className="w-[59px] h-5 border border-[#3D9BE9] rounded-[8px] flex items-center justify-center bg-white dark:bg-transparent">
-                  <h2 className="text-[#3D9BE9] dark:text-[#FDFDFD] text-xs font-normal leading-3">
-                    {discountPercentage}%
+                <div className="px-2 h-5 border border-[#C50000] text-[#C50000] rounded-[8px] flex items-center justify-center">
+                  <h2 className=" text-xs font-normal leading-3 uppercase">
+                    {i18n.dir() === "rtl"
+                      ? `${t("Products.off")} ${parseFloat(discountPercentage.toFixed(1))}%`
+                      : `${parseFloat(discountPercentage.toFixed(1))}% ${t("Products.off")}`}
                   </h2>
                 </div>
               )}
@@ -76,7 +83,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
             }`}
           >
             {formatPrice(finalPrice)}{" "}
-            <span className="font-normal">{ currency}</span>
+            <span className="font-normal">{currency}</span>
           </h2>
         )}
       </div>
@@ -90,6 +97,15 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
           )}
         </p>
       </div>
+      {/* Render product description directly under availability (above stock count) */}
+      {(shortDescription || description) && (
+        <div className="mt-4">
+          <ProductDescription
+            shortDescription={shortDescription}
+            description={description}
+          />
+        </div>
+      )}
       {/* Only show stock count if product is actually in stock */}
       {isInStock && stockCount > 0 && (
         <div className="mt-7 flex items-center gap-2">

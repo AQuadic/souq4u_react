@@ -13,7 +13,8 @@ export const ToastContainer: React.FC = () => {
   }
 
   return (
-    <div className="fixed top-[80px] left-0 right-0 z-50 flex flex-col gap-2 px-4">
+    // Ensure toast renders above modals and overlays (modal uses z up to 100000)
+    <div className="fixed top-[80px] left-0 right-0 z-[100001] flex flex-col gap-2 px-4">
       {toasts.map((toast) => (
         <Toast key={toast.id} toast={toast} onRemove={removeToast} />
       ))}

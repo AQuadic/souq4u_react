@@ -58,6 +58,12 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
     }
   }, [isAuthenticated, addresses, isLoading]);
 
+  useEffect(() => {
+    if (!showAddressForm && isAuthenticated && addresses.length > 0) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [showAddressForm, isAuthenticated, addresses.length]);
+
   const handleAddressSelect = (addressId: number) => {
     setSelectedAddress(addressId);
     onAddressSelected(addressId);

@@ -1,4 +1,5 @@
 import "./App.css";
+import { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./shared/components/layout";
 import HomeCategories from "./features/categories/components/HomeCategories";
@@ -23,6 +24,8 @@ import NotificationsPage from "./features/notifications/NotificationsPage";
 import OrderTrackingPage from "./features/profile/orders/tracking/OrderTrackingPage";
 import { ToastContainer } from "./shared/components/ui/toast";
 import SubscribeModalProvider from "./shared/components/modals/SubscribeModalProvider";
+import { MainTracking } from "./features/order";
+import EditAddress from "./features/profile/addresses/components/EditAddress";
 
 // Home Page Component
 function HomePage() {
@@ -56,40 +59,43 @@ function ContactPage() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <PagesProvider>
-        <SubscribeModalProvider>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<HomePage />} />
-              <Route path="products" element={<ProductsPage />} />
-              <Route path="products/:id" element={<ProductDetailsPage />} />
-              <Route path="contact" element={<ContactPage />} />
-              <Route path="pages/:slug" element={<DynamicPage />} />
-              <Route path="profile" element={<ProfileLayout />}>
-                <Route index element={<MyAccount />} />
-                <Route path="account" element={<MyAccount />} />
-                <Route path="orders" element={<MyOrders />} />
-                <Route
-                  path="orders/tracking/:id"
-                  element={<OrderTrackingPage />}
-                />
-                <Route path="favorites" element={<MyFavorites />} />
-                <Route path="addresses" element={<SaveAddress />} />
-                <Route path="addresses/add" element={<AddAddressPage />} />
-                <Route path="addresses/edit/:id" element={<AddAddressPage />} />
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <BrowserRouter>
+        <PagesProvider>
+          <SubscribeModalProvider>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="products" element={<ProductsPage />} />
+                <Route path="products/:id" element={<ProductDetailsPage />} />
+                <Route path="contact" element={<ContactPage />} />
+                <Route path="pages/:slug" element={<DynamicPage />} />
+                <Route path="profile" element={<ProfileLayout />}>
+                  <Route index element={<MyAccount />} />
+                  <Route path="account" element={<MyAccount />} />
+                  <Route path="orders" element={<MyOrders />} />
+                  <Route
+                    path="orders/tracking/:id"
+                    element={<OrderTrackingPage />}
+                  />
+                  <Route path="favorites" element={<MyFavorites />} />
+                  <Route path="addresses" element={<SaveAddress />} />
+                  <Route path="addresses/add" element={<AddAddressPage />} />
+                  <Route path="addresses/edit/:id" element={<EditAddress />} />
+                </Route>
+
+                <Route path="cart" element={<MainCart />} />
+                <Route path="checkout" element={<MainCheckout />} />
+                <Route path="notifications" element={<NotificationsPage />} />
+                <Route path="track-order" element={<MainTracking />} />
               </Route>
+            </Routes>
+          </SubscribeModalProvider>
+        </PagesProvider>
 
-              <Route path="cart" element={<MainCart />} />
-              <Route path="checkout" element={<MainCheckout />} />
-              <Route path="notifications" element={<NotificationsPage />} />
-            </Route>
-          </Routes>
-        </SubscribeModalProvider>
-      </PagesProvider>
-
-      <ToastContainer />
-    </BrowserRouter>
+        <ToastContainer />
+      </BrowserRouter>
+    </Suspense>
   );
 }
 

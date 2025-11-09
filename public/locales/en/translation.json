@@ -1,5 +1,6 @@
 {
   "Common": {
+    "selected": "Selected",
     "language": "Language",
     "currency": "EGP",
     "email": "Email",
@@ -56,8 +57,9 @@
     "home": "Home",
     "products": "Products",
     "productDetails": "Product Details",
-    "subscribeUs": "Subscribe us"
+    "subscribeUs": "Subscribe to us"
   },
+  "recommendedForYou": "Recommended For You",
   "Toasts": {
     "invalidRequest": "Invalid request. Please check your information and try again.",
     "pleaseLogin": "Please log in to continue.",
@@ -84,7 +86,9 @@
     "viewAllProducts": "View All Products",
     "failedToLoad": "Failed to load products",
     "recommendedForYou": "Recommended For You",
+    "recentlyViewed": "Recently Viewed",
     "addToCart": "Add to Cart",
+    "updateCart": "Update Cart",
     "addedToCart": "Added to Cart",
     "outOfStock": "Out of Stock",
     "price": "Price",
@@ -93,6 +97,8 @@
     "rating": "Rating",
     "reviews": "Reviews",
     "description": "Description",
+    "noReviewsYet": "No reviews yet",
+    "beTheFirst": "Be the first to review this product",
     "specifications": "Specifications",
     "relatedProducts": "Related Products",
     "productDetails": "Product Details",
@@ -117,7 +123,13 @@
       "heading": "Review Summary",
       "starsLabel": "stars"
     },
-    "tapToExpand": "Tap to expand"
+    "tapToExpand": "Tap to expand",
+    "topRated": "Top rated",
+    "guideImage": "Guide image",
+    "close": "Close",
+    "off": "off",
+    "mostViewedProducts": "Most viewed products",
+    "bestOffersProducts": "Best offers products"
   },
   "ProductsGrid": {
     "home": "Home",
@@ -193,12 +205,13 @@
     "saveOffer": "Save {amount} {currency} ({percent}% off)",
     "loginToCheckout": "Please login to checkout",
     "loginRequired": "Login Required",
-    "addToCartSentence": "Product added to your cart",
+    "addToCartSentence": "{{product}} added to your cart",
+    "updateCartSentence": "Updated {{product}} in your cart to {{quantity}}",
     "viewCart": "View Cart",
     "failedToAdd": "Failed to add item to cart",
-    "updatedQuantity": "Updated {productName} quantity to {quantity}",
+    "updatedQuantity": "Updated {{productName}} quantity to {{quantity}}",
     "failedUpdateQuantity": "Failed to update {productName} quantity",
-    "removedFromCart": "{productName} removed from cart",
+    "removedFromCart": "Removed {{productName}} from the cart",
     "failedRemoveFromCart": "Failed to remove {productName}",
     "couponAppliedSuccess": "Coupon applied successfully",
     "couponApplyError": "Failed to apply coupon",
@@ -206,7 +219,7 @@
     "couponRemoveError": "Failed to remove coupon",
     "loginRequiredForCart": "Please login to add items to your cart",
     "outOfStock": "Out of stock",
-    "onlyXAvailable": "Only {count} available in stock",
+    "onlyXAvailable": "Only {{count}} available in stock",
     "confirmDelete": "Are you sure you want to delete item?"
   },
   "Checkout": {
@@ -268,7 +281,8 @@
     "saving": "Saving...",
     "updateAddress": "Update Address",
     "addAddress": "Add Address",
-    "editAddress": "Edit Address"
+    "editAddress": "Edit Address",
+    "phoneMinLength": "Phone number must be at least {{minLength}} digits"
   },
   "BillingDetails": {
     "title": "Billing Details"
@@ -300,7 +314,7 @@
     "rememberMe": "Remember Me",
     "loginSuccess": "Login successful! Welcome back.",
     "loginError": "Login failed",
-    "welcome": "Welcome Back",
+    "welcome": "Welcome back to Souq4u!",
     "enterPhone": "Enter your phone",
     "phoneRequired": "Please enter your phone number",
     "signingIn": "Signing In...",
@@ -350,7 +364,14 @@
     "errorGeneric": "An error occurred. Please try again later.",
     "errorNameRequired": "Name is required",
     "errorPhoneRequired": "Phone is required",
-    "errorMessageRequired": "message is required"
+    "errorMessageRequired": "message is required",
+    "errorNameTooShort": "Name must be at least 3 characters.",
+    "errorPhoneInvalid": "Please enter a valid phone number.",
+    "errorMessageTooShort": "Message must be at least 10 characters.",
+    "errorNameLettersOnly": "Only Arabic or English letters are allowed.",
+    "errorNameTooLong": "Name must not exceed 100 characters.",
+    "errorEmailInvalid": "Invalid email format.",
+    "errorMessageTooLong": "Message must not exceed 1000 characters."
   },
   "Header": {
     "switchLanguage": "Switch Language",
@@ -393,6 +414,7 @@
   "Profile": {
     "title": "My Profile",
     "account": "My Account",
+    "email": "Email",
     "phone": "Phone",
     "updateSuccess": "Profile updated successfully!",
     "updateFailed": "Failed to update profile",
@@ -434,7 +456,22 @@
     "loadingFav": "Loading favorites...",
     "loadingOrders": "Loading orders...",
     "noAddress": "No Address Yet",
-    "noAddressDes": "Please add your addresses for your better experience"
+    "noAddressDes": "Please add your addresses for your better experience",
+    "reviewSuccess": "Review submitted successfully!",
+    "reviewError": "Failed to submit review",
+    "ratingRequired": "Please select a rating",
+    "language": "Language",
+    "darkMode": "Dark Mode",
+    "privacy": "Privacy policy",
+    "terms": "Terms & Conditions",
+    "contactUs": "Contact us",
+    "myAccount": "My Account",
+    "accountInfo": "Account Info",
+    "changeEmail": "Change E-mail",
+    "saveAddress": "Save Address",
+    "enterEmail": "Enter new email",
+    "password": "Password",
+    "save": "Save"
   },
   "Orders": {
     "orders": "Orders",
@@ -462,6 +499,7 @@
     "addOrder": "Please add your order for your better experience",
     "cancel": "Cancel",
     "confirmCancel": "Are you sure you want to cancel this order?",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "cancelling": "Cancelling"
   }
 }

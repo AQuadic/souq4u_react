@@ -14,10 +14,10 @@ interface CartSliderProps {
 }
 
 export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
-  const {t} = useTranslation("CartSlider");
+  const { t } = useTranslation("CartSlider");
   const { cart, updateItemQuantity, removeItem } = useCartOperations();
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
-  
+
   // ...existing code...
   const cartItems = cart?.items || [];
   const calculations = cart?.calculations || {
@@ -26,31 +26,34 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
     delivery_fees: 0,
     total: 0,
     discount: 0,
+    total_discount: 0,
+    product_discount: 0,
+    addons: 0,
   };
   const subtotal = calculations.subtotal;
   const tax = calculations.tax;
-  // const discount = calculations.discount;
+  const totalDiscount = calculations.total_discount;
   const total = calculations.total;
-  
+
   const handleUpdateQuantity = (id: number, quantity: number) => {
     updateItemQuantity(id, quantity);
   };
-  
+
   const handleRemoveItem = (id: number) => {
     setItemToDelete(id);
   };
-  
+
   const confirmDelete = () => {
     if (itemToDelete !== null) {
       removeItem(itemToDelete);
       setItemToDelete(null);
     }
   };
-  
+
   const cancelDelete = () => {
     setItemToDelete(null);
   };
-  
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -112,13 +115,13 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
               <CartSummary
                 subtotal={subtotal}
                 tax={tax}
-                // discount={discount}
+                totalDiscount={totalDiscount}
                 total={total}
                 onClose={onClose}
               />
             )}
           </motion.div>
-          
+
           <AnimatePresence>
             {itemToDelete !== null && (
               <>
@@ -129,7 +132,7 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
                   className="fixed inset-0 bg-black/50 z-[60]"
                   onClick={cancelDelete}
                 />
-                
+
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}

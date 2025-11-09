@@ -49,6 +49,7 @@ export const CheckoutPage: React.FC = () => {
   const [shippingAreaId, setShippingAreaId] = useState<string>("");
 
   const checkoutSuccessRef = useRef(false);
+  const initialCartCheckDone = useRef(false);
 
   // Fetch cart with shipping information when city and area are selected
   const { data: cartWithShipping } = useCartWithShipping({
@@ -58,6 +59,12 @@ export const CheckoutPage: React.FC = () => {
   });
 
   useEffect(() => {
+    // Only check cart on initial mount, not on subsequent cart changes
+    // This prevents redirect while user is filling out the form
+    if (initialCartCheckDone.current) {
+      return;
+    }
+
     // If checkout is in progress or has been completed, don't redirect
     if (
       checkoutSuccessRef.current ||
@@ -85,6 +92,9 @@ export const CheckoutPage: React.FC = () => {
       console.log("Total items is 0, redirecting to cart page");
       toast.error(t("cartEmpty"));
       navigate("/cart", { replace: true });
+    } else {
+      // Cart is valid, mark initial check as done
+      initialCartCheckDone.current = true;
     }
   }, [
     cart,

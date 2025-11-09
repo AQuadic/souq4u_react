@@ -134,7 +134,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
           Souq<span className="text-main-orange">4</span>U
         </h1>
       </div>
-      <p className="text-lg md:text-xl lg:text-[32px] font-medium leading-[120%] mt-6 md:mt-8 text-center">
+      <p className="text-[#5D5D5D] text-lg md:text-xl lg:text-[32px] font-medium leading-[120%] mt-6 md:mt-8 text-center capitalize">
         {t("Auth.welcome")}
       </p>
       <h2 className="text-xl md:text-2xl lg:text-[32px] font-bold leading-[120%] mt-4 md:mt-6 text-center">
@@ -168,6 +168,14 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
       >
         {t("Auth.continueAsGuest")}
       </Link>
+
+      <div className="w-full h-px bg-[#A9A9A9] my-8"></div>
+      <div className="dark:text-[#F1F1F1] text-lg font-normal leading-[100%] text-center">
+        Powered by {""}
+        <Link to="https://cloudwa.net/" target="_blank">
+          (CloudWa)
+        </Link>
+      </div>
     </form>
   );
 };

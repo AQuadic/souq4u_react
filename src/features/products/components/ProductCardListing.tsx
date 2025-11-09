@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Product } from "../api/getProduct";
 import Favorite from "../icons/Favorite";
 import Unfavorite from "../icons/Unfavorite";
-import Star from "../icons/Star";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useTranslatedText,
@@ -15,6 +14,7 @@ import { addFavorite } from "@/features/profile/favorites/api/postFavorites";
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard";
 import { useFavoritesToast } from "@/features/profile/favorites/hooks/useFavoritesToast";
 import { Link } from "react-router-dom";
+import Star from "../icons/FilledStar";
 
 interface ProductCardProps {
   product: Product;
@@ -35,7 +35,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
     product.name as MultilingualText | string | undefined,
     "Product Name"
   );
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Prepare translated category name safely
   const categoryName = product.category?.name as
@@ -188,9 +188,11 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
                   <span className="font-normal">{t("Common.currency")}</span>
                 </h2>
 
-                <div className="w-[59px] h-5 border border-[#3D9BE9] rounded-[8px] flex items-center justify-center">
-                  <h2 className=" text-xs font-normal leading-3">
-                    {parseFloat(discountPercentage.toFixed(1))} %
+                <div className="px-2 h-5 border border-[#C50000] text-[#C50000] rounded-[8px] flex items-center justify-center">
+                  <h2 className=" text-xs font-normal leading-3 uppercase">
+                    {i18n.dir() === "rtl"
+                      ? `${t("Products.off")} ${parseFloat(discountPercentage.toFixed(1))}%`
+                      : `${parseFloat(discountPercentage.toFixed(1))}% ${t("Products.off")}`}
                   </h2>
                 </div>
               </div>

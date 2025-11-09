@@ -52,7 +52,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, onRemove }) => {
         top: `${topOffset}px`,
         left: "50%",
         transform: "translateX(-50%)",
-        zIndex: 9999,
+        zIndex: 99999,
         width: "auto",
         maxWidth: "calc(100% - 32px)",
       }}

@@ -26,7 +26,7 @@ export const CartPage: React.FC = () => {
   } = useCartOperations();
 
   const handleUpdateQuantity = (itemId: string, quantity: number) => {
-    return updateItemQuantity(parseInt(itemId), quantity);
+    return updateItemQuantity(Number.parseInt(itemId), quantity);
   };
 
   const handleRemoveItem = (itemId: string) => {
@@ -64,6 +64,9 @@ export const CartPage: React.FC = () => {
       price: item.variant.final_price,
       quantity: item.quantity,
       image: item.image?.url || "/placeholder-product.svg",
+      stock: item.variant.stock,
+      is_stock: item.variant.is_stock,
+      attributes: item.variant.attributes,
       // pass the whole multilingual value object (or string) so child can translate based on locale
       size: (() => {
         const attr = item.variant.attributes.find((a) => {
@@ -86,6 +89,9 @@ export const CartPage: React.FC = () => {
     delivery_fees: 0,
     total: 0,
     discount: 0,
+    total_discount: 0,
+    product_discount: 0,
+    addons: 0,
   };
 
   const totalItems =
@@ -93,6 +99,7 @@ export const CartPage: React.FC = () => {
   const subtotal = calculations.subtotal;
   const taxes = calculations.tax;
   const shippingCost = calculations.delivery_fees;
+  const totalDiscount = calculations.total_discount;
   const total = calculations.total;
 
   return (
@@ -172,6 +179,7 @@ export const CartPage: React.FC = () => {
                   totalProducts={subtotal}
                   shippingCost={shippingCost}
                   taxes={taxes}
+                  totalDiscount={totalDiscount}
                   total={total}
                   appliedCoupon={appliedCoupon}
                   isCouponLoading={isCouponLoading}

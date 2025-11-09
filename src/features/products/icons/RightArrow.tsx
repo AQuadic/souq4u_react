@@ -12,7 +12,7 @@ const RightArrow = (props: SVGProps<SVGSVGElement>) => {
     >
       <path
         d="M9.00003 19.9181L15.52 13.3981C16.29 12.6281 16.29 11.3681 15.52 10.5981L9.00003 4.07812"
-        stroke="#C50000"
+        stroke="#0080c7"
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="round"

@@ -231,6 +231,7 @@ const MyAccount: React.FC = () => {
               placeholder={t("inputPlaceholder")}
               language={locale as "en" | "ar"}
               radius="md"
+              disabled
             />
           </div>
         </div>
@@ -240,7 +241,7 @@ const MyAccount: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 bg-main rounded-[8px]  text-base font-bold my-12 disabled:opacity-60"
+          className="w-full h-12 text-white bg-main rounded-[8px]  text-base font-bold my-12 disabled:opacity-60"
         >
           {isSubmitting
             ? t("Profile.saving") || "Saving..."

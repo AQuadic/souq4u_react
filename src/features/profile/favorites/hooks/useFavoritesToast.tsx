@@ -1,25 +1,25 @@
 "use client";
 
 import { useToast } from "@/shared/components/ui/toast";
-// import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 export const useFavoritesToast = () => {
   const toast = useToast();
-  // const t = useTranslations("Products");
+  const {t} = useTranslation("Products");
 
   return {
     /**
      * Show success toast when item is added to favorites
      */
     addedToFavorites: () => {
-      toast.success(("addedToFavorites"), { duration: 3000 });
+      toast.success(t("Products.addedToFavorites"), { duration: 3000 });
     },
 
     /**
      * Show success toast when item is removed from favorites
      */
     removedFromFavorites: () => {
-      toast.success(("removedFromFavorites"), { duration: 3000 });
+      toast.success(t("Products.removedFromFavorites"), { duration: 3000 });
     },
 
     /**
@@ -33,7 +33,7 @@ export const useFavoritesToast = () => {
      * Show error toast for login requirement
      */
     loginRequired: () => {
-      toast.error(("loginRequiredForFavorites"));
+      toast.error(t("Products.loginRequiredForFavorites"));
     },
   };
 };

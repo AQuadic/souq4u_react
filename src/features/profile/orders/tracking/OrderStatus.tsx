@@ -4,7 +4,7 @@ import Shipping from "../icons/Shipping";
 import Processing from "../icons/Processing";
 import Cancelled from "../icons/Cancelled";
 import Confirmed from "../icons/Confirmed";
-import ReadyForShipping from "../icons/ReadyForShipping";
+// import ReadyForShipping from "../icons/ReadyForShipping";
 import InShipping from "../icons/InShipping";
 import Completed from "../icons/Completed";
 import PreOrder from "../icons/PreOrder";
@@ -47,9 +47,9 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
       text: "text-[#03A900]",
     },
     ready_for_shipping: {
-      icon: <ReadyForShipping />,
-      bg: "bg-[#FFA50024]",
-      text: "text-[#FFA500]",
+      icon: <InShipping />,
+      bg: "bg-[#3D9BE924]",
+      text: "text-[#3D9BE9]",
     },
     in_shipping: {
       icon: <InShipping />,
@@ -99,7 +99,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
         {styles.icon}
         <div>
           <p className={`${styles.text} text-base font-normal leading-[100%]`}>
-            {locale === "ar" ? order.status : t(normalizedStatus)}
+            {t(`Orders.${normalizedStatus}`)}
           </p>
 
           <p className="dark:text-[#C0C0C0] text-sm font-normal leading-[100%] mt-2">

@@ -150,7 +150,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ isOpen, onClose }) => {
   const validateInput = (): string | null => {
     const trimmed = subscribeValue.value.trim();
     if (!trimmed) {
-      return toastT("validationError");
+      return toastT("Toasts.validationError");
     }
 
     if (subscribeType === "email") {

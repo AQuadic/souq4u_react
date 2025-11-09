@@ -43,7 +43,12 @@ export const useCartStore = create<CartStore>()(
       },
 
       removeItem: async (itemId) => {
-        const { cart, optimisticRemoveItem, rollbackOptimisticUpdate } = get();
+        const {
+          cart,
+          optimisticRemoveItem,
+          rollbackOptimisticUpdate,
+          clearCoupon,
+        } = get();
 
         if (!cart) return;
 
@@ -67,6 +72,9 @@ export const useCartStore = create<CartStore>()(
           String(item.name || "")
         );
 
+        // Check if this is the last item in the cart
+        const isLastItem = cart.items.length === 1;
+
         // Optimistic update - remove item from UI immediately
         optimisticRemoveItem(itemId);
 
@@ -79,15 +87,6 @@ export const useCartStore = create<CartStore>()(
 
           // Sync with server to get updated totals (silently)
           await get().syncCartSilently();
-
-          // Check if cart is empty after removal and clear coupon if so
-          const currentCart = get().cart;
-          if (!currentCart || currentCart.items.length === 0) {
-            // Clear coupon from session storage
-            clearCouponFromSession();
-            // Clear coupon from store state
-            set({ appliedCoupon: null });
-          }
         } catch (error) {
           console.error("Failed to remove item from cart:", error);
 
@@ -246,8 +245,11 @@ export const useCartStore = create<CartStore>()(
             responseData = {
               items: [],
               calculations: {
-                discount: 0,
                 subtotal: 0,
+                addons: 0,
+                product_discount: 0,
+                discount: 0,
+                total_discount: 0,
                 tax: 0,
                 delivery_fees: 0,
                 total: 0,
@@ -259,8 +261,11 @@ export const useCartStore = create<CartStore>()(
           const cart: Cart = {
             items: Array.isArray(responseData.items) ? responseData.items : [],
             calculations: responseData.calculations || {
-              discount: 0,
               subtotal: 0,
+              addons: 0,
+              product_discount: 0,
+              discount: 0,
+              total_discount: 0,
               tax: 0,
               delivery_fees: 0,
               total: 0,
@@ -296,8 +301,11 @@ export const useCartStore = create<CartStore>()(
             responseData = {
               items: [],
               calculations: {
-                discount: 0,
                 subtotal: 0,
+                addons: 0,
+                product_discount: 0,
+                discount: 0,
+                total_discount: 0,
                 tax: 0,
                 delivery_fees: 0,
                 total: 0,
@@ -309,8 +317,11 @@ export const useCartStore = create<CartStore>()(
           const cart: Cart = {
             items: Array.isArray(responseData.items) ? responseData.items : [],
             calculations: responseData.calculations || {
-              discount: 0,
               subtotal: 0,
+              addons: 0,
+              product_discount: 0,
+              discount: 0,
+              total_discount: 0,
               tax: 0,
               delivery_fees: 0,
               total: 0,

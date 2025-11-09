@@ -1,7 +1,7 @@
 import { axios } from "@/shared/lib/axios";
 
 export interface CancelOrderPayload {
-  order_id: number;
+  order_item_id: number;
 }
 
 export interface CancelOrderResponse {
@@ -12,7 +12,7 @@ export interface CancelOrderResponse {
 export async function cancelOrder(
   payload: CancelOrderPayload
 ): Promise<CancelOrderResponse> {
-  const res = await axios.post("/orders/cancel", payload, {
+  const res = await axios.post("/orders/item/cancel", payload, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

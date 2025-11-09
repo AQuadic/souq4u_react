@@ -71,10 +71,11 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
     variant.attributes?.forEach((attr) => {
       // attribute must have an id
       if (!attr.attribute?.id) return;
-    const locale = i18n.language
 
       const attrId = attr.attribute.id;
-      const attrName = attr.attribute.name?.[locale] || attr.attribute.name?.en || "";
+      const locale = i18n.language;
+      const attrName =
+        attr.attribute.name?.[locale] || attr.attribute.name?.en || "";
       // normalize type to lowercase for robust comparisons
       const attrType = (attr.attribute.type || "Text").toLowerCase();
       const valueId = attr.value?.id || 0;
@@ -82,7 +83,9 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
       // value may be missing when only special_value (color) is provided,
       // so compute displayValue defensively
       const displayValue =
-        attr.value?.value?.en ||
+        // prefer locale-specific value if present
+        attr.value?.value?.[locale] ||
+        // fall back to english
         attr.value?.value?.en ||
         // some APIs provide a direct display string
         (typeof attr.value?.display_value === "string"

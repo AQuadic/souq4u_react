@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslatedText } from "@/shared/utils/translationUtils";
+import { getTranslatedText, useTranslatedText } from "@/shared/utils/translationUtils";
 import type { MultilingualText } from "@/shared/utils/translationUtils";
 import { Minus, Plus } from "lucide-react";
 import { useCartToast } from "@/features/cart/hooks/useCartToast";
@@ -15,6 +15,19 @@ interface CartCardData {
   image: string;
   // allow size to be either a simple string or multilingual object from the API
   size?: MultilingualText | string;
+  // variant stock info (added to enforce limits in UI)
+  stock?: number;
+  is_stock?: boolean;
+  // pass through attributes array from API so card can render all attributes (size, color, etc.)
+  attributes?: Array<{
+    id: number;
+    attribute: { id: number; name: MultilingualText | string; type: string };
+    value: {
+      id: number;
+      value: MultilingualText | string;
+      special_value?: string | null;
+    };
+  }>;
 }
 
 interface CartCardProps {
@@ -41,6 +54,54 @@ export const CartCard: React.FC<CartCardProps> = ({
     item.size as MultilingualText | string | null | undefined,
     ""
   );
+  // size (if present) is now rendered through attributes list
+  // Precompute translated labels/values for attributes and the locale
+  const locale =
+    typeof document !== "undefined"
+      ? document.documentElement.lang ||
+        (navigator.language || "en").split("-")[0]
+      : "en";
+
+  const translatedAttributes = (item.attributes || []).map((attr) => {
+    const label = getTranslatedText(attr.attribute?.name || "", locale, "");
+    const value = getTranslatedText(attr.value?.value || "", locale, "");
+    const type = (attr.attribute?.type || "").toLowerCase();
+    const hex = attr.value?.special_value || null;
+    return { id: attr.id, label, value, type, hex };
+  });
+  
+
+  const renderAttributes = () => {
+    if (!translatedAttributes || translatedAttributes.length === 0) return null;
+
+    return (
+      <div className="mt-2 flex flex-row gap-2">
+        {translatedAttributes.map((attr) => (
+          <div
+            key={attr.id}
+            className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 bg-main/10 px-2 py-1 rounded-md"
+          >
+            <span className="capitalize mr-1">{attr.label}:</span>
+            {attr.type === "color" ? (
+              <>
+                <span
+                  className="w-5 h-5 rounded-full border"
+                  style={{ background: attr.hex || attr.value }}
+                />
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {attr.value}
+                </span>
+              </>
+            ) : (
+              <span className="font-medium text-gray-900 dark:text-white">
+                {attr.value}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
   const handleQuantityDecrease = () => {
     if (item.quantity > 1) {
       // optimistic toast immediately
@@ -57,6 +118,15 @@ export const CartCard: React.FC<CartCardProps> = ({
   };
 
   const handleQuantityIncrease = () => {
+    // If product uses stock tracking, prevent increasing beyond available stock
+    if (item.is_stock && typeof item.stock === "number") {
+      if (item.quantity + 1 > item.stock) {
+        // show friendly out-of-stock / limited message
+        showQuantityUpdateError(name);
+        return;
+      }
+    }
+
     // optimistic toast immediately
     showQuantityUpdateSuccess({
       productName: name,
@@ -86,7 +156,7 @@ export const CartCard: React.FC<CartCardProps> = ({
             src={item.image}
             alt={name}
             // fill
-            className="object-cover rounded w-[96px] h-[96px]"
+            className="object-cover rounded"
             sizes="96px"
           />
         </div>
@@ -98,11 +168,9 @@ export const CartCard: React.FC<CartCardProps> = ({
               <h3 className="text-gray-900 dark:text-white md:text-lg text-base font-semibold mb-1">
                 {name}
               </h3>
-              {item.size && (
-                <div className="text-gray-600 dark:text-gray-400 text-sm mb-2">
-                  {t("Common.size")} {sizeText}
-                </div>
-              )}
+
+              {renderAttributes()}
+
               <div className="text-[var(--color-main)] md:text-xl text-lg font-bold">
                 {item.price.toLocaleString()}{" "}
                 <span className="text-sm font-normal">

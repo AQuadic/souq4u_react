@@ -1,17 +1,19 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getCategories } from "../api/getCategories";
+import { getCategories, Category } from "../api/getCategories";
 import { useTranslation } from "react-i18next";
+import { getTranslatedText } from "@/shared/utils/translationUtils";
 import { useNavigate } from "react-router-dom";
 
 const HomeCategories = () => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
-  const navigate = useNavigate()
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => await getCategories(),
+  const navigate = useNavigate();
+  const { data: categories } = useQuery<Category[]>({
+    queryKey: ["categories", { parent_only: true, with_children: false }],
+    queryFn: () =>
+      getCategories({ parent_only: true, with_children: false }),
   });
 
   return (
@@ -28,15 +30,17 @@ const HomeCategories = () => {
           >
             <div className="w-[122px] h-[122px] rounded-full overflow-hidden bg-gray-100 shadow-md transition-transform duration-300 group-hover:scale-105">
               <img
-                src={"/categories/category-placeholder.jpg"}
-                alt={category.name[locale as "en" | "ar"] || category.name.en}
+                src={
+                  category.image?.url || "/categories/category-placeholder.jpg"
+                }
+                alt={getTranslatedText(category.name, locale, "category")}
                 width={122}
                 height={122}
                 className="object-cover w-full h-full"
               />
             </div>
             <p className="mt-3 text-center text-sm sm:text-base font-medium text-gray-800">
-              {category.name[locale as "en" | "ar"] || category.name.en}
+              {getTranslatedText(category.name, locale, "")}
             </p>
           </button>
         ))}

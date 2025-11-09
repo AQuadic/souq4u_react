@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { useTranslatedText } from "@/shared/utils/translationUtils";
-import type { MultilingualText } from "@/shared/utils/translationUtils";
+import { getTranslatedText, useTranslatedText } from "@/shared/utils/translationUtils";
+// import type { MultilingualText } from "@/shared/utils/translationUtils";
 import { Minus, Plus, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { CartItem as CartItemType } from "@/features/cart/types";
@@ -19,24 +19,18 @@ export const CartItem: React.FC<CartItemProps> = ({
   onUpdateQuantity,
   onRemove,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const name = useTranslatedText(item.name, "");
-  // derive size attribute value (could be multilingual object)
-  const sizeAttr = item.variant.attributes.find((a) => {
-    const nameField = a.attribute?.name;
-    if (!nameField) return false;
-    // nameField might be an object like { en: 'Size' } or a string; normalize to string
-    const enName =
-      typeof nameField === "object"
-        ? nameField.en || ""
-        : String(nameField || "");
-    return enName.toLowerCase().includes("size");
-  });
-  const sizeVal = sizeAttr?.value?.value as unknown as
-    | MultilingualText
-    | string
-    | undefined;
-  const sizeText = useTranslatedText(sizeVal, "");
+
+  const translatedAttributes =
+    item.variant?.attributes?.map((attr) => {
+      const attrName = getTranslatedText(attr.attribute?.name, i18n.language);
+      const attrValue = getTranslatedText(attr.value?.value, i18n.language);
+      return {
+        name: attrName,
+        value: attrValue,
+      };
+    }) || [];
   const handleQuantityDecrease = () => {
     if (item.quantity > 1) {
       onUpdateQuantity?.(item.id, item.quantity - 1);
@@ -79,10 +73,29 @@ export const CartItem: React.FC<CartItemProps> = ({
         </div>
 
         {/* Size */}
-        <div className="mb-2">
-          <span className="text-gray-600 dark:text-gray-400 text-xs">
-            { t("Common.size")} {sizeText || "N/A"}
-          </span>
+        <div className="flex flex-wrap gap-1 mb-2">
+          {translatedAttributes.map((attr, i) => {
+            const isColorAttr =
+              /(color|colour)/i.test(attr.name) ||
+              /^#([0-9A-F]{3}){1,2}$/i.test(attr.value);
+
+            return (
+              <div
+                key={i}
+                className="flex items-center gap-1 text-xs bg-main/10 text-[var(--color-main)] px-2 py-1 rounded-full"
+              >
+                {isColorAttr && (
+                  <span
+                    className="inline-block w-3 h-3 rounded-full border border-gray-300"
+                    style={{ backgroundColor: attr.value }}
+                  />
+                )}
+                <span>
+                  {attr.name}: {attr.value}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* Price */}

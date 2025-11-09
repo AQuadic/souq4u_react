@@ -7,36 +7,83 @@ export interface GetOrdersParams {
 }
 
 export interface OrderItem {
-  product_name?: {
-    en?: string;
-    ar?: string;
-  };
-  images?: Array<{
-    responsive_urls?: string[];
-  }>;
-}
-
-export interface Order {
   id: number;
   order_id: number;
-
-  status?: "pending" | "processing" | "shipping" | "cancelled" | "confirmed";
-
   product_name?: {
     en?: string;
     ar?: string;
   };
-
-  productable?: {
-    image?: {
-      responsive_urls?: string[];
-    };
-  };
-
+  status?: string | null;
+  code?: string | null;
+  order_code?: string | null,
   quantity?: number;
   final_price?: number;
   discount_amount?: number;
   subtotal?: number;
+  productable?: {
+    id?: number;
+    tenant_id?: number;
+    product_id?: number;
+    sku?: string;
+    barcode?: string | null;
+    price?: number;
+    stock?: number;
+    is_stock?: number;
+    is_active?: number;
+    created_at?: string;
+    updated_at?: string;
+    discount?: number;
+    image?: {
+      id?: number;
+      uuid?: string;
+      size?: number;
+      url?: string;
+      responsive_urls?: string[];
+    };
+  };
+  variant?: {
+    id?: number;
+    product_id?: number;
+    sku?: string;
+    barcode?: string | null;
+    price?: number;
+    discount?: number;
+    has_discount?: boolean;
+    discount_percentage?: number;
+    final_price?: number;
+    is_out_of_stock?: boolean;
+    group_addons?: any[];
+    stock?: number;
+    is_stock?: boolean;
+    is_active?: boolean;
+    images?: Array<{
+      id?: number;
+      uuid?: string;
+      size?: number;
+      url?: string;
+      responsive_urls?: string[];
+    }>;
+    attributes?: Array<{
+      id?: number;
+      attribute?: {
+        id?: number;
+        name?: {
+          ar?: string;
+          en?: string;
+        };
+        type?: string;
+      };
+      value?: {
+        id?: number;
+        value?: {
+          ar?: string;
+          en?: string;
+        };
+        special_value?: string | null;
+      };
+    }>;
+  };
+  custom_data?: any[];
   created_at?: string;
   updated_at?: string;
 }
@@ -60,7 +107,7 @@ export interface PaginationMeta {
 
 export interface GetOrdersResponse {
   items: {
-    data: Order[];
+    data: OrderItem[];
   };
   links: PaginationLinks;
   meta: PaginationMeta;

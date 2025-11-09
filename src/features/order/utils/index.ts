@@ -54,7 +54,7 @@ export const isValidPhone = (phone: string): boolean => {
 export const formatPhoneForApi = (phoneValue: PhoneValue): PhoneData => {
   return {
     phone: phoneValue.number,
-    phone_country: getCountryCodeFromPhone(phoneValue.code),
+    phone_country: phoneValue.code.toUpperCase(),
   };
 };
 
@@ -94,28 +94,120 @@ export const getCountryCodeFromPhone = (phoneCode: string): string => {
  */
 export const formatCurrency = (
   amount: number,
-  currency: string = "ج.م"
+  language: "en" | "ar" = "en"
 ): string => {
-  return `${amount.toLocaleString()} ${currency}`;
+  if (isNaN(amount)) return "";
+
+  const currencySymbol = language === "ar" ? "ج.م" : "EGP";
+  const formattedAmount =
+    language === "ar"
+      ? amount.toLocaleString("ar-EG")
+      : amount.toLocaleString("en-EG");
+
+  return `${formattedAmount} ${currencySymbol}`;
 };
 
 /**
  * Formats order status for display
  */
-export const formatOrderStatus = (
-  status: string
-): { label: string; color: string } => {
-  const statusMap: { [key: string]: { label: string; color: string } } = {
-    pending: { label: "Pending", color: "text-yellow-500" },
-    confirmed: { label: "Confirmed", color: "text-blue-500" },
-    processing: { label: "Processing", color: "text-orange-500" },
-    shipped: { label: "Shipped", color: "text-purple-500" },
-    delivered: { label: "Delivered", color: "text-green-500" },
-    cancelled: { label: "Cancelled", color: "text-red-500" },
-    returned: { label: "Returned", color: "text-gray-500" },
+type StatusStyle = {
+  labelKey: string;
+  label: string;
+  color: string;
+  bgLight: string;
+  bgDark: string;
+};
+
+const normalizeStatus = (status: string): string => {
+  const map: Record<string, string> = {
+    "معلق": "pending",
+    "مؤكد": "confirmed",
+    "قيد المعالجة": "processing",
+    "قيد الشحن": "shipped",
+    "في الشحن": "in_shipping",
+    "جاهز للشحن": "ready_for_shipping",
+    "تم التوصيل": "delivered",
+    "مكتمل": "completed",
+    "ملغي": "cancelled",
+    "مُرجع": "returned",
   };
 
-  return (
-    statusMap[status.toLowerCase()] || { label: status, color: "text-gray-500" }
-  );
+  return map[status.trim()] || status.toLowerCase();
+};
+
+export const formatOrderStatus = (status: string): StatusStyle => {
+  const normalized = normalizeStatus(status);
+
+  const statusMap: Record<string, Omit<StatusStyle, "label">> = {
+    pending: {
+      labelKey: "pending",
+      color: "text-yellow-500",
+      bgLight: "bg-yellow-50",
+      bgDark: "dark:bg-yellow-900/10",
+    },
+    confirmed: {
+      labelKey: "confirmed",
+      color: "text-green-500",
+      bgLight: "bg-green-50",
+      bgDark: "dark:bg-blue-900/10",
+    },
+    processing: {
+      labelKey: "processing",
+      color: "text-orange-500",
+      bgLight: "bg-orange-50",
+      bgDark: "dark:bg-orange-900/10",
+    },
+    shipped: {
+      labelKey: "shipping",
+      color: "text-purple-500",
+      bgLight: "bg-purple-50",
+      bgDark: "dark:bg-purple-900/10",
+    },
+    in_shipping: {
+      labelKey: "in_shipping",
+      color: "text-indigo-500",
+      bgLight: "bg-indigo-50",
+      bgDark: "dark:bg-indigo-900/10",
+    },
+    ready_for_shipping: {
+      labelKey: "ready_for_shipping",
+      color: "text-blue-500",
+      bgLight: "bg-blue-50",
+      bgDark: "dark:bg-blue-900/10",
+    },
+    delivered: {
+      labelKey: "delivered",
+      color: "text-green-500",
+      bgLight: "bg-green-50",
+      bgDark: "dark:bg-green-900/10",
+    },
+    completed: {
+      labelKey: "completed",
+      color: "text-green-500",
+      bgLight: "bg-green-50",
+      bgDark: "dark:bg-green-900/10",
+    },
+    cancelled: {
+      labelKey: "cancelled",
+      color: "text-red-500",
+      bgLight: "bg-red-50",
+      bgDark: "dark:bg-red-900/10",
+    },
+    returned: {
+      labelKey: "returned",
+      color: "text-gray-500",
+      bgLight: "bg-gray-50",
+      bgDark: "dark:bg-gray-900/10",
+    },
+
+  };
+
+  const result = statusMap[normalized] || {
+    labelKey: normalized,
+    color: "text-gray-500",
+    bgLight: "bg-gray-50",
+    bgDark: "dark:bg-gray-900/10",
+  };
+
+  return { ...result, label: result.labelKey };
 };

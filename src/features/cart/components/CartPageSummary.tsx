@@ -11,6 +11,7 @@ interface CartPageSummaryProps {
   totalProducts?: number;
   shippingCost?: number;
   taxes?: number;
+  totalDiscount?: number;
   total?: number;
   appliedCoupon?: string | null;
   isCouponLoading?: boolean;
@@ -24,14 +25,14 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
   totalProducts = 0,
   shippingCost = 0,
   taxes = 0,
+  totalDiscount = 0,
   total = 0,
   appliedCoupon,
   isCouponLoading = false,
   onApplyPromocode,
   onClearPromocode,
 }) => {
-  const {t} = useTranslation("Cart");
-  // const common = useTranslation("Common");
+  const { t } = useTranslation("Cart");
   const [promocode, setPromocode] = useState("");
 
   const handleApplyPromocode = async (e?: React.FormEvent) => {
@@ -161,6 +162,17 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
             </span>
           </div>
         )}
+
+        {totalDiscount > 0 && (
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 dark:text-white text-sm">
+              {t("Cart.discount")}
+            </span>
+            <span className="text-green-600 dark:text-green-400 font-medium">
+              -{totalDiscount.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Promocode Section (desktop: visible md+; hidden on mobile because we show mobile-only block above) */}
@@ -232,7 +244,9 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
           <div className="text-right">
             <span className="text-gray-900 dark:text-white text-xl font-bold">
               {total.toLocaleString()}{" "}
-              <span className="text-sm font-normal">{t("Common.currency")}</span>
+              <span className="text-sm font-normal">
+                {t("Common.currency")}
+              </span>
             </span>
           </div>
         </div>

@@ -8,12 +8,23 @@ type Breakdown = { stars: number; count: number };
 
 interface Props {
   reviewable_id: number;
-  reviewable_type?: string; // defaults to 'product'
+  reviewable_type?: string;
+  product?: {
+    images?: Array<{
+      url?: string;
+      responsive_urls?: string[];
+    }>;
+    name?: string | {
+      ar?: string;
+      en?: string;
+    };
+  };
 }
 
 const ProductReviewsSummary: React.FC<Props> = ({
   reviewable_id,
   reviewable_type = "product",
+  product,
 }) => {
   const { t } = useTranslation();
   const { t: common } = useTranslation();
@@ -51,6 +62,11 @@ const ProductReviewsSummary: React.FC<Props> = ({
     return Math.round((count / total) * 100);
   };
 
+  const productImage =
+    product?.images?.[0]?.responsive_urls?.slice(-1)[0] ||
+    product?.images?.[0]?.url ||
+    "/images/products/productIMG.png";
+
   return (
     <aside
       aria-label={t("Products.reviewSummary.ariaLabel")}
@@ -64,8 +80,8 @@ const ProductReviewsSummary: React.FC<Props> = ({
           <div className="flex items-center gap-3">
             <div className="flex-shrink-0">
               <img
-                src="/images/products/productIMG.png"
-                alt={t("Products.reviewSummary.productImageAlt")}
+                src={productImage}
+                alt='product image'
                 width={48}
                 height={48}
                 className="w-12 h-12 rounded-md object-cover"
@@ -73,22 +89,26 @@ const ProductReviewsSummary: React.FC<Props> = ({
             </div>
 
             <div className="flex-1">
-              <div className="flex items-center gap-3">
+              <div className="">
                 <div className="text-sm text-slate-900 dark:text-white font-medium mt-4">
                   {isLoading ? common("loading") : `${average} / 5`}
                 </div>
-                <div className="flex items-center gap-4">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <div
-                      key={`star-${star}`}
-                      className="w-4 h-4 text-yellow-400"
-                    >
-                      <Star />
-                    </div>
-                  ))}
-                </div>
-                <div className="ml-auto text-sm text-slate-500 dark:text-gray-400">
-                  ({isLoading ? common("loading") : total})
+                <div className="flex items-center">
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={`star-${star}`}
+                        className={`w-4 h-4 ${
+                          star <= Math.round(average)
+                            ? 'text-yellow-400'
+                            : 'text-slate-300 dark:text-gray-600'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <div className="ml-2 text-sm text-slate-500 dark:text-gray-400">
+                    ({isLoading ? common("loading") : total})
+                  </div>
                 </div>
               </div>
             </div>
@@ -126,7 +146,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
 
                   <div className="w-full rounded-full h-3 bg-slate-200 dark:bg-white/10 overflow-hidden">
                     <motion.div
-                      className="h-full bg-red-600 rounded-full"
+                      className="h-full bg-main rounded-full"
                       initial={{ width: 0 }}
                       whileInView={{ width: `${w}%` }}
                       viewport={{ once: true, amount: 0.4 }}

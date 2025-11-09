@@ -42,6 +42,7 @@ interface ImageItem {
   id: number;
   url: string;
   alt?: string;
+  responsive_urls?: string[];
 }
 
 interface ProductImageGalleryProps {
@@ -249,13 +250,24 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   const galleryRef = useRef<HTMLDivElement>(null);
   const [isRtl, setIsRtl] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const {t} = useTranslation("Products");
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
+  const { t } = useTranslation("Products");
 
   // Detect RTL direction
   useEffect(() => {
     const direction = document.documentElement.dir || document.body.dir;
     setIsRtl(direction === "rtl");
   }, []);
+
+  // Reset to first image when images array changes (variant switch)
+  useEffect(() => {
+    setCurrentIndex(0);
+    setIsZoomed(false);
+    setImagePosition({ x: 0, y: 0 });
+  }, [images]);
 
   // If no images provided, use placeholder
   const displayImages =
@@ -322,10 +334,17 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isExpanded && e.key === "Escape") {
-        setIsExpanded(false);
+        if (isZoomed) {
+          setIsZoomed(false);
+          setImagePosition({ x: 0, y: 0 });
+        } else {
+          setIsExpanded(false);
+        }
         return;
       }
-      
+
+      if (isZoomed) return;
+
       if (e.key === "ArrowLeft") {
         if (isRtl) {
           goToNext();
@@ -343,7 +362,42 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isRtl, goToNext, goToPrevious, isExpanded]);
+  }, [isRtl, goToNext, goToPrevious, isExpanded, isZoomed]);
+
+  const handleImageClick = () => {
+    if (!isDragging) {
+      if (isZoomed) {
+        setIsZoomed(false);
+        setImagePosition({ x: 0, y: 0 });
+      } else {
+        setIsZoomed(true);
+      }
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isZoomed) {
+      setIsDragging(false);
+      setDragStart({
+        x: e.clientX - imagePosition.x,
+        y: e.clientY - imagePosition.y,
+      });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isZoomed && e.buttons === 1) {
+      setIsDragging(true);
+      setImagePosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setTimeout(() => setIsDragging(false), 0);
+  };
 
   return (
     <div
@@ -363,10 +417,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             vertical
           />
           <div className="flex-1 relative">
-            <div 
-              onClick={() => setIsExpanded(true)}
-              className="cursor-zoom-in"
-            >
+            <div onClick={() => setIsExpanded(true)} className="cursor-pointer">
               <MainGallery
                 displayImages={displayImages}
                 currentIndex={currentIndex}
@@ -389,30 +440,106 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
       ) : (
         <>
           <div className="relative">
-            <div 
+            <div
               onClick={() => setIsExpanded(true)}
-              className="cursor-zoom-in"
+              className="cursor-pointer relative group"
             >
-              <MainGallery
-                displayImages={displayImages}
-                currentIndex={currentIndex}
-                totalImages={totalImages}
-                productName={productName}
-                isRtl={isRtl}
-                goToNext={goToNext}
-                goToPrevious={goToPrevious}
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={isFavorite}
-                galleryRef={galleryRef}
-                handleTouchStart={handleTouchStart}
-                handleTouchMove={handleTouchMove}
-                handleTouchEnd={handleTouchEnd}
-                showSideThumbnails={showSideThumbnails}
-              />
+              <div className="transition-opacity duration-300 group-hover:opacity-70">
+                <div
+                  ref={galleryRef}
+                  className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[590px] overflow-hidden rounded-lg"
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  <div className="w-full h-full relative">
+                    {displayImages.map((img, index) => {
+                      const isActive = index === currentIndex;
+                      const prevIndex =
+                        (currentIndex - 1 + totalImages) % totalImages;
+                      const nextIndex = (currentIndex + 1) % totalImages;
+                      const eagerLoad =
+                        isActive || index === prevIndex || index === nextIndex;
+
+                      return (
+                        <div
+                          key={`main-${img.id}-${index}`}
+                          className={`absolute inset-0 flex items-center justify-center transition-none ${
+                            isActive
+                              ? "opacity-100 z-10"
+                              : "opacity-0 z-0 pointer-events-none"
+                          }`}
+                        >
+                          <img
+                            src={img.url || "/placeholder-product.jpg"}
+                            alt={img.alt || productName}
+                            width={584}
+                            height={590}
+                            className="w-full h-full object-contain"
+                            loading={eagerLoad ? "eager" : "lazy"}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={onToggleFavorite}
+                    className="absolute top-0 right-3 z-20 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 md:hidden"
+                    aria-label={
+                      isFavorite ? "Remove from favorites" : "Add to favorites"
+                    }
+                  >
+                    {isFavorite ? <ResFav /> : <ResUnFav />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <span className="text-white text-lg sm:text-xl font-medium bg-black/60 px-4 py-2 rounded-full">
+                  {t("Products.tapToExpand")}
+                </span>
+              </div>
             </div>
-            <div className="absolute left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm pointer-events-none">
-              {t('Products.tapToExpand')}
-            </div>
+
+            {totalImages > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    isRtl ? goToNext() : goToPrevious();
+                  }}
+                  className={`absolute top-1/2 -translate-y-1/2 ${
+                    isRtl ? "right-4" : "left-4"
+                  } z-20 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  aria-label={isRtl ? "Next image" : "Previous image"}
+                >
+                  {isRtl ? (
+                    <ChevronRightIcon className="w-6 h-6 text-gray-700" />
+                  ) : (
+                    <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
+                  )}
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    isRtl ? goToPrevious() : goToNext();
+                  }}
+                  className={`absolute top-1/2 -translate-y-1/2 ${
+                    isRtl ? "left-4" : "right-4"
+                  } z-20 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  aria-label={isRtl ? "Previous image" : "Next image"}
+                >
+                  {isRtl ? (
+                    <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
+                  ) : (
+                    <ChevronRightIcon className="w-6 h-6 text-gray-700" />
+                  )}
+                </button>
+              </>
+            )}
           </div>
           <Thumbnails
             displayImages={displayImages}
@@ -442,38 +569,94 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
       )}
 
       {isExpanded && (
-        <div 
+        <div
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
-          onClick={() => setIsExpanded(false)}
+          onClick={() => {
+            if (isZoomed) {
+              setIsZoomed(false);
+              setImagePosition({ x: 0, y: 0 });
+            } else {
+              setIsExpanded(false);
+            }
+          }}
         >
           <button
-            onClick={() => setIsExpanded(false)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsZoomed(false);
+              setIsExpanded(false);
+            }}
             className="absolute top-4 right-4 z-50 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Close full screen"
           >
-            <svg className="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
 
-          <div 
-            className="relative w-full h-full flex items-center justify-center p-4"
+          <div
+            className="relative w-full h-full flex items-center justify-center p-4 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={displayImages[currentIndex].url || "/placeholder-product.jpg"}
-              alt={displayImages[currentIndex].alt || productName}
-              width={1200}
-              height={1200}
-              className="max-w-full max-h-full object-contain"
-            />
+            <div
+              className={`relative ${
+                isZoomed
+                  ? isDragging
+                    ? "cursor-move"
+                    : "cursor-zoom-out"
+                  : "cursor-zoom-in"
+              }`}
+              onClick={handleImageClick}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={
+                  displayImages[currentIndex].url || "/placeholder-product.jpg"
+                }
+                alt={displayImages[currentIndex].alt || productName}
+                width={1200}
+                height={1200}
+                className="object-contain transition-transform duration-300 select-none"
+                draggable="false"
+                style={{
+                  transform: isZoomed
+                    ? `scale(1.5) translate(${imagePosition.x / 1.5}px, ${
+                        imagePosition.y / 1.5
+                      }px)`
+                    : "scale(1)",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                }}
+              />
+            </div>
 
-            {totalImages > 1 && (
+            {!isZoomed && totalImages > 1 && (
               <>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // isRtl ? goToNext() : goToPrevious();
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    isRtl ? goToNext() : goToPrevious();
                   }}
                   className={`absolute top-1/2 -translate-y-1/2 ${
                     isRtl ? "right-4" : "left-4"
@@ -489,7 +672,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // isRtl ? goToPrevious() : goToNext();
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    isRtl ? goToPrevious() : goToNext();
                   }}
                   className={`absolute top-1/2 -translate-y-1/2 ${
                     isRtl ? "left-4" : "right-4"

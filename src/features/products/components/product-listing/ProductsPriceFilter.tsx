@@ -13,10 +13,10 @@ interface Props {
 }
 
 const ProductsPriceFilter: React.FC<Props> = ({
-  // minPrice = 0,
-  // maxPrice = 10000,
-  // actualMinPrice,
-  // actualMaxPrice,
+  minPrice = 0,
+  maxPrice = 10000,
+  actualMinPrice,
+  actualMaxPrice,
   setPriceRange,
 }) => {
   const { t } = useTranslation();
@@ -28,19 +28,13 @@ const ProductsPriceFilter: React.FC<Props> = ({
     }
   }, []);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Force slider to a fixed 0 - 10_000 range (ignore API-provided min/max which may be incorrect)
-  const SLIDER_MIN = 0;
-  const SLIDER_MAX = 10000;
-
   const [localRange, setLocalRange] = useState<[number, number]>([
-    SLIDER_MIN,
-    SLIDER_MAX,
+    minPrice ?? actualMinPrice,
+    maxPrice ?? actualMaxPrice,
   ]);
-
-  // Keep slider bounds constant regardless of API values
-  const sliderMin = SLIDER_MIN;
-  const sliderMax = SLIDER_MAX;
+  useEffect(() => {
+    setLocalRange([minPrice ?? actualMinPrice, maxPrice ?? actualMaxPrice]);
+  }, [minPrice, maxPrice, actualMinPrice, actualMaxPrice]);
 
   const handleChange = (value: [number, number]) => {
     setLocalRange(value);
@@ -59,7 +53,7 @@ const ProductsPriceFilter: React.FC<Props> = ({
 
   return (
     <section className="w-[276px] h-[156px] dark:bg-[#242529] bg-[#FDFDFD] overflow-y-auto mt-6 mx-auto">
-      <h1 className="text-2xl font-semibold leading-[100%] p-4 ltr:border-l-4 rtl:border-r-4 border-main">
+      <h1 className="md:text-2xl text-base font-semibold leading-[100%] p-4 ltr:border-l-4 rtl:border-r-4 border-main">
         {t("ProductsGrid.filterByPrice")}
       </h1>
       <div className="w-full h-px bg-[#FDFDFD]"></div>
@@ -67,9 +61,9 @@ const ProductsPriceFilter: React.FC<Props> = ({
         <div className="mt-4">
           <Slider
             dir={isRtl ? "rtl" : "ltr"}
-            min={sliderMin}
-            max={sliderMax}
-            step={100}
+            min={actualMinPrice}
+            max={actualMaxPrice}
+            step={1}
             value={localRange}
             onValueChange={handleChange}
           />

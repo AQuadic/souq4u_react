@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ColorValue {
   valueId: number;
@@ -33,6 +34,7 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
     showLabel: false,
   },
 }) => {
+  const { t } = useTranslation();
   console.log("ColorSelector rendering:", {
     attributeId,
     attributeName,
@@ -47,7 +49,7 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
         {attributeName}
       </p>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mt-4">
         {values.map((val) => {
           const isSelected = selectedValue === val.displayValue;
           const colorValue = val.specialValue || "#e5e5e5";
@@ -57,15 +59,14 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
               key={val.valueId}
               onClick={() => onSelect(attributeId, val.displayValue)}
               disabled={disabled}
-              className={`relative ${theme.size} ${
-                theme.rounded
-              } border-2 transition-all ${
-                isSelected
-                  ? "border-main ring-2 ring-main ring-offset-2 scale-110"
-                  : "border-gray-300 hover:border-gray-400"
-              } ${
-                disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-              }`}
+              className={`relative ${theme.size} ${theme.rounded} border transition-all w-[18px] h-[18px] rounded-full 
+                ${
+                  isSelected
+                    ? "border-main ring-1 ring-main ring-offset-2 scale-110"
+                    : "border-gray-300 hover:border-gray-400"
+                } 
+                ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+              `}
               title={val.displayValue}
               style={{
                 backgroundColor: colorValue,
@@ -95,7 +96,7 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
 
       {theme.showLabel && selectedValue && (
         <p className="mt-2 text-sm text-muted-foreground">
-          Selected: {selectedValue}
+          {t("Common.selected")}: {selectedValue}
         </p>
       )}
     </div>

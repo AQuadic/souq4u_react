@@ -31,17 +31,41 @@ export async function postSuggestion(
           message?: string;
           errors?: Record<string, string[]>;
         };
+        status?: number;
       };
       message?: string;
     };
 
+    const errorData = axiosError?.response?.data;
+        if (errorData && (errorData.message || errorData.errors)) {
+      return {
+        success: false,
+        message: errorData.message,
+        errors: errorData.errors || {},
+      };
+    }
+    const errorMessage = axiosError?.message || "Request failed";
+    
+    if (errorMessage.includes('{"message"')) {
+      try {
+        const jsonMatch = errorMessage.match(/\{.*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          return {
+            success: false,
+            message: parsed.message,
+            errors: parsed.errors || {},
+          };
+        }
+      } catch {
+        // If parsing fails, continue with original message
+      }
+    }
+
     return {
       success: false,
-      message:
-        axiosError?.response?.data?.message ||
-        axiosError?.message ||
-        "Request failed",
-      errors: axiosError?.response?.data?.errors || {},
+      message: errorMessage,
+      errors: {},
     };
   }
 }

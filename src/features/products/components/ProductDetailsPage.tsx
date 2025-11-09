@@ -18,7 +18,6 @@ import {
   ProductInfo,
   ProductPricing,
   ProductActions,
-  ProductDescription,
 } from "./product-details";
 import {
   useTranslatedText,
@@ -28,7 +27,7 @@ import { ProductImageGallery } from "./product-details/ProductImageGallery";
 import ProductDetailsSkeleton from "./ProductDetailsSkeleton";
 import { ProductForCart } from "@/features/cart/types";
 import ProductList from "./ProductList";
-import RecentlyViewedProducts from "./RecentlyViewedProducts";
+// import RecentlyViewedProducts from "./RecentlyViewedProducts";
 import { useRecentlyViewedStore } from "../stores/recently-viewed-store";
 import { useTranslation } from "react-i18next";
 import MainProductReviews from "./product-details/reviews/MainProductReviews";
@@ -50,6 +49,7 @@ const ProductDetailsPage: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const addProductId = useRecentlyViewedStore((state) => state.addProductId);
+  const cart = useCartStore((s) => s.cart);
 
   const {
     data: product,
@@ -60,6 +60,13 @@ const ProductDetailsPage: React.FC = () => {
     queryFn: () => getProduct(productId!),
     enabled: !!productId,
   });
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [productId]);
 
   // Track product view
   useEffect(() => {
@@ -89,28 +96,46 @@ const ProductDetailsPage: React.FC = () => {
         ? (product.name as { en: string; ar: string }).en
         : product?.name || "Product";
 
-    // Use product images (default behavior)
-    if (product?.images && Array.isArray(product.images)) {
+    // Priority 1: Use variant-specific images if available
+    if (
+      selectedVariant?.images &&
+      Array.isArray(selectedVariant.images) &&
+      selectedVariant.images.length > 0
+    ) {
+      selectedVariant.images.forEach(
+        (image: { id?: number; url?: string }, index: number) => {
+          if (image?.url) {
+            images.push({
+              id: image.id || index + 2000,
+              url: image.url,
+              alt: `${productNameStr} - Variant Image ${index + 1}`,
+            });
+          }
+        }
+      );
+    }
+    // Priority 2: Fallback to product images if no variant images
+    else if (product?.images && Array.isArray(product.images)) {
       product.images.forEach(
         (image: { id?: number; url?: string }, index: number) => {
           if (image?.url) {
-            const isDuplicate = images.some(
-              (existing) => existing.url === image.url
-            );
-            if (!isDuplicate) {
-              images.push({
-                id: image.id || index + 1000,
-                url: image.url,
-                alt: `${productNameStr} - Image ${index + 1}`,
-              });
-            }
+            images.push({
+              id: image.id || index + 1000,
+              url: image.url,
+              alt: `${productNameStr} - Image ${index + 1}`,
+            });
           }
         }
       );
     }
 
     return images;
-  }, [product]);
+  }, [
+    product?.images,
+    product?.name,
+    selectedVariant?.images,
+    selectedVariant?.id,
+  ]);
 
   useEffect(() => {
     if (!product?.variants?.length) return;
@@ -137,6 +162,13 @@ const ProductDetailsPage: React.FC = () => {
     }
   }, [product, selectedVariantId]);
 
+  // Reset quantity to 1 when variant changes (don't sync with cart)
+  // This way the quantity selector always represents "how many to add"
+  useEffect(() => {
+    if (!product || !selectedVariant) return;
+    setQuantity(1);
+  }, [product, selectedVariant?.id]);
+
   const productForCart: ProductForCart | null =
     product && selectedVariant
       ? {
@@ -156,7 +188,6 @@ const ProductDetailsPage: React.FC = () => {
   });
 
   const isAuthenticated = useIsAuthenticated();
-  const cart = useCartStore((s) => s.cart);
   const cartToast = useCartToast();
   const { t } = useTranslation("Cart");
 
@@ -204,16 +235,21 @@ const ProductDetailsPage: React.FC = () => {
         it.variant.product_id === product.id &&
         it.variant?.id === selectedVariant.id
     );
-    const existingQty = existingItem?.quantity ?? 0;
+    const isUpdating = !!existingItem;
+    const existingQuantity = existingItem?.quantity ?? 0;
 
-    const totalQuantity = existingQty + quantity;
+    // Calculate total quantity to send to API
+    // When product exists in cart: add the new quantity to existing
+    // When product is new: just send the selected quantity
+    const totalQuantity = isUpdating ? existingQuantity + quantity : quantity;
 
+    // Check stock availability against total quantity
     if (
       selectedVariant?.is_stock &&
       totalQuantity > (selectedVariant?.stock ?? 0)
     ) {
       cartToast.failedToAddToCart(
-        t("onlyXAvailable", { count: selectedVariant?.stock ?? 0 })
+        t("Cart.onlyXAvailable", { count: selectedVariant?.stock ?? 0 })
       );
       return;
     }
@@ -226,8 +262,9 @@ const ProductDetailsPage: React.FC = () => {
 
       if (result.success) {
         cartToast.addedToCart(translatedProductName, {
-          quantity,
+          quantity: totalQuantity,
           variant: variantInfo,
+          isUpdate: isUpdating,
         });
         return;
       }
@@ -279,36 +316,51 @@ const ProductDetailsPage: React.FC = () => {
   const isOutOfStock = selectedVariant?.is_out_of_stock === true;
   const isInStock = !isOutOfStock && (hasUnlimitedStock || stockCount > 0);
 
-  const variantMatchesAttributes = (
+  const getVariantAttributeValue = (
     variant: { attributes?: ProductAttribute[] },
-    attributes: SelectedAttributes
-  ): boolean => {
-    return Object.entries(attributes).every(([attrId, attrValue]) => {
-      return variant.attributes?.some((attr: ProductAttribute) => {
-        if (attr.attribute?.id !== Number(attrId)) return false;
-        const locale =
-          typeof window !== "undefined"
-            ? document.documentElement.lang || "en"
-            : "en";
-        const valueObj = attr.value?.value as
-          | Record<string, string>
-          | undefined;
-        const displayValue = valueObj?.[locale] || valueObj?.en || "";
-        return displayValue === attrValue;
-      });
-    });
+    attributeId: number
+  ): string | null => {
+    const attr = variant.attributes?.find(
+      (a) => a.attribute?.id === attributeId
+    );
+    if (!attr?.value?.value) return null;
+
+    const locale =
+      typeof window !== "undefined"
+        ? document.documentElement.lang || "en"
+        : "en";
+    const valueObj = attr.value.value as Record<string, string> | undefined;
+    return valueObj?.[locale] || valueObj?.en || "";
   };
 
   const handleAttributeChange = (attributeId: number, value: string) => {
-    const newAttributes = { ...selectedAttributes, [attributeId]: value };
-    setSelectedAttributes(newAttributes);
+    // Find the best matching variant for this specific attribute value
+    const matchingVariants = product?.variants?.filter((variant) => {
+      const variantValue = getVariantAttributeValue(variant, attributeId);
+      return variantValue === value;
+    });
 
-    const matchingVariant = product?.variants?.find((variant) =>
-      variantMatchesAttributes(variant, newAttributes)
-    );
+    if (matchingVariants && matchingVariants.length > 0) {
+      const selectedVariant = matchingVariants[0];
+      setSelectedVariantId(selectedVariant.id);
 
-    if (matchingVariant) {
-      setSelectedVariantId(matchingVariant.id);
+      // Update selected attributes to match the new variant's attributes
+      const newAttributes: SelectedAttributes = {};
+      selectedVariant.attributes?.forEach((attr) => {
+        if (attr.attribute?.id && attr.value?.value) {
+          const locale =
+            typeof window !== "undefined"
+              ? document.documentElement.lang || "en"
+              : "en";
+          const valueObj = attr.value.value as Record<string, string>;
+          const displayValue = valueObj[locale] || valueObj.en || "";
+          if (displayValue) {
+            newAttributes[attr.attribute.id] = displayValue;
+          }
+        }
+      });
+
+      setSelectedAttributes(newAttributes);
     }
   };
 
@@ -319,6 +371,7 @@ const ProductDetailsPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 md:mt-10">
         <div className="w-full">
           <ProductImageGallery
+            key={selectedVariant?.id || "default"}
             images={combinedImages}
             productName={productName}
             isFavorite={isFavorite}
@@ -331,11 +384,7 @@ const ProductDetailsPage: React.FC = () => {
             categoryName={categoryName}
             productName={productName}
             shortDescription={shortDescription}
-          />
-
-          <ProductDescription
-            shortDescription={shortDescription}
-            description={description}
+            productId={product.id}
           />
 
           <ProductPricing
@@ -356,6 +405,8 @@ const ProductDetailsPage: React.FC = () => {
             stockCount={stockCount}
             isInStock={isInStock}
             hasUnlimitedStock={hasUnlimitedStock}
+            shortDescription={shortDescription}
+            description={description}
           />
 
           <ProductActions
@@ -379,15 +430,15 @@ const ProductDetailsPage: React.FC = () => {
 
       {/* Reviews Section - Full Width */}
       {!!product?.id && (
-        <div className="w-full mt-12">
-          <MainProductReviews productId={product.id} />
+        <div id="product-reviews" className="w-full mt-12">
+          <MainProductReviews productId={product.id} product={product} />
         </div>
       )}
 
       {!!product?.id && (
         <>
           <ProductList
-            titleKey="recommendedForYou"
+            titleKey={t("Products.recommendedForYou")}
             titleAlign={isRtl ? "right" : "left"}
             queryParams={{
               category_id: product?.category?.id ?? product?.category_id ?? 0,
@@ -404,14 +455,14 @@ const ProductDetailsPage: React.FC = () => {
             theme={{
               gridClassName: "xl:grid-cols-4 grid-cols-2",
               titleClassName:
-                "text-main md:text-[32px] text-2xl font-normal leading-[100%] uppercase font-anton-sc",
+                "text-main md:text-[32px] text-2xl font-normal leading-[100%] capitalize font-anton-sc ltr:text-left rtl:text-right",
             }}
           />
 
-          <RecentlyViewedProducts
+          {/* <RecentlyViewedProducts
             currentProductId={product.id}
             titleAlign={isRtl ? "right" : "left"}
-          />
+          /> */}
         </>
       )}
     </div>

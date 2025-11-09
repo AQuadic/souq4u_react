@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import type { Address } from "../types";
+import { useDeleteAddress } from "../hooks";
 import { useAuthStore } from "@/features/auth/stores/auth-store";
 import { Link } from "react-router-dom";
 import DeleteAddressDialog from "./DeleteAddressDialog";
@@ -22,18 +23,25 @@ interface AddressCardProps {
   address: Address;
   isSelected: boolean;
   onSelect: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  isCheckout?: boolean;
 }
 
 const AddressCard: React.FC<AddressCardProps> = ({
   address,
   isSelected,
   onSelect,
+  onEdit,
+  onDelete,
+  isCheckout = false,
 }) => {
+  const [showActions, setShowActions] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState<number | null>(null);
-  const { addresses, removeAddress } = useAddressStore();
-  const { t } = useTranslation("saveAddress");
+  const { addresses, isLoading, error, fetchAddresses, removeAddress } =
+    useAddressStore();
 
   const handleDelete = async (id: number) => {
     // This function will be invoked after user confirms in dialog
@@ -45,18 +53,24 @@ const AddressCard: React.FC<AddressCardProps> = ({
     }
   };
 
+  // Build the edit link with optional checkout redirect parameter
+  const editHref = isCheckout
+    ? `/profile/addresses/edit/${address.id}?from=checkout`
+    : `/profile/addresses/edit/${address.id}`;
+
   return (
-    <button
-      type="button"
+    <div
       className={`
-        w-full text-left relative border rounded-lg p-4 cursor-pointer transition-all
+        relative border rounded-lg p-4 cursor-pointer transition-all
         ${isSelected ? "border-main bg-[var(--color-main)]/10" : "border"}
       `}
       onClick={onSelect}
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
     >
       {/* Selection indicator */}
       <div className="flex items-end justify-between">
-        <div className="">
+        <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <div
               className={`
@@ -71,13 +85,13 @@ const AddressCard: React.FC<AddressCardProps> = ({
             <h3 className="dark:text-white font-medium">{address.title}</h3>
           </div>
 
-          <p className="dark:text-gray-300 text-sm leading-relaxed ltr:text-left rtl:text-right">
+          <p className="dark:text-gray-300 text-sm leading-relaxed">
             {address.details}
           </p>
 
           {address.zipcode && (
             <p className="dark:text-gray-400 text-xs mt-1">
-              {t("saveAddress.zipcode")}: {address.zipcode}
+              Zipcode: {address.zipcode}
             </p>
           )}
         </div>
@@ -89,16 +103,11 @@ const AddressCard: React.FC<AddressCardProps> = ({
               setAddressToDelete(address.id);
               setIsDeleteDialogOpen(true);
             }}
-            aria-label={t("delete")}
-            className="text-sm text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+            aria-label="delete"
           >
             <Delete />
           </button>
-          <Link
-            to={`/profile/addresses/edit/${address.id}`}
-            onClick={(e) => e.stopPropagation()}
-            className="text-sm text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-          >
+          <Link to={editHref} onClick={(e) => e.stopPropagation()}>
             <Edit />
           </Link>
         </div>
@@ -117,7 +126,7 @@ const AddressCard: React.FC<AddressCardProps> = ({
           }
         }}
       />
-    </button>
+    </div>
   );
 };
 
@@ -128,8 +137,24 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
   onAddNewAddress,
   isCheckout = false,
 }) => {
+  const deleteAddressMutation = useDeleteAddress();
   const { isAuthenticated } = useAuthStore();
-  const { t } = useTranslation("saveAddress");
+
+  const handleEdit = (address: Address) => {
+    // TODO: Implement edit functionality - for now, just show the form
+    console.log("Edit address:", address);
+  };
+
+  const handleDelete = async (address: Address) => {
+    if (window.confirm(`Are you sure you want to delete "${address.title}"?`)) {
+      try {
+        await deleteAddressMutation.mutateAsync(address.id);
+      } catch (error) {
+        console.error("Failed to delete address:", error);
+      }
+    }
+  };
+  const {t} = useTranslation("saveAddress");
 
   return (
     <div className="space-y-4">
@@ -146,6 +171,9 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
             address={address}
             isSelected={selectedAddressId === address.id}
             onSelect={() => onAddressSelect(address.id)}
+            onEdit={() => handleEdit(address)}
+            onDelete={() => handleDelete(address)}
+            isCheckout={isCheckout}
           />
         ))}
       </div>

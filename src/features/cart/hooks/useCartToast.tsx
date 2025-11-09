@@ -21,9 +21,7 @@ export const useCartToast = () => {
     variant,
   }: CartToastOptions) => {
     const variantText = variant ? ` (${variant})` : "";
-    const productLabel = `${productName}${variantText}${
-      quantity > 1 ? ` (${quantity}x)` : ""
-    }`;
+    const productLabel = `${productName}${variantText}`;
 
     const message = t("Cart.addToCartSentence", { product: productLabel });
 
@@ -44,15 +42,53 @@ export const useCartToast = () => {
     });
   };
 
+  const showUpdateCartSuccess = ({
+    productName,
+    quantity = 1,
+    variant,
+  }: CartToastOptions) => {
+    const variantText = variant ? ` (${variant})` : "";
+    const productLabel = `${productName}${variantText}`;
+    const quantityText = quantity > 1 ? `${quantity}x` : `${quantity}`;
+
+    const message = t("Cart.updateCartSentence", {
+      product: productLabel,
+      quantity: quantityText,
+    });
+
+    toast.success(message, {
+      action: (
+        <Link
+          to="/cart"
+          className="text-white underline text-sm font-medium hover:no-underline"
+          onClick={() => {
+            console.log("View cart clicked");
+          }}
+        >
+          {t("Cart.viewCart")}
+        </Link>
+      ),
+      duration: 5000,
+    });
+  };
+
   const addedToCart = (
     productName: string,
-    opts?: { quantity?: number; variant?: string }
+    opts?: { quantity?: number; variant?: string; isUpdate?: boolean }
   ) => {
-    showAddToCartSuccess({
-      productName,
-      quantity: opts?.quantity ?? 1,
-      variant: opts?.variant,
-    });
+    if (opts?.isUpdate) {
+      showUpdateCartSuccess({
+        productName,
+        quantity: opts?.quantity ?? 1,
+        variant: opts?.variant,
+      });
+    } else {
+      showAddToCartSuccess({
+        productName,
+        quantity: opts?.quantity ?? 1,
+        variant: opts?.variant,
+      });
+    }
   };
 
   const showAddToCartError = (message?: string | Error) => {
@@ -97,24 +133,24 @@ export const useCartToast = () => {
   };
 
   const showItemRemoveError = (productName: string) => {
-    const message = t("failedRemoveFromCart", { productName });
+    const message = t("Cart.failedRemoveFromCart", { productName });
     toast.error(message, { duration: 5000 });
   };
 
   const showCouponApplySuccess = () => {
-    toast.success(t("couponAppliedSuccess"), { duration: 3000 });
+    toast.success(t("Cart.couponAppliedSuccess"), { duration: 3000 });
   };
 
   const showCouponApplyError = () => {
-    toast.error(t("couponApplyError"), { duration: 5000 });
+    toast.error(t("Cart.couponApplyError"), { duration: 5000 });
   };
 
   const showCouponClearSuccess = () => {
-    toast.success(t("couponRemovedSuccess"), { duration: 3000 });
+    toast.success(t("Cart.couponRemovedSuccess"), { duration: 3000 });
   };
 
   const showCouponClearError = () => {
-    toast.error(t("couponRemoveError"), { duration: 5000 });
+    toast.error(t("Cart.couponRemoveError"), { duration: 5000 });
   };
 
   const loginRequired = () => {
@@ -126,7 +162,7 @@ export const useCartToast = () => {
   };
 
   const failedToAddToCart = (message?: string) => {
-    toast.error(message || t("failedToAdd") || "Failed to add item to cart", {
+    toast.error(message || t("Cart.failedToAdd") || "Failed to add item to cart", {
       duration: 5000,
     });
   };

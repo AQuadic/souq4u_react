@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getProducts, Product, PaginatedResponse } from "../../api/getProduct";
+import { getProductsPaginated, PaginatedResponse, Product } from "../../api/getProduct";
 import { getPriceRange } from "../../api/getPriceRange";
 import ProductCard from "../ProductCard";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -14,13 +14,14 @@ import ProductCardListing from "../ProductCardListing";
 import { useProductFilters } from "../../hooks/useProductFilters";
 import ProductsCategoryFilter from "./ProductsCategoryFilter";
 import ProductsPagination from "@/shared/components/pagenation/ProductsPagenation";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 
 const ProductsGrid: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate()
   const [view, setView] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
 
   const { filters, setCategory, setPriceRange, setSorting } =
     useProductFilters();
@@ -28,6 +29,17 @@ const ProductsGrid: React.FC = () => {
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const searchQuery = searchParams.get("search") ?? undefined;
+  const categoryIdFromUrl = searchParams.get("category_id");
+
+  const mostViewParam = searchParams?.get("is_most_view");
+  const isMostViewedActive = mostViewParam === "1" || mostViewParam === "true";
+  const onlyDiscountParam = searchParams?.get("only_discount");
+  const isOnlyDiscountedActive = onlyDiscountParam === "1" || onlyDiscountParam === "true";
+
+
+  const activeCategoryId = categoryIdFromUrl 
+    ? parseInt(categoryIdFromUrl) 
+    : filters.categoryId;
 
   // Fetch price range from API
   const { data: priceRangeData } = useQuery<{
@@ -40,51 +52,43 @@ const ProductsGrid: React.FC = () => {
   });
 
   const {
-    data: rawData,
+    data,
     isLoading,
     isFetching,
     error,
-  } = useQuery<Product[] | PaginatedResponse<Product>, Error>({
-    queryKey: ["products", filters, searchQuery, currentPage],
+  } = useQuery<PaginatedResponse<Product>, Error>({
+    queryKey: [
+      "products",
+      currentPage,
+      filters.sortBy,
+      filters.sortOrder,
+      filters.categoryId,
+      filters.minPrice,
+      filters.maxPrice,
+    ],
     queryFn: () =>
-      getProducts({
-        q: searchQuery,
-        // use server-side normal pagination
-        pagination: "normal",
-        sort_by: filters.sortBy ?? "updated_at",
-        sort_order: filters.sortOrder ?? "desc",
-        only_discount: filters.onlyDiscount ?? 0,
+      getProductsPaginated({
+        q: searchParams.get("search") ?? undefined,
+        page: currentPage,
+        sort_by: filters.sortBy,
+        sort_order: filters.sortOrder,
+        only_discount:
+          searchParams.get("discount") === "1" ||
+          searchParams.get("is_discounted") === "1",
         category_id: filters.categoryId,
         min_price: filters.minPrice,
         max_price: filters.maxPrice,
-        page: currentPage,
-        per_page: 4,
       }),
     staleTime: 5000,
   });
 
-  // Normalize API response (can be plain array or paginated object)
-  const raw = rawData as any;
-  const productsArray: Product[] = Array.isArray(raw) ? raw : raw?.data ?? [];
-  const meta = !Array.isArray(raw) ? raw?.meta : undefined;
+  const products = data?.data ?? [];
+  const totalProducts = data?.meta?.total ?? 0;
+  const totalPages = data?.meta?.last_page ?? 1;
 
-  // Derive pagination values. When server returns paginated meta, use it.
-  const perPageFromServer = meta?.per_page ?? itemsPerPage;
-  const totalProducts = meta?.total ?? productsArray.length;
-  const totalPages = Math.max(1, Math.ceil(totalProducts / perPageFromServer));
-
-  // If server returned paginated data, `productsArray` is already the current
-  // page's items. If not, slice locally for client-side pagination.
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentProducts = meta
-    ? productsArray
-    : productsArray.slice(startIndex, endIndex);
-
-  // Reset to page 1 when filters change
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentPage(1);
-  }, [filters, searchQuery]);
+  }, [filters, searchQuery, activeCategoryId]);
 
   if (error) {
     return (
@@ -102,8 +106,30 @@ const ProductsGrid: React.FC = () => {
     );
   }
 
+  const handleRemoveMostViewed = () => {
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    params.delete("is_most_view");
+
+    const newUrl = params.toString()
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+
+    navigate(newUrl);
+  };
+
+    const handleRemoveIsDiscounted = () => {
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    params.delete("only_discount");
+
+    const newUrl = params.toString()
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+
+    navigate(newUrl);
+  };
+
   return (
-    <section className="container md:py-[88px] py-8">
+    <section className="container md:py-[44px] py-8">
       {/* <h1 className="text-main md:text-[32px] text-2xl font-normal leading-[100%] text-center uppercase font-anton-sc">
         {t("ProductsGrid.title")}
       </h1> */}
@@ -114,6 +140,40 @@ const ProductsGrid: React.FC = () => {
           { label: t("Products.title") },
         ]}
       />
+
+    {isMostViewedActive && (
+      <div className="mt-6 flex items-center gap-2">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 rounded-full border border-main/30">
+          <span className="text-sm font-medium text-main">
+            {t("Products.mostViewedProducts")}
+          </span>
+          <button
+            onClick={handleRemoveMostViewed}
+            className="hover:bg-main/20 rounded-full p-1 transition-colors"
+            aria-label="Remove most viewed filter"
+          >
+            <X className="w-4 h-4 text-main" />
+          </button>
+        </div>
+      </div>
+    )}
+
+      {isOnlyDiscountedActive && (
+      <div className="mt-6 flex items-center gap-2">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 rounded-full border border-main/30">
+          <span className="text-sm font-medium text-main">
+            {t("Products.bestOffersProducts")}
+          </span>
+          <button
+            onClick={handleRemoveIsDiscounted}
+            className="hover:bg-main/20 rounded-full p-1 transition-colors"
+            aria-label="Remove discount filter"
+          >
+            <X className="w-4 h-4 text-main" />
+          </button>
+        </div>
+      </div>
+    )}
 
       <div className="flex lg:flex-row flex-col gap-8 mt-10">
         <div>
@@ -132,15 +192,15 @@ const ProductsGrid: React.FC = () => {
             view={view}
             setView={setView}
             setSorting={setSorting}
-            displayed={currentProducts.length}
+            displayed={products.length}
             total={totalProducts}
           />
 
           {isFetching && !isLoading && (
-            <div className="flex items-center justify-center py-4 mb-4 bg-gray-100 dark:bg-gray-800 rounded-lg mt-6">
+            <div className="flex items-center justify-center py-4 mb-4 bg-gray-100 rounded-lg mt-6">
               <div className="flex items-center gap-2">
                 <div className="animate-spin h-4 w-4 border-2 border-main border-t-transparent rounded-full"></div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-gray-600">
                   {t("ProductsGrid.loadingNewProducts")}
                 </p>
               </div>
@@ -174,7 +234,7 @@ const ProductsGrid: React.FC = () => {
             </div>
           )}
 
-          {!isLoading && currentProducts.length > 0 && (
+          {!isLoading && products.length > 0 && (
             <>
               <div
                 className={`md:mt-12 mt-6 ${
@@ -183,7 +243,7 @@ const ProductsGrid: React.FC = () => {
                     : "flex flex-col gap-4"
                 }`}
               >
-                {currentProducts.map((product) =>
+                {products.map((product) =>
                   view === "grid" ? (
                     <ProductCard key={product.id} product={product} />
                   ) : (
@@ -202,8 +262,8 @@ const ProductsGrid: React.FC = () => {
             </>
           )}
 
-          {!isLoading && productsArray && productsArray.length === 0 && (
-            <p className="text-center dark:text-[#FDFDFD] mt-8">
+          {!isLoading && products.length === 0 && (
+            <p className="text-center mt-8 text-gray-700">
               {t("ProductsGrid.noProducts")}
             </p>
           )}

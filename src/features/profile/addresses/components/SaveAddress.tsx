@@ -10,6 +10,7 @@ import BackArrow from "@/features/products/icons/BackArrow";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import AddressEmpty from "./AddressEmpty";
+import Phone from "../icons/Phone";
 
 const SaveAddress: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -113,7 +114,16 @@ const SaveAddress: React.FC = () => {
                 )}
               </div>
             </div>
-            {addr.zipcode && (
+
+            <div className="flex items-start gap-2 mt-3">
+              <Phone />
+              <div className="min-w-0">
+                <p className="text-[#5D5D5D] dark:text-white text-lg font-semibold leading-[120%] truncate" dir="ltr">
+                  {addr.phone}
+                </p>
+              </div>
+            </div>
+            {/* {addr.zipcode && (
               <div className="flex gap-2 mt-[12px]">
                 <p
                   className="text-neutral-600 dark:text-neutral-400 text-lg font-medium leading-[140%] truncate"
@@ -122,7 +132,7 @@ const SaveAddress: React.FC = () => {
                   {addr.zipcode}
                 </p>
               </div>
-            )}
+            )} */}
           </div>
           <div className="flex items-center gap-4 flex-shrink-0">
             <button
