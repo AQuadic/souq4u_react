@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuthStore } from "@/features/auth/stores/auth-store";
 import { useAddresses } from "../hooks";
 import type { AddressFormData } from "../types";
@@ -41,6 +41,8 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
 
   const [showAddressForm, setShowAddressForm] = useState(false);
   const { t } = useTranslation("BillingDetails");
+  const shouldScrollOnCloseRef = useRef(false);
+  const manuallyOpenedFormRef = useRef(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -51,16 +53,25 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
   useEffect(() => {
     // If user is authenticated and has addresses, automatically show saved addresses
     // If no addresses, show the form
+    // But don't auto-close the form if it was manually opened
     if (isAuthenticated && addresses.length === 0 && !isLoading) {
       setShowAddressForm(true);
-    } else if (addresses.length > 0) {
+      manuallyOpenedFormRef.current = false;
+    } else if (addresses.length > 0 && !manuallyOpenedFormRef.current) {
+      // Only auto-close if the form wasn't manually opened
       setShowAddressForm(false);
     }
-  }, [isAuthenticated, addresses, isLoading]);
+    // Note: isLoading is intentionally NOT in dependencies to prevent form from flickering
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, addresses.length]);
 
   useEffect(() => {
     if (!showAddressForm && isAuthenticated && addresses.length > 0) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // Only scroll if it was a successful form submission
+      if (shouldScrollOnCloseRef.current) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        shouldScrollOnCloseRef.current = false;
+      }
 
       // Auto-select first address if none is selected and trigger shipping update
       if (!selectedAddressId && addresses[0]) {
@@ -91,9 +102,8 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
     // Find the selected address and trigger shipping update
     const selectedAddress = addresses.find((addr) => addr.id === addressId);
     if (
-      selectedAddress &&
-      selectedAddress.city_id &&
-      selectedAddress.area_id &&
+      selectedAddress?.city_id &&
+      selectedAddress?.area_id &&
       onShippingUpdate
     ) {
       onShippingUpdate(selectedAddress.city_id, selectedAddress.area_id);
@@ -101,16 +111,30 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
   };
 
   const handleAddNewAddress = () => {
+    manuallyOpenedFormRef.current = true;
     setShowAddressForm(true);
   };
 
   const handleFormSubmit = (formData: AddressFormData) => {
     onAddressFormSubmit(formData);
+    // Don't close the form here - let onSubmitSuccess handle it
+  };
+
+  const handleFormSubmitSuccess = () => {
     if (isAuthenticated) {
-      // After creating address, refresh the list and hide form
+      // Mark that we should scroll on close
+      shouldScrollOnCloseRef.current = true;
+      // Reset the manually opened flag
+      manuallyOpenedFormRef.current = false;
+      // After creating address successfully, refresh the list and hide form
       fetchAddresses();
       setShowAddressForm(false);
     }
+  };
+
+  const handleCancelForm = () => {
+    manuallyOpenedFormRef.current = false;
+    setShowAddressForm(false);
   };
 
   if (!isAuthenticated) {
@@ -125,12 +149,18 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
           onShippingUpdate={onShippingUpdate}
           isCheckout={isCheckout}
           onFormDataChange={onFormDataChange}
+          onSubmitSuccess={handleFormSubmitSuccess}
         />
       </div>
     );
   }
 
-  if (isLoading) {
+  // Don't unmount the entire component when loading - let the form handle its own loading state
+  // This prevents losing form data when API calls fail
+  const showLoadingSpinner =
+    isLoading && addresses.length === 0 && !showAddressForm;
+
+  if (showLoadingSpinner) {
     return (
       <div className="rounded-lg p-6">
         <h2 className="text-xl font-semibold text-white mb-6">
@@ -167,13 +197,12 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
         <AddressForm
           onSubmit={handleFormSubmit}
           showSaveOption={isAuthenticated}
-          onCancel={
-            addresses.length > 0 ? () => setShowAddressForm(false) : undefined
-          }
+          onCancel={addresses.length > 0 ? handleCancelForm : undefined}
           onImmediateCheckout={onImmediateCheckout}
           onShippingUpdate={onShippingUpdate}
           isCheckout={isCheckout}
           onFormDataChange={onFormDataChange}
+          onSubmitSuccess={handleFormSubmitSuccess}
         />
       )}
     </div>

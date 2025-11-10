@@ -47,7 +47,8 @@ const AddAddressPage: React.FC = () => {
       navigate("/profile/addresses");
     } catch (error) {
       console.error("Failed to create address:", error);
-      // Error is already handled by the mutation hook, just don't navigate
+      // Error is already handled by the mutation hook and toast
+      // Don't navigate - let the user fix the error
     }
   };
 

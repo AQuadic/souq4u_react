@@ -44,6 +44,8 @@ interface AddressFormProps {
   ) => void;
   /** If true, form will handle API calls internally. If false, parent handles submission */
   handleApiInternally?: boolean;
+  /** Callback when submission is successful */
+  onSubmitSuccess?: () => void;
 }
 
 export const AddressForm: React.FC<AddressFormProps> = ({
@@ -58,6 +60,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   isCheckout = false,
   onFormDataChange,
   handleApiInternally = true,
+  onSubmitSuccess,
 }) => {
   const [formData, setFormData] = useState<AddressFormData>({
     title: "",
@@ -303,6 +306,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           },
         });
         onSubmit(payload);
+        onSubmitSuccess?.();
       } else if (showSaveOption && formData.saveAddress) {
         await createAddressMutation.mutateAsync({
           title: finalTitle,
@@ -320,10 +324,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           user_name: formData.user_name,
         });
         onSubmit(payload);
+        onSubmitSuccess?.();
       } else if (onImmediateCheckout && !formData.saveAddress) {
         onImmediateCheckout(payload);
       } else {
         onSubmit(payload);
+        onSubmitSuccess?.();
       }
     } catch (error: unknown) {
       console.error("Failed to save address:", error);
@@ -385,7 +391,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         toast.error("Failed to save address", { duration: 5000 });
       }
 
-      // Don't call onSubmit if there was an error
+      // Don't call onSubmit or onSubmitSuccess if there was an error - form stays open
     }
   };
 
