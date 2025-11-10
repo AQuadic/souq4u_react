@@ -87,8 +87,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                 />
 
                 {["cancelled", "ملغي"].includes(itemStatus) && (
-                  <span className="absolute top-2 left-2 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full shadow">
-                    {t("cancelled", { defaultValue: "Cancelled" })}
+                  <span className="absolute top-2 ltr:right-2 rtl:left-2 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full shadow">
+                    {t("Orders.cancelled", { defaultValue: "Cancelled" })}
                   </span>
                 )}
               </div>
