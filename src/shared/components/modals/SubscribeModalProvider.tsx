@@ -3,8 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import SubscribeModal from "./SubscribeModal";
 import { getStoreSetting } from "../layout/api/store";
 
-const STORAGE_KEY = "obranchy_subscribe_modal_shown";
-const DEFAULT_DELAY_MINUTES = 5; 
+const STORAGE_KEY = "souq4u_subscribe_modal_shown";
 
 interface StoreSettings {
   subscription_pop_up_duration?: number;
@@ -18,11 +17,11 @@ interface StoreSettings {
     twitter?: string | null;
     whatsapp?: string | null;
     youtube?: string | null;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   email?: string;
   phone?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const SubscribeModalProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -30,7 +29,11 @@ const SubscribeModalProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data: storeSettings, isLoading, isError } = useQuery<StoreSettings>({
+  const {
+    data: storeSettings,
+    isLoading,
+    isError,
+  } = useQuery<StoreSettings>({
     queryKey: ["store-settings"],
     queryFn: () => getStoreSetting(),
     staleTime: 5 * 60 * 1000,
@@ -47,37 +50,49 @@ const SubscribeModalProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (isError) {
-      console.warn("[SubscribeModalProvider] Failed to load settings, using default duration");
+      console.warn(
+        "[SubscribeModalProvider] Failed to load settings, proceeding with default behavior"
+      );
     }
 
-    const durationMinutes =
-      storeSettings?.subscription_pop_up_duration ?? DEFAULT_DELAY_MINUTES;
-    console.log(`[SubscribeModalProvider] Duration from config: ${durationMinutes} minutes`);
-
-    const now = Date.now();
-    const lastShownTime = sessionStorage.getItem(STORAGE_KEY);
-    if (!lastShownTime || now - parseInt(lastShownTime, 10) >= durationMinutes * 60 * 1000) {
-      console.log("[SubscribeModalProvider] Showing modal immediately on load");
-      setIsModalOpen(true);
-      sessionStorage.setItem(STORAGE_KEY, now.toString());
+    // Use localStorage so the "shown" flag persists across refreshes.
+    const alreadyShown = localStorage.getItem(STORAGE_KEY);
+    if (alreadyShown) {
+      console.log(
+        "[SubscribeModalProvider] Modal has been shown before; will not show again"
+      );
+      return;
     }
 
-    const interval = setInterval(() => {
-      console.log("[SubscribeModalProvider] Showing modal via interval");
-      setIsModalOpen(true);
-      sessionStorage.setItem(STORAGE_KEY, Date.now().toString());
-    }, durationMinutes * 60 * 1000);
+    // Show the modal once and persist the fact that it was shown.
+    console.log("[SubscribeModalProvider] Showing modal (first time)");
+    setIsModalOpen(true);
+    try {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    } catch (e) {
+      console.warn(
+        "[SubscribeModalProvider] Could not write to localStorage",
+        e
+      );
+    }
 
+    // No interval — modal should appear only once ever (unless localStorage is cleared).
     return () => {
-      console.log("[SubscribeModalProvider] Component unmounting, clearing interval");
-      clearInterval(interval);
+      console.log("[SubscribeModalProvider] Component unmounting");
     };
   }, [storeSettings, isLoading, isError]);
 
   const handleCloseModal = () => {
     console.log("[SubscribeModalProvider] Modal closed by user");
     setIsModalOpen(false);
-    sessionStorage.setItem(STORAGE_KEY, Date.now().toString());
+    try {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    } catch (e) {
+      console.warn(
+        "[SubscribeModalProvider] Could not write to localStorage on close",
+        e
+      );
+    }
   };
 
   return (
