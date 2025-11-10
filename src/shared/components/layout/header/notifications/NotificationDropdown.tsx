@@ -158,8 +158,8 @@ export default function NotificationDropdown() {
                       >
                         <div className="relative w-[40px] h-[40px]">
                           <img
-                            src={"/logo.png"}
-                            alt="Notification"
+                            src={n.image?.url || "/logo.png"}
+                            alt={n.title?.en || "Notification"}
                             className={`w-full h-full object-cover rounded-full ${
                               n.read_at ? "opacity-70" : ""
                             }`}
@@ -205,8 +205,8 @@ export default function NotificationDropdown() {
                       >
                         <div className="relative w-[40px] h-[40px]">
                           <img
-                            src={"/logo.png"}
-                            alt="Notification"
+                            src={n.image?.url || "/logo.png"}
+                            alt={n.title?.en || "Notification"}
                             className={`w-full h-full object-cover rounded-full ${
                               n.read_at ? "opacity-70" : ""
                             }`}

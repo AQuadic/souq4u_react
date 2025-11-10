@@ -129,8 +129,8 @@ export default function NotificationsPage() {
                   >
                     <div className="relative px-4">
                       <img
-                        src={"/logo.png"}
-                        alt="Notification"
+                        src={n.image?.url || "/logo.png"}
+                        alt={n.title?.en || "Notification"}
                         className={`w-[50px] h-[50px] object-cover rounded-full ${
                           n.read_at ? "opacity-70" : ""
                         }`}
@@ -178,8 +178,8 @@ export default function NotificationsPage() {
                   >
                     <div className="relative px-2">
                       <img
-                        src={"/logo.png"}
-                        alt="Notification"
+                        src={n.image?.url || "/logo.png"}
+                        alt={n.title?.en || "Notification"}
                         className={`w-[50px] h-[50px] object-cover rounded-full ${
                           n.read_at ? "opacity-70" : ""
                         }`}
