@@ -4,6 +4,7 @@ import SubscribeModal from "./SubscribeModal";
 import { getStoreSetting } from "../layout/api/store";
 
 const STORAGE_KEY = "souq4u_subscribe_modal_shown";
+const DEFAULT_DELAY_SECONDS = 300; // fallback to 5 minutes if not provided
 
 interface StoreSettings {
   subscription_pop_up_duration?: number;
@@ -55,8 +56,21 @@ const SubscribeModalProvider: React.FC<{ children: React.ReactNode }> = ({
       );
     }
 
-    // Use localStorage so the "shown" flag persists across refreshes.
-    const alreadyShown = localStorage.getItem(STORAGE_KEY);
+    // Check localStorage to see if modal was already shown and closed by user.
+    let alreadyShown = false;
+    try {
+      const storedValue = localStorage.getItem(STORAGE_KEY);
+      alreadyShown = storedValue === "true";
+      console.log(
+        `[SubscribeModalProvider] localStorage check: ${storedValue}, alreadyShown: ${alreadyShown}`
+      );
+    } catch (e) {
+      console.warn(
+        "[SubscribeModalProvider] Could not read from localStorage",
+        e
+      );
+    }
+
     if (alreadyShown) {
       console.log(
         "[SubscribeModalProvider] Modal has been shown before; will not show again"
@@ -64,21 +78,27 @@ const SubscribeModalProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    // Show the modal once and persist the fact that it was shown.
-    console.log("[SubscribeModalProvider] Showing modal (first time)");
-    setIsModalOpen(true);
-    try {
-      localStorage.setItem(STORAGE_KEY, Date.now().toString());
-    } catch (e) {
-      console.warn(
-        "[SubscribeModalProvider] Could not write to localStorage",
-        e
-      );
-    }
+    // Determine delay in seconds from settings (API returns seconds).
+    // Some API responses nest the data under `settings`, so support both shapes.
+    const apiValue =
+      storeSettings?.subscription_pop_up_duration ??
+      // @ts-expect-error - support alternate shape where response is { settings: { ... } }
+      storeSettings?.settings?.subscription_pop_up_duration;
+    const delaySeconds = apiValue ?? DEFAULT_DELAY_SECONDS;
+    console.log(
+      `[SubscribeModalProvider] Will show modal after ${delaySeconds} seconds`
+    );
 
-    // No interval — modal should appear only once ever (unless localStorage is cleared).
+    const timeout = setTimeout(() => {
+      console.log("[SubscribeModalProvider] Showing modal after delay");
+      setIsModalOpen(true);
+    }, Math.max(0, Number(delaySeconds)) * 1000);
+
     return () => {
-      console.log("[SubscribeModalProvider] Component unmounting");
+      console.log(
+        "[SubscribeModalProvider] Component unmounting, clearing timeout"
+      );
+      clearTimeout(timeout);
     };
   }, [storeSettings, isLoading, isError]);
 
@@ -86,7 +106,8 @@ const SubscribeModalProvider: React.FC<{ children: React.ReactNode }> = ({
     console.log("[SubscribeModalProvider] Modal closed by user");
     setIsModalOpen(false);
     try {
-      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+      localStorage.setItem(STORAGE_KEY, "true");
+      console.log("[SubscribeModalProvider] Persisted 'true' to localStorage");
     } catch (e) {
       console.warn(
         "[SubscribeModalProvider] Could not write to localStorage on close",
