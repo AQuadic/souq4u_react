@@ -60,13 +60,44 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
 
   useEffect(() => {
     if (!showAddressForm && isAuthenticated && addresses.length > 0) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Auto-select first address if none is selected and trigger shipping update
+      if (!selectedAddressId && addresses[0]) {
+        const firstAddress = addresses[0];
+        setSelectedAddress(firstAddress.id);
+        onAddressSelected(firstAddress.id);
+
+        if (firstAddress.city_id && firstAddress.area_id && onShippingUpdate) {
+          onShippingUpdate(firstAddress.city_id, firstAddress.area_id);
+        }
+      }
     }
-  }, [showAddressForm, isAuthenticated, addresses.length]);
+  }, [
+    showAddressForm,
+    isAuthenticated,
+    addresses.length,
+    selectedAddressId,
+    addresses,
+    setSelectedAddress,
+    onAddressSelected,
+    onShippingUpdate,
+  ]);
 
   const handleAddressSelect = (addressId: number) => {
     setSelectedAddress(addressId);
     onAddressSelected(addressId);
+
+    // Find the selected address and trigger shipping update
+    const selectedAddress = addresses.find((addr) => addr.id === addressId);
+    if (
+      selectedAddress &&
+      selectedAddress.city_id &&
+      selectedAddress.area_id &&
+      onShippingUpdate
+    ) {
+      onShippingUpdate(selectedAddress.city_id, selectedAddress.area_id);
+    }
   };
 
   const handleAddNewAddress = () => {
@@ -102,7 +133,9 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
   if (isLoading) {
     return (
       <div className="rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-white mb-6">{t("Checkout.title")}</h2>
+        <h2 className="text-xl font-semibold text-white mb-6">
+          {t("Checkout.title")}
+        </h2>
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
         </div>
@@ -114,7 +147,9 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
     <div className="rounded-lg md:p-6">
       <Link to="/cart" className="md:hidden flex items-center gap-2 mb-6">
         <BackArrow />
-        <h2 className="text-xl font-semibold text-white">{t("Checkout.title")}</h2>
+        <h2 className="text-xl font-semibold text-white">
+          {t("Checkout.title")}
+        </h2>
       </Link>
 
       <h2 className="md:flex hidden text-xl font-semibold text-white mb-6">
