@@ -158,6 +158,10 @@ export async function getProducts(
     paramsPayload.is_best_seller = coerceFlag(params.is_best_seller);
   }
 
+  if (params?.is_most_view !== undefined) {
+    paramsPayload.is_most_view = coerceFlag(params.is_most_view);
+  }
+
   // `only_discount` can be provided by callers; prefer numeric 1/0.
   if (params?.only_discount !== undefined) {
     paramsPayload.only_discount = coerceFlag(params.only_discount);
@@ -216,6 +220,10 @@ export async function getProductsPaginated(
 
   if (params?.is_best_seller !== undefined) {
     paramsPayload.is_best_seller = coerceFlag(params.is_best_seller);
+  }
+
+  if (params?.is_most_view !== undefined) {
+    paramsPayload.is_most_view = coerceFlag(params.is_most_view);
   }
 
   if (params?.only_discount !== undefined) {
