@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -8,13 +8,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem,
 } from "../../../ui/dropdown-menu";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   getNotifications,
   Notification as NotificationType,
 } from "./api/getNotifications";
 import { markNotificationAsRead } from "./api/markNotificationAsRead";
-// import { markNotificationAsUnread } from "./api/markNotificationAsUnread";
 import { Link, useNavigate } from "react-router-dom";
 import Notifications from "../icons/Notifications";
 import { useTranslation } from "react-i18next";
@@ -26,16 +25,39 @@ export default function NotificationDropdown() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const {
-    data: notifications = [],
+    data,
     isLoading,
     isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     refetch,
-  } = useQuery({
+  } = useInfiniteQuery({
     queryKey: ["notifications"],
-    queryFn: () => getNotifications(),
+    queryFn: ({ pageParam }) => getNotifications({ cursor: pageParam }),
+    getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
+    initialPageParam: undefined as string | undefined,
   });
+
+  const notifications = data?.pages.flatMap((page) => page.data) ?? [];
+
+  const handleScroll = useCallback(() => {
+    if (!scrollContainerRef.current || !hasNextPage || isFetchingNextPage) {
+      return;
+    }
+
+    const { scrollTop, scrollHeight, clientHeight } =
+      scrollContainerRef.current;
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+
+    // Fetch more when scrolled to 80% of content
+    if (scrollPercentage > 0.8) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const handleNotificationClick = async (n: NotificationType) => {
     try {
@@ -117,99 +139,111 @@ export default function NotificationDropdown() {
                 </Link>
               </div>
 
-              {todayNotifications.length > 0 && (
-                <div>
-                  <h4 className="text-black px-5 pb-2 text-base font-semibold uppercase tracking-wide">
-                    {t("Notifications.new")}
-                  </h4>
-                  {todayNotifications.map((n: NotificationType) => (
-                    <DropdownMenuItem
-                      key={n.id}
-                      onClick={() => handleNotificationClick(n)}
-                      onSelect={(e) => e.preventDefault()}
-                      className="flex items-center gap-3 py-3 px-8 border-b border-[#E5E5E5] cursor-pointer hover:bg-[#f9f9f9]"
-                    >
-                      <div className="relative w-[40px] h-[40px]">
-                        <img
-                          src={"/logo.png"}
-                          alt="Notification"
-                          className={`w-full h-full object-cover rounded-full ${
-                            n.read_at ? "opacity-70" : ""
-                          }`}
-                        />
-                        {!n.read_at && (
-                          <span className="absolute top-5 -right-3 h-2 w-2 rounded-full bg-main" />
-                        )}
-                      </div>
+              <div
+                ref={scrollContainerRef}
+                onScroll={handleScroll}
+                className="max-h-[500px] overflow-y-auto"
+              >
+                {todayNotifications.length > 0 && (
+                  <div>
+                    <h4 className="text-black px-5 pb-2 text-base font-semibold uppercase tracking-wide">
+                      {t("Notifications.new")}
+                    </h4>
+                    {todayNotifications.map((n: NotificationType) => (
+                      <DropdownMenuItem
+                        key={n.id}
+                        onClick={() => handleNotificationClick(n)}
+                        onSelect={(e) => e.preventDefault()}
+                        className="flex items-center gap-3 py-3 px-8 border-b border-[#E5E5E5] cursor-pointer hover:bg-[#f9f9f9]"
+                      >
+                        <div className="relative w-[40px] h-[40px]">
+                          <img
+                            src={"/logo.png"}
+                            alt="Notification"
+                            className={`w-full h-full object-cover rounded-full ${
+                              n.read_at ? "opacity-70" : ""
+                            }`}
+                          />
+                          {!n.read_at && (
+                            <span className="absolute top-5 -right-3 h-2 w-2 rounded-full bg-main" />
+                          )}
+                        </div>
 
-                      <div className="flex-1 flex flex-col justify-between gap-1 overflow-hidden">
-                        <p
-                          className={`text-sm font-medium leading-[150%] break-words ${
-                            n.read_at ? "text-gray-500" : "text-black"
-                          }`}
-                        >
-                          {isArabic ? n.body?.ar : n.body?.en}
-                        </p>
-                        <span className="text-[10px] font-medium text-[#A1A1A1] self-end">
-                          {new Date(n.created_at).toLocaleString(locale, {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            day: "2-digit",
-                            month: "short",
-                          })}
-                        </span>
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-              )}
+                        <div className="flex-1 flex flex-col justify-between gap-1 overflow-hidden">
+                          <p
+                            className={`text-sm font-medium leading-[150%] break-words ${
+                              n.read_at ? "text-gray-500" : "text-black"
+                            }`}
+                          >
+                            {isArabic ? n.body?.ar : n.body?.en}
+                          </p>
+                          <span className="text-[10px] font-medium text-[#A1A1A1] self-end">
+                            {new Date(n.created_at).toLocaleString(locale, {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              day: "2-digit",
+                              month: "short",
+                            })}
+                          </span>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+                )}
 
-              {earlierNotifications.length > 0 && (
-                <div>
-                  <h4 className="px-5 pt-3 pb-2 text-base font-semibold text-black">
-                    {t("Notifications.earlier")}
-                  </h4>
-                  {earlierNotifications.map((n: NotificationType) => (
-                    <DropdownMenuItem
-                      key={n.id}
-                      onClick={() => handleNotificationClick(n)}
-                      onSelect={(e) => e.preventDefault()}
-                      className="flex items-center gap-3 py-3 px-8 border-b border-[#E5E5E5] cursor-pointer hover:bg-[#f9f9f9]"
-                    >
-                      <div className="relative w-[40px] h-[40px]">
-                        <img
-                          src={"/logo.png"}
-                          alt="Notification"
-                          className={`w-full h-full object-cover rounded-full ${
-                            n.read_at ? "opacity-70" : ""
-                          }`}
-                        />
-                        {!n.read_at && (
-                          <span className="absolute top-5 -right-3 h-2 w-2 rounded-full bg-main" />
-                        )}
-                      </div>
+                {earlierNotifications.length > 0 && (
+                  <div>
+                    <h4 className="px-5 pt-3 pb-2 text-base font-semibold text-black">
+                      {t("Notifications.earlier")}
+                    </h4>
+                    {earlierNotifications.map((n: NotificationType) => (
+                      <DropdownMenuItem
+                        key={n.id}
+                        onClick={() => handleNotificationClick(n)}
+                        onSelect={(e) => e.preventDefault()}
+                        className="flex items-center gap-3 py-3 px-8 border-b border-[#E5E5E5] cursor-pointer hover:bg-[#f9f9f9]"
+                      >
+                        <div className="relative w-[40px] h-[40px]">
+                          <img
+                            src={"/logo.png"}
+                            alt="Notification"
+                            className={`w-full h-full object-cover rounded-full ${
+                              n.read_at ? "opacity-70" : ""
+                            }`}
+                          />
+                          {!n.read_at && (
+                            <span className="absolute top-5 -right-3 h-2 w-2 rounded-full bg-main" />
+                          )}
+                        </div>
 
-                      <div className="flex-1 flex flex-col justify-between gap-1 overflow-hidden">
-                        <p
-                          className={`text-sm font-medium leading-[150%] break-words ${
-                            n.read_at ? "text-gray-500" : "text-black"
-                          }`}
-                        >
-                          {isArabic ? n.body?.ar : n.body?.en}
-                        </p>
-                        <span className="text-[10px] font-medium text-[#A1A1A1] self-end">
-                          {new Date(n.created_at).toLocaleString(locale, {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            day: "2-digit",
-                            month: "short",
-                          })}
-                        </span>
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-              )}
+                        <div className="flex-1 flex flex-col justify-between gap-1 overflow-hidden">
+                          <p
+                            className={`text-sm font-medium leading-[150%] break-words ${
+                              n.read_at ? "text-gray-500" : "text-black"
+                            }`}
+                          >
+                            {isArabic ? n.body?.ar : n.body?.en}
+                          </p>
+                          <span className="text-[10px] font-medium text-[#A1A1A1] self-end">
+                            {new Date(n.created_at).toLocaleString(locale, {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              day: "2-digit",
+                              month: "short",
+                            })}
+                          </span>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+                )}
+
+                {isFetchingNextPage && (
+                  <div className="flex justify-center py-4">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-main border-t-transparent" />
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <div className="flex flex-col items-center justify-center py-10 text-center">
