@@ -86,7 +86,7 @@ const AddressCard: React.FC<AddressCardProps> = ({
           </div>
 
           <p className="dark:text-gray-300 text-sm leading-relaxed">
-            {address.details}
+            {address.phone}
           </p>
 
           {address.zipcode && (
@@ -154,7 +154,7 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
       }
     }
   };
-  const {t} = useTranslation("saveAddress");
+  const { t } = useTranslation("saveAddress");
 
   return (
     <div className="space-y-4">
