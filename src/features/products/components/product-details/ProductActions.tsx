@@ -106,11 +106,11 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
       queryClient.invalidateQueries({ queryKey: ["favorites"] });
       toast.success(
         !favorite
-          ? t("addedToFavorites") ||
-              t("addedToFavorites") ||
+          ? t("Products.addedToFavorites") ||
+              t("Products.addedToFavorites") ||
               "Added to favorites"
-          : t("removedFromFavorites") ||
-              t("removedFromFavorites") ||
+          : t("Products.removedFromFavorites") ||
+              t("Products.removedFromFavorites") ||
               "Removed from favorites"
       );
       if (onToggleFavorite) {
