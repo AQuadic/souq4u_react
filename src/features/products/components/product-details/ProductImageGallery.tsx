@@ -484,7 +484,10 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                   </div>
 
                   <button
-                    onClick={onToggleFavorite}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleFavorite();
+                    }}
                     className="absolute top-0 right-3 z-20 bg-white/80 hover:bg-white/90 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 md:hidden"
                     aria-label={
                       isFavorite ? "Remove from favorites" : "Add to favorites"
