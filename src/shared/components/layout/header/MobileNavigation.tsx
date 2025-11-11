@@ -6,8 +6,10 @@ import NavigationFav from "./icons/NavigationFav";
 import NavigationCart from "./icons/NavigationCart";
 import NavigationProfile from "./icons/NavigationProfile";
 import NavigationMainHome from "./icons/NavigationMainHome";
+import { useTranslation } from "react-i18next";
 
 const MobileNavigation = () => {
+  const { t } = useTranslation("Common");
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -15,10 +17,10 @@ const MobileNavigation = () => {
   const cleanPathname = pathname.replace(/^\/(en|ar)(\/|$)/, "/");
 
   const navItems = [
-    { href: "/", label: "Home", icon: NavigationMainHome },
-    { href: "/profile/favorites", label: "Favorites", icon: NavigationFav },
-    { href: "/cart", label: "Cart", icon: NavigationCart },
-    { href: "/profile", label: "Profile", icon: NavigationProfile },
+    { href: "/", label: t('Navigation.home'), icon: NavigationMainHome },
+    { href: "/profile/favorites", label: t('Navigation.favorites'), icon: NavigationFav },
+    { href: "/cart", label: t('Navigation.cart'), icon: NavigationCart },
+    { href: "/profile", label: t('Navigation.profile'), icon: NavigationProfile },
   ];
 
   return (

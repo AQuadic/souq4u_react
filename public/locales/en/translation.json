@@ -57,7 +57,10 @@
     "home": "Home",
     "products": "Products",
     "productDetails": "Product Details",
-    "subscribeUs": "Subscribe to us"
+    "subscribeUs": "Subscribe to us",
+    "favorites": "Favorites",
+    "cart": "Cart",
+    "profile": "My Profile"
   },
   "recommendedForYou": "Recommended For You",
   "Toasts": {
