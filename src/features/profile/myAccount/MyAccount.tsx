@@ -14,6 +14,18 @@ import BackArrow from "@/features/products/icons/BackArrow";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { ChevronDownIcon } from "lucide-react"
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
+import { Button } from "@/shared/components/ui/button";
+import { Calendar } from "@/shared/components/ui/calendar";
+// import { Calendar } from "@/components/ui/calendar"
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover"
+
 const MyAccount: React.FC = () => {
   const { i18n, t } = useTranslation("Profile");
   const locale = i18n.language;
@@ -22,6 +34,8 @@ const MyAccount: React.FC = () => {
 
   // Get user data from auth store
   const user = useUser();
+  const [open, setOpen] = React.useState(false)
+  const [date, setDate] = React.useState<Date | undefined>(undefined)
 
   // Form state - initialize with user data immediately
   const [name, setName] = useState<string>(user?.name || "");
@@ -236,6 +250,62 @@ const MyAccount: React.FC = () => {
               disabled
             />
           </div>
+        </div>
+
+        <div className="mt-8">
+          <div className="flex flex-col gap-3">
+            <Label className="px-1">
+              {t("Profile.birthday")}
+            </Label>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild className="!w-full h-[46px]">
+                <Button
+                  variant="outline"
+                  id="date"
+                  className="w-48 justify-between font-normal"
+                >
+                  {date ? date.toLocaleDateString() : t('Profile.selectDate')}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  captionLayout="dropdown"
+                  onSelect={(date) => {
+                    setDate(date)
+                    setOpen(false)
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <label
+            htmlFor="gender"
+            className=" text-base font-normal leading-[100%]"
+          >
+            {t("Profile.gender")}
+          </label>
+
+          <div className="flex items-center justify-between gap-4 mt-4">
+              <div className="w-full border rounded-[8px] dark:border-gray-600">
+                  <div className="flex items-center ps-3">
+                      <input id="male" type="radio" value="" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" />
+                      <label htmlFor="male" className="w-full py-3 ms-2 text-sm font-medium text-gray-900">Male</label>
+                  </div>
+              </div>
+              <div className="w-full border rounded-[8px] dark:border-gray-600">
+                  <div className="flex items-center ps-3">
+                      <input id="female" type="radio" value="" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" />
+                      <label htmlFor="female" className="w-full py-3 ms-2 text-sm font-medium text-gray-900">Female</label>
+                  </div>
+              </div>
+          </div>
+
         </div>
 
         {/* city id and profile image removed */}

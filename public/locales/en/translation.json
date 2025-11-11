@@ -477,7 +477,10 @@
     "saveAddress": "Save Address",
     "enterEmail": "Enter new email",
     "password": "Password",
-    "save": "Save"
+    "save": "Save",
+    "birthday": "Birthday",
+    "selectDate": "Select date",
+    "gender": "Gender"
   },
   "Orders": {
     "orders": "Orders",
