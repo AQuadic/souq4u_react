@@ -21,14 +21,14 @@ const HomeCategories = () => {
       <h3 className="font-bold text-2xl sm:text-3xl mb-6">
         {t("Home.categories")}
       </h3>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 place-items-center">
+      <div className="flex flex-wrap gap-6 place-items-center">
         {categories?.map((category) => (
           <button
             key={category.id}
             onClick={() => navigate(`/products?category_id=${category.id}`)}
             className="flex flex-col items-center group"
           >
-            <div className="w-[122px] h-[122px] rounded-full overflow-hidden bg-gray-100 shadow-md transition-transform duration-300 group-hover:scale-105">
+            <div className="md:w-[122px] w-16 md:h-[122px] h-16 rounded-full overflow-hidden bg-gray-100 shadow-md transition-transform duration-300 group-hover:scale-105">
               <img
                 src={
                   category.image?.url || "/categories/category-placeholder.jpg"
@@ -36,7 +36,7 @@ const HomeCategories = () => {
                 alt={getTranslatedText(category.name, locale, "category")}
                 width={122}
                 height={122}
-                className="object-cover w-full h-full"
+                className="object-cover md:w-[122px] w-16 md:h-[122px] h-16"
               />
             </div>
             <p className="mt-3 text-center text-sm sm:text-base font-medium text-gray-800">
