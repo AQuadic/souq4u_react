@@ -228,7 +228,7 @@ const MyAccount: React.FC = () => {
             <PhoneInput
               value={phone}
               onChange={setPhone}
-              placeholder={t("inputPlaceholder")}
+              placeholder={t("Profile.inputPlaceholder")}
               language={locale as "en" | "ar"}
               radius="md"
               disabled
