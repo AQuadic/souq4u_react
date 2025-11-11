@@ -30,6 +30,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
   description,
 }) => {
   const { t, i18n } = useTranslation();
+  const currencyLabel = t(`Common.currency`);
 
   const formatPrice = (price: number) =>
     price.toLocaleString("en-US", { maximumFractionDigits: 0 });
@@ -48,7 +49,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
               }`}
             >
               {formatPrice(finalPrice)}{" "}
-              <span className="font-normal text-xl">{currency}</span>
+              <span className="font-normal text-xl">{currencyLabel}</span>
             </h2>
             <div className="flex items-center gap-4">
               <h2
@@ -61,7 +62,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
                 {originalPrice !== undefined && (
                   <>
                     {formatPrice(originalPrice)}{" "}
-                    <span className="font-normal">{currency}</span>
+                    <span className="font-normal">{currencyLabel}</span>
                   </>
                 )}
               </h2>
@@ -83,7 +84,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
             }`}
           >
             {formatPrice(finalPrice)}{" "}
-            <span className="font-normal">{currency}</span>
+            <span className="font-normal">{currencyLabel}</span>
           </h2>
         )}
       </div>
