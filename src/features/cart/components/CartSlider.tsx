@@ -92,34 +92,37 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
               </button>
             </div>
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-4 pb-24 md:pb-4">
               {cartItems.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <p className="text-gray-400 text-center">{t("Cart.empty")}</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {cartItems.map((item) => (
-                    <CartItem
-                      key={item.id}
-                      item={item}
-                      onUpdateQuantity={handleUpdateQuantity}
-                      onRemove={handleRemoveItem}
+                <>
+                  <div className="space-y-4">
+                    {cartItems.map((item) => (
+                      <CartItem
+                        key={item.id}
+                        item={item}
+                        onUpdateQuantity={handleUpdateQuantity}
+                        onRemove={handleRemoveItem}
+                      />
+                    ))}
+                  </div>
+                  
+            {/* Cart Summary */}
+                  <div className="mt-4">
+                    <CartSummary
+                      subtotal={subtotal}
+                      tax={tax}
+                      totalDiscount={totalDiscount}
+                      total={total}
+                      onClose={onClose}
                     />
-                  ))}
-                </div>
+                  </div>
+                </>
               )}
             </div>
-            {/* Cart Summary */}
-            {cartItems.length > 0 && (
-              <CartSummary
-                subtotal={subtotal}
-                tax={tax}
-                totalDiscount={totalDiscount}
-                total={total}
-                onClose={onClose}
-              />
-            )}
           </motion.div>
 
           <AnimatePresence>
