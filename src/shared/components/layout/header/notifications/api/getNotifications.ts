@@ -14,11 +14,28 @@ export interface Notification {
 
 export interface GetNotificationsParams {
   type?: string;
+  cursor?: string;
+}
+
+export interface NotificationsResponse {
+  data: Notification[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: {
+    path: string;
+    per_page: number;
+    next_cursor: string | null;
+    prev_cursor: string | null;
+  };
 }
 
 export const getNotifications = async (
   params?: GetNotificationsParams
-): Promise<Notification[]> => {
+): Promise<NotificationsResponse> => {
   try {
     const response = await axios.get("/notification", {
       headers: {
@@ -31,15 +48,30 @@ export const getNotifications = async (
 
     console.log("Notifications response:", response.data);
 
-    if (response.data?.data && Array.isArray(response.data.data)) {
-      return response.data.data;
+    if (response.data) {
+      return response.data;
     }
 
-    return [];
-  } catch (error: any) {
+    return {
+      data: [],
+      links: {
+        first: null,
+        last: null,
+        prev: null,
+        next: null,
+      },
+      meta: {
+        path: "",
+        per_page: 15,
+        next_cursor: null,
+        prev_cursor: null,
+      },
+    };
+  } catch (error: unknown) {
     console.error("Failed to fetch notifications:", error);
     throw new Error(
-      error.response?.data?.message || "Failed to fetch notifications"
+      (error as { response?: { data?: { message?: string } } })?.response?.data
+        ?.message || "Failed to fetch notifications"
     );
   }
 };

@@ -87,8 +87,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                 />
 
                 {["cancelled", "ملغي"].includes(itemStatus) && (
-                  <span className="absolute top-2 left-2 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full shadow">
-                    {t("cancelled", { defaultValue: "Cancelled" })}
+                  <span className="absolute top-2 ltr:right-2 rtl:left-2 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full shadow">
+                    {t("Orders.cancelled", { defaultValue: "Cancelled" })}
                   </span>
                 )}
               </div>
@@ -101,7 +101,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                   {productName}
                 </h2>
                 <p className="text-main md:text-2xl text-base font-bold md:mt-6 mt-2">
-                  {order.sub_total} <span className="font-normal">{t("Orders.egp")}</span>
+                  {order.sub_total}{" "}
+                  <span className="font-normal">{t("Orders.egp")}</span>
                 </p>
                 {/* Show days since order */}
                 {/* {order.created_at && (
@@ -128,7 +129,9 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
                             ? { ...i, is_reviewed: true }
                             : i
                         );
-                        queryClient.invalidateQueries({ queryKey: ["order", order.id] });
+                        queryClient.invalidateQueries({
+                          queryKey: ["order", order.id],
+                        });
                       }}
                     />
                   </div>
@@ -137,73 +140,79 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
             </div>
 
             <div className="flex flex-col items-end gap-2 pr-4">
-              {["pending", "معلق"].includes(order.status?.toLowerCase() || "") &&
-              !["cancelled", "ملغي"].includes(itemStatus) && (
-                <>
-                  <button
-                    type="button"
-                    className="text-main text-base font-normal leading-[100%] px-4 py-8 cursor-pointer hover:underline"
-                    onClick={() => {
-                      setToCancelId(item.id);
-                      setIsDialogOpen(true);
-                    }}
-                  >
-                    {loadingId === item.id
-                      ? t("Orders.cancel")
-                      : t("Orders.cancel")}
-                  </button>
+              {["pending", "معلق"].includes(
+                order.status?.toLowerCase() || ""
+              ) &&
+                !["cancelled", "ملغي"].includes(itemStatus) && (
+                  <>
+                    <button
+                      type="button"
+                      className="text-main text-base font-normal leading-[100%] px-4 py-8 cursor-pointer hover:underline"
+                      onClick={() => {
+                        setToCancelId(item.id);
+                        setIsDialogOpen(true);
+                      }}
+                    >
+                      {loadingId === item.id
+                        ? t("Orders.cancel")
+                        : t("Orders.cancel")}
+                    </button>
 
-                  {isDialogOpen && toCancelId === item.id && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center">
-                      <button
-                        aria-label={t("no")}
-                        onClick={() => setIsDialogOpen(false)}
-                        className="fixed inset-0 bg-black/50"
-                      />
+                    {isDialogOpen && toCancelId === item.id && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center">
+                        <button
+                          aria-label={t("no")}
+                          onClick={() => setIsDialogOpen(false)}
+                          className="fixed inset-0 bg-black/50"
+                        />
 
-                      <div className="relative z-10 w-full max-w-[500px] mx-4">
-                        <div className="rounded-3xl border-none bg-white dark:bg-[#121216] shadow-xl">
-                          <div className="px-6 pt-6">
-                            <h2 className="text-center leading-[150%] text-gray-900 dark:text-gray-100 text-2xl font-medium">
-                              {t("Orders.confirm", { defaultValue: "Confirm" })}
-                            </h2>
-                          </div>
+                        <div className="relative z-10 w-full max-w-[500px] mx-4">
+                          <div className="rounded-3xl border-none bg-white dark:bg-[#121216] shadow-xl">
+                            <div className="px-6 pt-6">
+                              <h2 className="text-center leading-[150%] text-gray-900 dark:text-gray-100 text-2xl font-medium">
+                                {t("Orders.confirm", {
+                                  defaultValue: "Confirm",
+                                })}
+                              </h2>
+                            </div>
 
-                          <div className="px-6 mt-4 text-center">
-                            <p className="text-sm text-gray-700 dark:text-gray-300">
-                              {t("Orders.confirmDelete", {
-                                defaultValue:
-                                  "Are you sure you want to cancel this order?",
-                              })}
-                            </p>
-                          </div>
+                            <div className="px-6 mt-4 text-center">
+                              <p className="text-sm text-gray-700 dark:text-gray-300">
+                                {t("Orders.confirmCancel", {
+                                  defaultValue:
+                                    "Are you sure you want to cancel this order?",
+                                })}
+                              </p>
+                            </div>
 
-                          <div className="flex justify-center gap-4 px-6 py-6">
-                            <button
-                              onClick={() => {
-                                if (toCancelId) handleCancel(toCancelId);
-                              }}
-                              aria-label={t("Orders.confirm", {
-                                defaultValue: "Confirm",
-                              })}
-                              className="w-[140px] h-12 rounded-[8px] bg-main hover:bg-main text-white text-base font-medium cursor-pointer transition-colors"
-                            >
-                              {t("Orders.confirm", { defaultValue: "Confirm" })}
-                            </button>
-                            <button
-                              onClick={() => setIsDialogOpen(false)}
-                              aria-label={t("no")}
-                              className="w-[140px] h-12 rounded-[8px] border border-gray-300 dark:border-gray-700 text-base font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-                            >
-                              {t("Orders.cancel", { defaultValue: "Cancel" })}
-                            </button>
+                            <div className="flex justify-center gap-4 px-6 py-6">
+                              <button
+                                onClick={() => {
+                                  if (toCancelId) handleCancel(toCancelId);
+                                }}
+                                aria-label={t("Orders.confirm", {
+                                  defaultValue: "Confirm",
+                                })}
+                                className="w-[140px] h-12 rounded-[8px] bg-main hover:bg-main text-white text-base font-medium cursor-pointer transition-colors"
+                              >
+                                {t("Orders.confirm", {
+                                  defaultValue: "Confirm",
+                                })}
+                              </button>
+                              <button
+                                onClick={() => setIsDialogOpen(false)}
+                                aria-label={t("no")}
+                                className="w-[140px] h-12 rounded-[8px] border border-gray-300 dark:border-gray-700 text-base font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                              >
+                                {t("Orders.cancel", { defaultValue: "Cancel" })}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </>
-              )}
+                    )}
+                  </>
+                )}
 
               {/* Payment details (show once per order, placed under actions) */}
               {/* <div className="w-full md:w-[260px] text-right mt-2">

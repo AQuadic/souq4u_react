@@ -2,7 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getProductsPaginated, PaginatedResponse, Product } from "../../api/getProduct";
+import {
+  getProductsPaginated,
+  PaginatedResponse,
+  Product,
+} from "../../api/getProduct";
 import { getPriceRange } from "../../api/getPriceRange";
 import ProductCard from "../ProductCard";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -19,7 +23,7 @@ import { X } from "lucide-react";
 
 const ProductsGrid: React.FC = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -34,11 +38,11 @@ const ProductsGrid: React.FC = () => {
   const mostViewParam = searchParams?.get("is_most_view");
   const isMostViewedActive = mostViewParam === "1" || mostViewParam === "true";
   const onlyDiscountParam = searchParams?.get("only_discount");
-  const isOnlyDiscountedActive = onlyDiscountParam === "1" || onlyDiscountParam === "true";
+  const isOnlyDiscountedActive =
+    onlyDiscountParam === "1" || onlyDiscountParam === "true";
 
-
-  const activeCategoryId = categoryIdFromUrl 
-    ? parseInt(categoryIdFromUrl) 
+  const activeCategoryId = categoryIdFromUrl
+    ? parseInt(categoryIdFromUrl)
     : filters.categoryId;
 
   // Fetch price range from API
@@ -51,12 +55,10 @@ const ProductsGrid: React.FC = () => {
     staleTime: 60000, // Cache for 1 minute
   });
 
-  const {
-    data,
-    isLoading,
-    isFetching,
-    error,
-  } = useQuery<PaginatedResponse<Product>, Error>({
+  const { data, isLoading, isFetching, error } = useQuery<
+    PaginatedResponse<Product>,
+    Error
+  >({
     queryKey: [
       "products",
       currentPage,
@@ -65,6 +67,8 @@ const ProductsGrid: React.FC = () => {
       filters.categoryId,
       filters.minPrice,
       filters.maxPrice,
+      isMostViewedActive,
+      isOnlyDiscountedActive,
     ],
     queryFn: () =>
       getProductsPaginated({
@@ -72,9 +76,14 @@ const ProductsGrid: React.FC = () => {
         page: currentPage,
         sort_by: filters.sortBy,
         sort_order: filters.sortOrder,
+        // Respect various query param names used around the app
         only_discount:
+          searchParams.get("only_discount") === "1" ||
           searchParams.get("discount") === "1" ||
           searchParams.get("is_discounted") === "1",
+        is_most_view:
+          searchParams.get("is_most_view") === "1" ||
+          searchParams.get("is_most_view") === "true",
         category_id: filters.categoryId,
         min_price: filters.minPrice,
         max_price: filters.maxPrice,
@@ -107,25 +116,13 @@ const ProductsGrid: React.FC = () => {
   }
 
   const handleRemoveMostViewed = () => {
-    const params = new URLSearchParams(searchParams?.toString() || "");
-    params.delete("is_most_view");
-
-    const newUrl = params.toString()
-      ? `${window.location.pathname}?${params.toString()}`
-      : window.location.pathname;
-
-    navigate(newUrl);
+    // Redirect to the main products listing (no filters) so user sees all products
+    navigate("/products");
   };
 
-    const handleRemoveIsDiscounted = () => {
-    const params = new URLSearchParams(searchParams?.toString() || "");
-    params.delete("only_discount");
-
-    const newUrl = params.toString()
-      ? `${window.location.pathname}?${params.toString()}`
-      : window.location.pathname;
-
-    navigate(newUrl);
+  const handleRemoveIsDiscounted = () => {
+    // Redirect to the main products listing (no filters) so user sees all products
+    navigate("/products");
   };
 
   return (
@@ -141,39 +138,39 @@ const ProductsGrid: React.FC = () => {
         ]}
       />
 
-    {isMostViewedActive && (
-      <div className="mt-6 flex items-center gap-2">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 rounded-full border border-main/30">
-          <span className="text-sm font-medium text-main">
-            {t("Products.mostViewedProducts")}
-          </span>
-          <button
-            onClick={handleRemoveMostViewed}
-            className="hover:bg-main/20 rounded-full p-1 transition-colors"
-            aria-label="Remove most viewed filter"
-          >
-            <X className="w-4 h-4 text-main" />
-          </button>
+      {isMostViewedActive && (
+        <div className="mt-6 flex items-center gap-2">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 rounded-full border border-main/30">
+            <span className="text-sm font-medium text-main">
+              {t("Products.mostViewedProducts")}
+            </span>
+            <button
+              onClick={handleRemoveMostViewed}
+              className="hover:bg-main/20 rounded-full p-1 transition-colors"
+              aria-label="Remove most viewed filter"
+            >
+              <X className="w-4 h-4 text-main" />
+            </button>
+          </div>
         </div>
-      </div>
-    )}
+      )}
 
       {isOnlyDiscountedActive && (
-      <div className="mt-6 flex items-center gap-2">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 rounded-full border border-main/30">
-          <span className="text-sm font-medium text-main">
-            {t("Products.bestOffersProducts")}
-          </span>
-          <button
-            onClick={handleRemoveIsDiscounted}
-            className="hover:bg-main/20 rounded-full p-1 transition-colors"
-            aria-label="Remove discount filter"
-          >
-            <X className="w-4 h-4 text-main" />
-          </button>
+        <div className="mt-6 flex items-center gap-2">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-main/10 rounded-full border border-main/30">
+            <span className="text-sm font-medium text-main">
+              {t("Products.bestOffersProducts")}
+            </span>
+            <button
+              onClick={handleRemoveIsDiscounted}
+              className="hover:bg-main/20 rounded-full p-1 transition-colors"
+              aria-label="Remove discount filter"
+            >
+              <X className="w-4 h-4 text-main" />
+            </button>
+          </div>
         </div>
-      </div>
-    )}
+      )}
 
       <div className="flex lg:flex-row flex-col gap-8 mt-10">
         <div>

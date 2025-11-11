@@ -10,6 +10,7 @@ import { useAddressStore } from "../stores";
 import { useTranslation } from "react-i18next";
 import Delete from "@/features/profile/addresses/icons/Delete";
 import Edit from "@/features/profile/addresses/icons/Edit";
+import Phone from "@/features/profile/addresses/icons/Phone";
 
 interface SavedAddressesProps {
   addresses: Address[];
@@ -85,9 +86,12 @@ const AddressCard: React.FC<AddressCardProps> = ({
             <h3 className="dark:text-white font-medium">{address.title}</h3>
           </div>
 
-          <p className="dark:text-gray-300 text-sm leading-relaxed">
-            {address.details}
-          </p>
+          <div className="flex items-center gap-2">
+            <Phone />
+            <p className="dark:text-gray-300 text-sm leading-relaxed">
+              {address.phone}
+            </p>
+          </div>
 
           {address.zipcode && (
             <p className="dark:text-gray-400 text-xs mt-1">
@@ -154,7 +158,7 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
       }
     }
   };
-  const {t} = useTranslation("saveAddress");
+  const { t } = useTranslation("saveAddress");
 
   return (
     <div className="space-y-4">

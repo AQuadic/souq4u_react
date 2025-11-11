@@ -25,7 +25,6 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
 }) => {
   const { t } = useTranslation("Checkout");
   const { t: p } = useTranslation("Cart");
-  const { t: common } = useTranslation("Common");
   const { summaryData } = useCheckoutCartSummary();
   const [promocode, setPromocode] = useState("");
 
@@ -155,7 +154,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
             {t("Cart.subtotal")}
           </span>
           <span className="font-medium text-slate-900 dark:text-white">
-            {subtotal.toLocaleString()} {common("Common.currency")}
+            {subtotal.toLocaleString()} {t("Common.currency")}
           </span>
         </div>
 
@@ -166,7 +165,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
             {t("Cart.totalProducts")}
           </span>
           <span className="font-medium text-slate-900 dark:text-white">
-            {totalProducts.toLocaleString()} {common("Common.currency")}
+            {totalProducts.toLocaleString()} {t("Common.currency")}
           </span>
         </div>
 
@@ -176,7 +175,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               {t("taxes")}
             </span>
             <span className="font-medium text-slate-900 dark:text-white">
-              {taxes.toLocaleString()} {common("Common.currency")}
+              {taxes.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}
@@ -187,7 +186,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               {t("Cart.discount")}
             </span>
             <span className="font-medium text-green-600 dark:text-green-400">
-              -{totalDiscount.toLocaleString()} {common("Common.currency")}
+              -{totalDiscount.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}
@@ -198,7 +197,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
               {t("shipping")}
             </span>
             <span className="font-medium text-slate-900 dark:text-white">
-              {shipping.toLocaleString()} {common("Common.currency")}
+              {shipping.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}
@@ -273,7 +272,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
             <span className="text-xl font-bold text-slate-900 dark:text-white">
               {total.toLocaleString()}{" "}
               <span className="text-sm font-normal text-slate-700 dark:text-slate-200">
-                {common("Common.currency")}
+                {t("Common.currency")}
               </span>
             </span>
           </div>

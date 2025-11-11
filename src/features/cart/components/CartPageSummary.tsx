@@ -147,7 +147,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
               {t("Cart.shippingCost")}
             </span>
             <span className="text-gray-900 dark:text-white font-medium">
-              {shippingCost.toLocaleString()} {t("currency")}
+              {shippingCost.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}
@@ -158,7 +158,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
               {t("Cart.taxes")}
             </span>
             <span className="text-gray-900 dark:text-white font-medium">
-              {taxes.toLocaleString()} {t("currency")}
+              {taxes.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}

@@ -21,7 +21,9 @@ const EditAddress = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [initialData, setInitialData] = useState<Partial<AddressFormData> | undefined>(undefined);
+  const [initialData, setInitialData] = useState<
+    Partial<AddressFormData> | undefined
+  >(undefined);
 
   useEffect(() => {
     if (!id || isNaN(Number(id))) {
@@ -63,6 +65,11 @@ const EditAddress = () => {
   }, [id]);
 
   const handleSubmit = async () => {
+    // This is called when the form submission is initiated
+    // Navigation will happen in handleSubmitSuccess
+  };
+
+  const handleSubmitSuccess = () => {
     if (!id || isNaN(Number(id))) return;
 
     // Navigate after successful update
@@ -73,7 +80,8 @@ const EditAddress = () => {
     }
   };
 
-  if (loading) return <p className="text-[#C0C0C0]">{t("Profile.loadingAddressess")}</p>;
+  if (loading)
+    return <p className="text-[#C0C0C0]">{t("Profile.loadingAddressess")}</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
@@ -92,7 +100,10 @@ const EditAddress = () => {
         {t("AddressForm.editAddress")}
       </h2>
 
-      <Link to="/profile/addresses" className="md:hidden flex items-center mb-8">
+      <Link
+        to="/profile/addresses"
+        className="md:hidden flex items-center mb-8"
+      >
         <BackArrow />
         <h2 className="text-[32px] font-bold leading-[100%]">
           {t("AddressForm.editAddress")}
@@ -106,6 +117,7 @@ const EditAddress = () => {
           isEditing
           addressId={Number(id)}
           showSaveOption={true}
+          onSubmitSuccess={handleSubmitSuccess}
         />
       ) : (
         <p className="text-[#C0C0C0]">Address not found</p>

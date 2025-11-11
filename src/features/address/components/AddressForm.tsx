@@ -30,7 +30,7 @@ import { useToast } from "@/shared/components/ui/toast";
 
 interface AddressFormProps {
   initialData?: Partial<AddressFormData>;
-  onSubmit: (data: AddressFormData) => void;
+  onSubmit: (data: AddressFormData) => void | Promise<void>;
   onCancel?: () => void;
   showSaveOption?: boolean;
   isEditing?: boolean;
@@ -42,6 +42,10 @@ interface AddressFormProps {
     data: AddressFormData,
     phoneData: { code: string; number: string }
   ) => void;
+  /** If true, form will handle API calls internally. If false, parent handles submission */
+  handleApiInternally?: boolean;
+  /** Callback when submission is successful */
+  onSubmitSuccess?: () => void;
 }
 
 export const AddressForm: React.FC<AddressFormProps> = ({
@@ -55,6 +59,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   onShippingUpdate,
   isCheckout = false,
   onFormDataChange,
+  handleApiInternally = true,
+  onSubmitSuccess,
 }) => {
   const [formData, setFormData] = useState<AddressFormData>({
     title: "",
@@ -268,6 +274,13 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       lng: 0,
     };
 
+    // If parent component wants to handle submission, just call onSubmit and return
+    if (!handleApiInternally) {
+      await onSubmit(payload);
+      return;
+    }
+
+    // Otherwise, handle API calls internally (legacy behavior for checkout/billing)
     try {
       // Clear previous API errors
       setApiErrors({});
@@ -293,6 +306,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           },
         });
         onSubmit(payload);
+        onSubmitSuccess?.();
       } else if (showSaveOption && formData.saveAddress) {
         await createAddressMutation.mutateAsync({
           title: finalTitle,
@@ -310,10 +324,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           user_name: formData.user_name,
         });
         onSubmit(payload);
+        onSubmitSuccess?.();
       } else if (onImmediateCheckout && !formData.saveAddress) {
         onImmediateCheckout(payload);
       } else {
         onSubmit(payload);
+        onSubmitSuccess?.();
       }
     } catch (error: unknown) {
       console.error("Failed to save address:", error);
@@ -375,7 +391,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         toast.error("Failed to save address", { duration: 5000 });
       }
 
-      // Don't call onSubmit if there was an error
+      // Don't call onSubmit or onSubmitSuccess if there was an error - form stays open
     }
   };
 
@@ -613,10 +629,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                 formData.saveAddress &&
                 createAddressMutation.isPending) ||
               (isEditing && updateAddressMutation.isPending) ||
-              !formData.title?.trim() ||
+              (showSaveOption && !formData.title?.trim()) ||
               !formData.city_id ||
               !formData.area_id ||
-              !formData.details.trim()
+              !formData.details.trim() ||
+              !phone.number.trim() ||
+              !!phoneError
             }
             className="flex-1 px-4 py-2 text-white bg-main hover:bg-main rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >

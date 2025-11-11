@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState, useRef, useCallback } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   getNotifications,
   Notification as NotificationType,
@@ -17,16 +17,39 @@ export default function NotificationsPage() {
   const isArabic = locale.startsWith("ar");
   const navigate = useNavigate();
   const [, setOpen] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const {
-    data: notifications = [],
+    data,
     isLoading,
     isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     refetch,
-  } = useQuery({
+  } = useInfiniteQuery({
     queryKey: ["notifications"],
-    queryFn: () => getNotifications(),
+    queryFn: ({ pageParam }) => getNotifications({ cursor: pageParam }),
+    getNextPageParam: (lastPage) => lastPage.meta.next_cursor,
+    initialPageParam: undefined as string | undefined,
   });
+
+  const notifications = data?.pages.flatMap((page) => page.data) ?? [];
+
+  const handleScroll = useCallback(() => {
+    if (!scrollContainerRef.current || !hasNextPage || isFetchingNextPage) {
+      return;
+    }
+
+    const { scrollTop, scrollHeight, clientHeight } =
+      scrollContainerRef.current;
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+
+    // Fetch more when scrolled to 80% of content
+    if (scrollPercentage > 0.8) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const handleNotificationClick = async (n: NotificationType) => {
     try {
@@ -76,14 +99,22 @@ export default function NotificationsPage() {
       className="min-h-screen text-black p-6 md:p-10"
     >
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold">{t("Notifications.notifications")}</h1>
+        <h1 className="text-3xl font-semibold">
+          {t("Notifications.notifications")}
+        </h1>
       </div>
 
       {hasNotifications ? (
-        <div className="space-y-6">
+        <div
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto"
+        >
           {todayNotifications.length > 0 && (
             <section>
-              <h2 className="text-xl font-semibold mb-3">{t("Notifications.new")}</h2>
+              <h2 className="text-xl font-semibold mb-3">
+                {t("Notifications.new")}
+              </h2>
               <div className="space-y-2">
                 {todayNotifications.map((n: NotificationType) => (
                   <div
@@ -98,8 +129,8 @@ export default function NotificationsPage() {
                   >
                     <div className="relative px-4">
                       <img
-                        src={"/logo.png"}
-                        alt="Notification"
+                        src={n.image?.url || "/logo.png"}
+                        alt={n.title?.en || "Notification"}
                         className={`w-[50px] h-[50px] object-cover rounded-full ${
                           n.read_at ? "opacity-70" : ""
                         }`}
@@ -130,7 +161,9 @@ export default function NotificationsPage() {
 
           {earlierNotifications.length > 0 && (
             <section>
-              <h2 className="text-xl font-semibold mb-3">{t("Notifications.earlier")}</h2>
+              <h2 className="text-xl font-semibold mb-3">
+                {t("Notifications.earlier")}
+              </h2>
               <div className="space-y-">
                 {earlierNotifications.map((n: NotificationType) => (
                   <div
@@ -145,8 +178,8 @@ export default function NotificationsPage() {
                   >
                     <div className="relative px-2">
                       <img
-                        src={"/logo.png"}
-                        alt="Notification"
+                        src={n.image?.url || "/logo.png"}
+                        alt={n.title?.en || "Notification"}
                         className={`w-[50px] h-[50px] object-cover rounded-full ${
                           n.read_at ? "opacity-70" : ""
                         }`}
@@ -173,6 +206,12 @@ export default function NotificationsPage() {
                 ))}
               </div>
             </section>
+          )}
+
+          {isFetchingNextPage && (
+            <div className="flex justify-center py-4">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-main border-t-transparent" />
+            </div>
           )}
         </div>
       ) : (
