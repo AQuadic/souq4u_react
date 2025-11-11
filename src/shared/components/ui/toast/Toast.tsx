@@ -61,7 +61,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, onRemove }) => {
       <div
         className={cn(
           "relative flex items-center justify-between p-4 rounded-lg border shadow-lg animate-in slide-in-from-top-2 duration-200",
-          "min-h-[60px] w-[1264px] ",
+          "min-h-[60px] lg:w-[1264px] w-80 ",
           toastVariants[toast.type]
         )}
         role="alert"
