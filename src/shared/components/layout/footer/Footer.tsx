@@ -396,7 +396,7 @@ const Footer = () => {
   return (
     <div>
       <FooterContactInfo />
-      <footer className="container lg:py-20 py-8">
+      <footer className="container lg:py-20 py-8 h-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
           {/* Section 1 - Brand */}
           <div className="lg:col-span-1 md:col-span-2">
@@ -410,7 +410,7 @@ const Footer = () => {
               />
             </div>
 
-            <p className="text-base lg:text-lg font-normal leading-[150%] max-w-[340px] mx-auto lg:mx-0 mb-6">
+            <p className="text-base lg:text-lg font-normal leading-[150%] max-w-[340px] mx-auto lg:mx-0 mb-6 text-center md:text-start">
               {isLoading
                 ? (locale === "ar" ? "جارِ التحميل..." : "Loading...")
                 : error
@@ -439,10 +439,10 @@ const Footer = () => {
 
           {/* Section 2 - Explore */}
           <div>
-            <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
+            <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6 text-center md:text-start">
               {t("Footer.explore")}
             </h2>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 text-center md:text-start">
               <Link
                 to="/"
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -469,10 +469,10 @@ const Footer = () => {
 
           {/* Section 3 - Dynamic Pages (from API) */}
           <div>
-            <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
+            <h2 className="text-xl lg:text-[32px] font-semibold leading-[100%] mb-6 text-center md:text-start">
               {t("Footer.help")}
             </h2>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 text-center md:text-start">
               {!isAuth && (
                 <Link
                   onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -507,7 +507,7 @@ const Footer = () => {
 
           {/* Section 4 - Newsletter */}
           <div className="  lg: ">
-            <h2 className=" text-xl lg:text-[32px] font-semibold leading-[100%] mb-6">
+            <h2 className=" text-xl lg:text-[32px] font-semibold leading-[100%] mb-6 text-center md:text-start">
               {t("Navigation.subscribeUs")}
             </h2>
             <div className="flex flex-col gap-4 max-w-[323px] mx-auto lg:mx-0">
