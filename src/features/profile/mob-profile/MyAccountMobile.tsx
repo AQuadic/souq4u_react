@@ -27,12 +27,12 @@ const MyAccountMobile = () => {
                 </div>
             </Link>
 
-            <Link to='/profile/change-email' className='w-full h-12 dark:bg-[#242529] bg-gray-200 rounded-[8px] mt-3 flex items-center justify-between px-4'>
+            {/* <Link to='/profile/change-email' className='w-full h-12 dark:bg-[#242529] bg-gray-200 rounded-[8px] mt-3 flex items-center justify-between px-4'>
                 <p className='text-base font-semibold leading-[100%]'>{t('Profile.changeEmail')}</p>
                 <div className='transform rtl:scale-x-100 ltr:scale-x-[-1]'>
                     <BackArrow />
                 </div>
-            </Link>
+            </Link> */}
 
             <Link to='/profile/addresses' className='w-full h-12 dark:bg-[#242529] bg-gray-200 rounded-[8px] mt-3 flex items-center justify-between px-4'>
                 <p className='text-base font-semibold leading-[100%]'>{t('Profile.saveAddress')}</p>
