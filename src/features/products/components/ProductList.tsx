@@ -55,8 +55,8 @@ const defaultTheme: Required<ProductListTheme> = {
   gapClassName: "md:gap-6 gap-4",
   errorClassName: "text-center text-main mt-8",
   buttonClassName:
-    "flex items-center justify-center gap-2 md:w-[255px] w-[188px] h-14 bg-main rounded-[8px] text-[#FDFDFD] md:text-lg text-base font-bold leading-[100%]",
-  buttonIconClassName: "md:flex hidden rtl:rotate-180",
+    "flex items-center justify-center gap-2 md:w-[255px] w-[237px] h-14 bg-main rounded-[8px] text-[#FDFDFD] md:text-lg text-base font-bold leading-[100%]",
+  buttonIconClassName: "flex rtl:rotate-180",
 };
 
 const ProductListSkeletonGrid: React.FC<{
