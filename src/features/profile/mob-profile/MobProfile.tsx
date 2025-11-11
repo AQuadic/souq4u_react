@@ -61,7 +61,7 @@ const MobProfile = () => {
         {/* Second section */}
         <div className="w-full h-full bg-[#F7F7F7] rounded-[8px] my-4 py-3 px-4">
             <Link
-                to="/profile/myAccount"
+                to="/profile/mobileAccount"
                 className="flex items-center gap-2"
                 >
                     <Profile />

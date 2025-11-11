@@ -27,6 +27,7 @@ import SubscribeModalProvider from "./shared/components/modals/SubscribeModalPro
 import { MainTracking } from "./features/order";
 import EditAddress from "./features/profile/addresses/components/EditAddress";
 import MobProfile from "./features/profile/mob-profile/MobProfile";
+import MyAccountMobile from "./features/profile/mob-profile/MyAccountMobile";
 
 // Home Page Component
 function HomePage() {
@@ -84,6 +85,7 @@ function App() {
                   <Route path="addresses/add" element={<AddAddressPage />} />
                   <Route path="addresses/edit/:id" element={<EditAddress />} />
                   <Route path="myAccount" element={<MobProfile />} />
+                  <Route path="mobileAccount" element={<MyAccountMobile />} />
                 </Route>
 
                 <Route path="cart" element={<MainCart />} />

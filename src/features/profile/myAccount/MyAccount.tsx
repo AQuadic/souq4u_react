@@ -176,8 +176,10 @@ const MyAccount: React.FC = () => {
         {t("Profile.title") || "Profile.My Account"}
       </h1>
 
-      <Link to='/profile/account' className="flex items-center gap-2 md:hidden">
+      <Link to='/profile/account' className="flex gap-2 md:hidden">
+      <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
         <BackArrow />
+      </div>
         <h1 className=" text-[32px] font-bold leading-[100%]">
         {t("Profile.title") || "Profile.My Account"}
       </h1>

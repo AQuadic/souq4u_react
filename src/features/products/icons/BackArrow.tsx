@@ -16,7 +16,7 @@ const BackArrow: React.FC<Props> = ({ flip = false }) => {
     >
       <path
         d="M25.0898 29.9181L18.5698 23.3981C17.7998 22.6281 17.7998 21.3681 18.5698 20.5981L25.0898 14.0781"
-        stroke="#FDFDFD"
+        stroke="#000000"
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="round"
