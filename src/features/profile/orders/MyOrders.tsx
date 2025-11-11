@@ -76,7 +76,9 @@ const MyOrders: React.FC<MyOrdersProps> = ({
             to="/profile/account"
             className="flex items-center gap-2 mb-4 md:hidden"
           >
-            <BackArrow />
+            <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+              <BackArrow />
+            </div>
             <h2 className="text-[32px] font-bold leading-[100%]">
               {t("Profile.orders")}
             </h2>
@@ -99,7 +101,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
             return (
               <div
                 key={item.id}
-                className="relative w-full md:h-[172px] h-24 dark:bg-[#242529] shadow-md hover:shadow-lg rounded-2xl px-3 my-4"
+                className="relative w-full py-4 h-full bg-[#F7F7F7] shadow-md rounded-2xl px-3 my-4"
               >
                 <Link to={`/profile/orders/tracking/${item.order_id}`}>
                   <div className="flex items-end justify-between">
@@ -117,7 +119,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                         <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
                           {t("Common.orderCode")} <span dir="ltr">#{item.code}</span>
                         </p>
-                        <h1 className=" md:text-2xl text-base font-semibold leading-[100%] md:mt-6 mt-4">
+                        <h1 className="md:text-2xl text-base font-semibold leading-tight md:mt-6 mt-4 line-clamp-2">
                           {productName}
                         </h1>
                         {Array.isArray(item.variant?.attributes) && item.variant.attributes.length > 0 && (
