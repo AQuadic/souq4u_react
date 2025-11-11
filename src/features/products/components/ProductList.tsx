@@ -50,7 +50,7 @@ export interface ProductListProps {
 const defaultTheme: Required<ProductListTheme> = {
   containerClassName: "container py-8",
   titleClassName:
-    "text-main md:text-[32px] text-2xl font-normal leading-[100%] uppercase font-anton-sc",
+    "md:text-[32px] text-2xl font-normal leading-[100%] uppercase font-anton-sc",
   gridClassName: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
   gapClassName: "gap-6",
   errorClassName: "text-center text-main mt-8",
@@ -242,7 +242,7 @@ const ProductList: React.FC<ProductListProps> = ({
       showSection={showSection}
       className={mergedTheme.containerClassName}
     >
-      <h1 className={`${mergedTheme.titleClassName} ${titleAlignClass}`}>
+      <h1 className={`${mergedTheme.titleClassName}`}>
         {displayTitle}
       </h1>
 
