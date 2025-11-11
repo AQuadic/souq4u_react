@@ -172,7 +172,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         {taxes > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("taxes")}
+              {t("Cart.taxes")}
             </span>
             <span className="font-medium text-slate-900 dark:text-white">
               {taxes.toLocaleString()} {t("Common.currency")}
@@ -194,7 +194,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         {shipping !== undefined && shipping > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("shipping")}
+              {t("Cart.shipping")}
             </span>
             <span className="font-medium text-slate-900 dark:text-white">
               {shipping.toLocaleString()} {t("Common.currency")}
