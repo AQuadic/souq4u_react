@@ -157,7 +157,16 @@ const SaveAddress: React.FC = () => {
         </button>
       ))}
 
-      {selectedId && (
+      <Link
+        to="/profile/addresses/add"
+        className={` w-full h-14 bg-main text-white dark:text-white text-lg font-bold flex items-center justify-center ${
+          isClothesDesign ? "rounded-[24px]" : "rounded-[8px]"
+        }`}
+      >
+        {t("AddressForm.addAddress") || "Add Address"}
+      </Link>
+
+      {/* {selectedId && (
         <div className="flex md:flex-row flex-col items-center justify-center gap-4 mt-4">
           <Link
             to={`/profile/addresses/edit/${selectedId}`}
@@ -167,16 +176,9 @@ const SaveAddress: React.FC = () => {
           >
             {t("AddressForm.editAddress") || "Edit Address"}
           </Link>
-          <Link
-            to="/profile/addresses/add"
-            className={`md:w-1/2 w-full h-14 bg-main text-white dark:text-white text-lg font-bold flex items-center justify-center ${
-              isClothesDesign ? "rounded-[24px]" : "rounded-[8px]"
-            }`}
-          >
-            {t("AddressForm.addAddress") || "Add Address"}
-          </Link>
+          
         </div>
-      )}
+      )} */}
 
       <DeleteAddressDialog
         open={isDeleteDialogOpen}
