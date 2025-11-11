@@ -180,7 +180,7 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
           <BackArrow />
         </div>
         <h2 className="text-xl font-semibold text-black">
-          {t("Checkout.title")}
+          {t("Checkout.billingDetails")}
         </h2>
       </Link>
 

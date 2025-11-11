@@ -483,7 +483,7 @@ export const CheckoutPage: React.FC = () => {
 
           {/* Right Column - Summary */}
           <div className="lg:col-span-1">
-            <div className="rounded-lg shadow p-4">
+            <div className="rounded-lg shadow">
               <CheckoutSummary
                 onCheckout={handleFinalCheckout}
                 loading={loading}
