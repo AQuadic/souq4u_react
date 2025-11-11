@@ -29,6 +29,18 @@ const MobileNavigation = () => {
   ];
 
   const handleClick = (item: any) => {
+    if (item.href === "/profile/myAccount") {
+      if (!isAuth) {
+        const profileButton = document.querySelector('[aria-label="' + t("profile") + '"]') as HTMLButtonElement;
+        if (profileButton) {
+          profileButton.click();
+        }
+        return;
+      }
+      navigate(item.href);
+      return;
+    }
+
     if (item.protected && !isAuth) {
       toast.error(t("Navigation.mustLoggin"));
       return;
