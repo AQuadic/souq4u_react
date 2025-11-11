@@ -60,7 +60,8 @@
     "subscribeUs": "Subscribe to us",
     "favorites": "Favorites",
     "cart": "Cart",
-    "profile": "My Profile"
+    "profile": "My Profile",
+    "mustLoggin": "You must log in first"
   },
   "recommendedForYou": "Recommended For You",
   "Toasts": {

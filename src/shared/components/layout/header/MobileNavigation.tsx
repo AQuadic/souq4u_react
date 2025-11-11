@@ -1,27 +1,40 @@
 "use client";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import NavigationFav from "./icons/NavigationFav";
 import NavigationCart from "./icons/NavigationCart";
 import NavigationProfile from "./icons/NavigationProfile";
 import NavigationMainHome from "./icons/NavigationMainHome";
-import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/features/auth";
+import { useToast } from "@/shared/components/ui/toast";
 
 const MobileNavigation = () => {
   const { t } = useTranslation("Common");
   const location = useLocation();
+  const navigate = useNavigate();
+  const toast = useToast();
   const pathname = location.pathname;
 
   // ✅ Remove locale prefix (e.g. /en, /ar)
   const cleanPathname = pathname.replace(/^\/(en|ar)(\/|$)/, "/");
+  const isAuth = useAuthStore((state) => state.isAuthenticated);
 
   const navItems = [
     { href: "/", label: t('Navigation.home'), icon: NavigationMainHome },
-    { href: "/profile/favorites", label: t('Navigation.favorites'), icon: NavigationFav },
+    { href: "/profile/favorites", label: t('Navigation.favorites'), icon: NavigationFav, protected: true,},
     { href: "/cart", label: t('Navigation.cart'), icon: NavigationCart },
-    { href: "/profile", label: t('Navigation.profile'), icon: NavigationProfile },
+    { href: "/profile", label: t('Navigation.profile'), icon: NavigationProfile, protected: true, },
   ];
+
+  const handleClick = (item: any) => {
+    if (item.protected && !isAuth) {
+      toast.error(t("Navigation.mustLoggin"));
+      return;
+    }
+    navigate(item.href);
+  };
 
   return (
     <div className="md:hidden fixed bottom-0 w-full h-[88px] bg-[#FDFDFD] rounded-tl-[20px] rounded-tr-[20px] flex items-center justify-around px-4 z-50">
@@ -37,9 +50,9 @@ const MobileNavigation = () => {
         const Icon = item.icon;
 
         return (
-          <Link
+          <button
             key={item.href}
-            to={item.href}
+            onClick={() => handleClick(item)}
             className={`flex flex-row items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 ${
               isActive
                 ? "bg-main/20 shadow-lg scale-105"
@@ -55,7 +68,7 @@ const MobileNavigation = () => {
                 {item.label}
               </span>
             )}
-          </Link>
+          </button>
         );
       })}
     </div>
