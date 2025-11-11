@@ -68,9 +68,13 @@ const ProductsPriceFilter: React.FC<Props> = ({
             onValueChange={handleChange}
           />
         </div>
-        <p className="text-xs font-medium leading-[100%] mt-4">
-          {t("ProductsGrid.price")} {localRange[0]} - {localRange[1]}{" "}
-          {t("ProductsGrid.egp")}
+        <p className="flex justify-between text-xs font-medium leading-[100%] mt-4">
+          <span className="text-[#5D5D5D]">
+            {t("ProductsGrid.from")} {localRange[0].toLocaleString()} {t("ProductsGrid.egp")}
+          </span>
+          <span className="text-[#5D5D5D]">
+            {t("ProductsGrid.to")} <span className="text-main">{localRange[1].toLocaleString()}</span> {t("ProductsGrid.egp")}
+          </span>
         </p>
       </div>
     </section>

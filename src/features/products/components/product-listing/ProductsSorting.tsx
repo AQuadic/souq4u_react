@@ -71,7 +71,7 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
           </div>
 
           <Select onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[180px] h-12 dark:border-[#FDFDFD] border-[#C0C0C0]">
+            <SelectTrigger className="w-full h-12 dark:border-[#FDFDFD] border-[#C0C0C0]">
               <SelectValue placeholder={t("ProductsGrid.defaultSorting")} />
             </SelectTrigger>
             <SelectContent>

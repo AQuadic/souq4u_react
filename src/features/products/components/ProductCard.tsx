@@ -215,7 +215,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   <span className="font-normal">{t("Common.currency")}</span>
                 </h2>
 
-                <div className="px-2 h-5 border border-[#C50000] text-[#C50000] rounded-[8px] flex items-center justify-center">
+                <div className="md:px-2 px-1 h-5 border border-[#C50000] text-[#C50000] rounded-[8px] flex items-center justify-center">
                   <h2 className=" text-xs font-normal leading-3 uppercase">
                     {parseFloat(discountPercentage.toFixed(1))}% {t('Products.off')}
                   </h2>

@@ -166,7 +166,9 @@
     "egp": "EGP",
     "defaultSorting": "Default Sorting",
     "asc": "Price: Low to High",
-    "desc": "Price: High to Low"
+    "desc": "Price: High to Low",
+    "from": "From",
+    "to": "To"
   },
   "Cart": {
     "title": "Shopping Cart",
