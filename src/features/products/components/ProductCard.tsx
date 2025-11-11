@@ -197,7 +197,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         </div>
 
-        <p className=" lg:text-base text-xs font-normal leading-[160%] lg:mt-4 mt-1 sm:h-12 overflow-y-hidden ">
+        <p className="lg:text-base text-xs font-normal leading-[160%] lg:mt-4 mt-1 sm:h-12 overflow-hidden text-ellipsis line-clamp-2">
           {shortDescription}
         </p>
 
@@ -209,7 +209,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </h2>
 
             {product.variants?.[0]?.has_discount && discountPercentage > 0 && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center md:gap-2 gap-1">
                 <h2 className=" text-xs font-normal leading-3 line-through">
                   {formatPrice(product.variants?.[0]?.price ?? 0)}{" "}
                   <span className="font-normal">{t("Common.currency")}</span>
