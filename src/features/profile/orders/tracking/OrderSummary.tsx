@@ -11,7 +11,7 @@ type OrderSummaryProps = {
 const OrderSummary: React.FC<OrderSummaryProps> = ({ order }) => {
   const { t } = useTranslation("Orders");
   return (
-    <section className="w-full h-full dark:bg-[#242529] bg-[#FDFDFD] my-6 rounded-[8px] p-6">
+    <section className="w-full h-full bg-[#F7F7F7] my-6 rounded-[8px] p-6">
       <h2 className="dark:text-[#FDFDFD] md:text-2xl text-base font-semibold leading-[100%]">
         {t("Orders.orderSummary")}
       </h2>

@@ -74,7 +74,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
         return (
           <div
             key={item.id}
-            className="w-full border border-[#C0C0C0] rounded-3xl mt-6 flex justify-between items-center min-h-[120px] md:min-h-[174px] py-4"
+            className="w-full bg-[#F7F7F7] rounded-3xl mt-6 flex justify-between items-center min-h-[120px] md:min-h-[174px] py-4"
           >
             <div className="flex items-center px-4 h-full">
               <div className="relative">

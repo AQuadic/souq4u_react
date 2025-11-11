@@ -33,7 +33,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
   > = {
     pending: {
       icon: <Pending />,
-      bg: "bg-[#8B8B8B2B]",
+      bg: "bg-[#F1F1F1]",
       text: "text-[#C0C0C0]",
     },
     PreOrder: {
