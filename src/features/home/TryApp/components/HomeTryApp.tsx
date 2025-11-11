@@ -16,12 +16,12 @@ const HomeTryApp = () => {
   return (
     <section className="container flex justify-between items-center max-sm:flex-col gap-6">
       <div>
-        <h1 className="text-2xl lg:text-[40px] font-semibold text-main font-anton-sc">
+        <h1 className="text-lg lg:text-[40px] font-bold font-anton-sc flex items-center gap-2">
           {titleBefore && <>{titleBefore} </>}
-          Souq<span className="text-main-orange">4</span>U
+          <p className="text-main">Souq<span className="text-main-orange">4</span>U</p>
           {titleAfter && <> {titleAfter}</>}
         </h1>
-        <p className="max-w-[545px] text-xl sm:text-2xl my-6 sm:my-10 text-main-gray">
+        <p className="max-w-[545px] text-sm sm:text-2xl my-3 sm:my-10 text-main-gray">
           {description.split("\n").map((line, idx) => (
             <React.Fragment key={`desc-line-${line.substring(0, 10)}-${idx}`}>
               {line}
