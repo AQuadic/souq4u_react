@@ -8,20 +8,20 @@ import Menu from "./icons/Menu";
 import { CartSlider } from "@/features/cart/components/CartSlider";
 import { useCartSlider } from "@/features/cart/hooks/useCartSlider";
 import { useCartStore } from "@/features/cart/stores";
-import MainAuth from "@/features/auth/components/MainAuth";
+// import MainAuth from "@/features/auth/components/MainAuth";
 import HeaderSearch from "./HeaderSearch";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+// import { useAuth } from "@/features/auth/hooks/useAuth";
 import {
   usePagesContextSafe,
   useHeaderNavigation,
 } from "@/features/static-pages";
 import LogoutDialog from "@/features/profile/sidebar/LogoutDialog";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../../ui/accordion";
+// import {
+//   Accordion,
+//   AccordionContent,
+//   AccordionItem,
+//   AccordionTrigger,
+// } from "../../ui/accordion";
 
 const MobileHeader = () => {
   const { t, i18n } = useTranslation();
@@ -29,7 +29,7 @@ const MobileHeader = () => {
   const locale = i18n.language || "en";
   const location = useLocation();
   const { isOpen: isCartOpen, openCart, closeCart } = useCartSlider();
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   // Get pages from context and build navigation links
   const pages = usePagesContextSafe();
@@ -104,7 +104,7 @@ const MobileHeader = () => {
           ))}
         </nav>
 
-        {user && (
+        {/* {user && (
           <Accordion type="single" collapsible className="w-full mt-4">
             <AccordionItem value="profile">
               <AccordionTrigger className="p-0 hover:no-underline">
@@ -117,8 +117,8 @@ const MobileHeader = () => {
 
               <AccordionContent className="mt-4 flex flex-col gap-4 text-lg hover:text-main transition-colors">
                 <Link to="/profile/account">{t("Common.account")}</Link>
-                {/* <Link to="/notifications">Notification</Link> */}
-                {/* <Link to="/change-password">Change Password</Link> */}
+                <Link to="/notifications">Notification</Link> 
+                <Link to="/change-password">Change Password</Link> 
                 <Link to="/profile/favorites">{t("Common.favorite")}</Link>
                 <Link to="/profile/orders">{t("Common.orders")}</Link>
                 <Link to="/profile/addresses">{t("Common.saveAddress")}</Link>
@@ -131,15 +131,15 @@ const MobileHeader = () => {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        )}
+        )} */}
 
         <div className="mt-6 space-y-4">
           <div className="border-t border-gray-600 pt-4 flex items-center justify-between">
             <LanguageSwitcher mode="full" isMobile={true} className="" />
           </div>
-          <div className="border-t border-gray-600 pt-4">
+          {/* <div className="border-t border-gray-600 pt-4">
             <MainAuth onProfileClick={() => setIsOpen(false)} />
-          </div>
+          </div> */}
         </div>
       </div>
 
