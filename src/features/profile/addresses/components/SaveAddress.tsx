@@ -74,7 +74,9 @@ const SaveAddress: React.FC = () => {
         to="/profile/addresses"
         className="flex items-center gap-2 mb-8 md:hidden"
       >
-        <BackArrow />
+        <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+            <BackArrow />
+          </div>
         <h2 className="text-neutral-900 dark:text-white text-[32px] font-bold leading-[100%]">
         {t("Profile.AddAddress.header")|| "Save Address"}
         </h2>
