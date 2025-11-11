@@ -105,7 +105,7 @@ const SaveAddress: React.FC = () => {
               <Location />
               <div className="min-w-0">
                 <p className="text-neutral-900 dark:text-white text-lg font-semibold leading-[120%] truncate">
-                  {addr.title}
+                  {addr.user_name}
                 </p>
                 {addr.details && (
                   <p className="text-neutral-600 dark:text-neutral-400 text-sm font-medium leading-[140%] truncate mt-1">

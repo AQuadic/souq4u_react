@@ -263,7 +263,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     const fullPhone = `${phone.code}${normalizedPhone}`;
 
     // For guest checkout, set a default title if none provided
-    const finalTitle = formData.title.trim() || "Guest Address";
+    const finalTitle = formData.title.trim();
 
     const payload = {
       ...formData,

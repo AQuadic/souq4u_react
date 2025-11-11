@@ -480,7 +480,8 @@
     "save": "Save",
     "birthday": "Birthday",
     "selectDate": "Select date",
-    "gender": "Gender"
+    "gender": "Gender",
+    "addressAdded": "Address added successfully"
   },
   "Orders": {
     "orders": "Orders",

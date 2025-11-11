@@ -41,7 +41,7 @@ const AddAddressPage: React.FC = () => {
       });
 
       // Show success message
-      toast.success("Address added successfully");
+      toast.success(t('Profile.addressAdded'));
 
       // Navigate back to addresses list after successful creation
       navigate("/profile/addresses");
