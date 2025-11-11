@@ -25,7 +25,7 @@ const MobileNavigation = () => {
     { href: "/", label: t('Navigation.home'), icon: NavigationMainHome },
     { href: "/profile/favorites", label: t('Navigation.favorites'), icon: NavigationFav, protected: true,},
     { href: "/cart", label: t('Navigation.cart'), icon: NavigationCart },
-    { href: "/profile", label: t('Navigation.profile'), icon: NavigationProfile, protected: true, },
+    { href: "/profile/myAccount", label: t('Navigation.profile'), icon: NavigationProfile, protected: true, },
   ];
 
   const handleClick = (item: any) => {

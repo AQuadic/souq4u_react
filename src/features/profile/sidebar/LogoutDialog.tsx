@@ -42,7 +42,7 @@ export default function LogoutDialog(props: Readonly<Props>) {
   const clearAddresses = useAddressStore((s) => s.clearAddresses);
   const toast = useToast();
 
-  const resolvedLabel = label ?? t("triggerLabel");
+  const resolvedLabel = label ?? t("Auth.logoutDialog.triggerLabel");
 
   const handleLogout = async () => {
     try {

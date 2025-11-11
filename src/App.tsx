@@ -26,6 +26,7 @@ import { ToastContainer } from "./shared/components/ui/toast";
 import SubscribeModalProvider from "./shared/components/modals/SubscribeModalProvider";
 import { MainTracking } from "./features/order";
 import EditAddress from "./features/profile/addresses/components/EditAddress";
+import MobProfile from "./features/profile/mob-profile/MobProfile";
 
 // Home Page Component
 function HomePage() {
@@ -82,6 +83,7 @@ function App() {
                   <Route path="addresses" element={<SaveAddress />} />
                   <Route path="addresses/add" element={<AddAddressPage />} />
                   <Route path="addresses/edit/:id" element={<EditAddress />} />
+                  <Route path="myAccount" element={<MobProfile />} />
                 </Route>
 
                 <Route path="cart" element={<MainCart />} />
