@@ -6,6 +6,7 @@ import {
 import React, { useState } from "react";
 
 import { useToast } from "@/shared/components/ui/toast/toast-store";
+import { DialogClose } from "@/shared/components/ui/dialog";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -33,9 +34,10 @@ interface LoginFormProps {
     phone: string;
     phone_country: string;
   }) => Promise<void>;
+  isInDialog?: boolean;
 }
 
-const LoginForm = ({ onSubmit }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
   const [phone, setPhone] = useState<PhoneValue>({ code: "20", number: "" });
   const [loading, setLoading] = useState(false);
   const {t} = useTranslation("Auth");
@@ -162,12 +164,23 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
         {loading ? t("Auth.signingIn") : t("Auth.signIn")}
       </button>
 
-      <Link
-        to="/"
-        className="w-full h-12 md:h-14  border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg  leading-[100%] transition-colors hover:bg-main/10"
-      >
+      {isInDialog ? (
+        <DialogClose asChild>
+          <Link
+            to="/"
+            className="w-full h-12 md:h-14 border border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg font-bold leading-[100%] transition-colors hover:bg-main/10"
+          >
         {t("Auth.continueAsGuest")}
-      </Link>
+          </Link>
+        </DialogClose>
+      ) : (
+        <Link
+          to="/"
+          className="w-full h-12 md:h-14 border border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg font-bold leading-[100%] transition-colors hover:bg-main/10"
+        >
+        {t("Auth.continueAsGuest")}
+        </Link>
+      )}
 
       <div className="w-full h-px bg-[#A9A9A9] my-8"></div>
       <div className="dark:text-[#F1F1F1] text-lg font-normal leading-[100%] text-center">
