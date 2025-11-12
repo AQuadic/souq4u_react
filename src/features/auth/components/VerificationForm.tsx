@@ -51,21 +51,21 @@ export const VerificationForm = ({
         alt="verification"
         width={120}
         height={120}
-        className="mx-auto mt-4 md:mt-6 w-24 h-24 md:w-32 md:h-32"
+        className="mx-auto mt-4 md:mt-6 w-24 h-24 md:w-24 md:h-24"
       />
 
-      <h2 className="  text-xl md:text-2xl lg:text-[32px] font-bold leading-[120%] text-center mt-4 md:mt-6">
+      <h2 className="  text-xl md:text-2xl lg:text-[32px] font-bold leading-[120%] text-center mt-4">
         {t("Auth.fastVerification")}
       </h2>
-      <p className="text-[#C0C0C0] text-sm md:text-base lg:text-lg font-normal leading-[140%] text-center px-2 md:px-4 mt-3 md:mt-4">
+      <p className="text-[#C0C0C0] text-sm md:text-base lg:text-lg font-normal leading-[140%] text-center px-2 md:px-4 mt-3">
         {t("Auth.verificationDescription")}
       </p>
 
-      <h3 className=" text-sm md:text-base font-semibold leading-[120%] mt-4 md:mt-6 text-center">
+      <h3 className=" text-sm md:text-base font-semibold leading-[120%] mt-4 text-center">
         {t("Auth.sendFromNumber")}
       </h3>
       <p
-        className=" text-base md:text-lg font-semibold leading-[120%] mt-2 md:mt-3 text-center"
+        className=" text-base md:text-lg font-semibold leading-[120%] mt-2 text-center"
         dir="ltr"
       >
         {displayPhoneNumber}
@@ -73,7 +73,7 @@ export const VerificationForm = ({
 
       <button
         onClick={onBack}
-        className="text-main text-xs md:text-sm font-medium mt-2 md:mt-3 underline flex items-center justify-center text-center mx-auto hover:text-main/80 transition-colors cursor-pointer"
+        className="text-main text-xs md:text-sm font-medium mt-2 underline flex items-center justify-center text-center mx-auto hover:text-main/80 transition-colors cursor-pointer"
       >
         {t("Auth.changeNumber")}
       </button>
@@ -109,7 +109,7 @@ export const VerificationForm = ({
       </button>
 
       <div className="w-full h-px bg-[#A9A9A9] my-8"></div>
-      <div className="dark:text-[#F1F1F1] text-lg font-normal leading-[100%] text-center">
+      <div className="text-[#7413FC] text-xs font-normal leading-[100%] text-center">
         Powered by {""}
         <Link to="https://cloudwa.net/" target="_blank">
           (CloudWa)

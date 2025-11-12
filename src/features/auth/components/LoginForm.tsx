@@ -181,7 +181,7 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
         <DialogClose asChild>
           <Link
             to="/"
-            className="w-full h-12 md:h-14 border border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg font-bold leading-[100%] transition-colors hover:bg-main/10"
+            className="w-full h-12 md:h-14 mt-4 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg font-medium leading-[100%] transition-colors hover:bg-main/10"
           >
             {t("Auth.continueAsGuest")}
           </Link>
@@ -194,14 +194,6 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
           {t("Auth.continueAsGuest")}
         </Link>
       )}
-
-      <div className="w-full h-px bg-[#A9A9A9] my-8"></div>
-      <div className="dark:text-[#F1F1F1] text-lg font-normal leading-[100%] text-center">
-        {t("Auth.poweredBy")} {""}
-        <Link to="https://cloudwa.net/" target="_blank">
-          (CloudWa)
-        </Link>
-      </div>
     </form>
   );
 };
