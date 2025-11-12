@@ -49,7 +49,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-[var(--color-cart-bg)] p-6 rounded-lg sticky top-6 shadow-sm border border-gray-100 dark:border-transparent">
+    <div className="bg-[#F2F2F2] p-6 rounded-lg sticky top-6 shadow-sm">
       <h2 className="text-gray-900 dark:text-white text-xl font-semibold mb-6">
         {t("Cart.summary")}
       </h2>
@@ -60,7 +60,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
           htmlFor="promocode-input"
           className="block text-gray-900 dark:text-white text-sm font-semibold mb-2"
         >
-          {t("addPromocode")}
+          {t("Cart.addPromocode")}
         </label>
 
         {appliedCoupon ? (
@@ -93,7 +93,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
               type="text"
               value={promocode}
               onChange={(e) => setPromocode(e.target.value)}
-              placeholder={t("promocodePlaceholder")}
+              placeholder={t("Cart.promocodePlaceholder")}
               className="flex-1 bg-transparent border border-gray-200 dark:border-white/20 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus:border-[var(--color-main)] transition-colors text-sm"
             />
             {promocode.trim() && (

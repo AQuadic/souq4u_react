@@ -79,7 +79,7 @@ export const CartCard: React.FC<CartCardProps> = ({
         {translatedAttributes.map((attr) => (
           <div
             key={attr.id}
-            className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 bg-main/10 px-2 py-1 rounded-md"
+            className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 bg-main/10 md:px-2 px-1 py-1 rounded-md"
           >
             <span className="capitalize mr-1">{attr.label}:</span>
             {attr.type === "color" ? (
