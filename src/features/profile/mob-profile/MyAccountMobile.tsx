@@ -9,7 +9,7 @@ const MyAccountMobile = () => {
     return (
         <div className='container my-4'>
             <Link
-                to="/profile"
+                to="/profile/myAccount"
                 className="flex items-center gap-2 md:hidden"
                 >
                 <div className='transform ltr:scale-x-100 rtl:scale-x-[-1]'>
