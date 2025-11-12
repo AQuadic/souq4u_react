@@ -18,8 +18,9 @@ import ProductCardListing from "../ProductCardListing";
 import { useProductFilters } from "../../hooks/useProductFilters";
 import ProductsCategoryFilter from "./ProductsCategoryFilter";
 import ProductsPagination from "@/shared/components/pagenation/ProductsPagenation";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
+import BackArrow from "../../icons/BackArrow";
 
 const ProductsGrid: React.FC = () => {
   const { t } = useTranslation();
@@ -126,17 +127,28 @@ const ProductsGrid: React.FC = () => {
   };
 
   return (
-    <section className="container md:py-[44px] py-8">
+    <section className="container md:py-[44px] py-4">
       {/* <h1 className="text-main md:text-[32px] text-2xl font-normal leading-[100%] text-center uppercase font-anton-sc">
         {t("ProductsGrid.title")}
       </h1> */}
 
-      <Breadcrumbs
+      <div className="md:block hidden">
+        <Breadcrumbs
         items={[
           { label: t("Navigation.home"), href: "/" },
           { label: t("Products.title") },
         ]}
       />
+      </div>
+
+      <Link to="/" className="md:hidden flex items-center gap-2 mb-6">
+        <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+          <BackArrow />
+        </div>
+        <h2 className="text-xl font-semibold text-black">
+          {t("Navigation.products")}
+        </h2>
+      </Link>
 
       {isMostViewedActive && (
         <div className="mt-6 flex items-center gap-2">
