@@ -90,6 +90,7 @@ const ProductsCategoryFilter = ({
                   className="border-none"
                 >
                   <AccordionTrigger
+                    onClick={() => handleClick(cat.id)}
                     className={`group flex items-center justify-between py-2 px-3 text-sm rounded-md transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 [&>svg]:hidden`}
                   >
                     <div className="flex items-center gap-2">
@@ -111,11 +112,9 @@ const ProductsCategoryFilter = ({
                     {/* Vertical connecting line */}
                     <div className="absolute ltr:left-[-20px] rtl:right-[-20px] top-0 bottom-[35px] w-px bg-gray-300 dark:bg-gray-600 pointer-events-none"></div>
 
-                    {cat.children!.map((child) => {
-                      const isSelected = selectedCategory === child.id;
-                      return (
-                        <div key={child.id} className="relative">
-                          {/* Curved connector for each item */}
+                    {cat.children!.map((child) => (
+                      <div key={child.id} className="relative">
+                        {/* Curved connector for each item */}
                           <div className="absolute ltr:left-[-20px] rtl:right-[-20px] top-[6px]">
                             <svg
                               width="24"
@@ -159,12 +158,12 @@ const ProductsCategoryFilter = ({
                               </svg>
                             </div>
                           </div>
-                          <button
-                            onClick={() => handleClick(child.id)}
-                            className={`w-full flex items-center justify-between px-3 py-1.5 text-sm rounded-md text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                              isSelected ? "text-main bg-main/10" : ""
-                            }`}
-                          >
+                        <button
+                          onClick={() => handleClick(child.id)}
+                          className={`w-full flex items-center justify-between px-3 py-1.5 text-sm rounded-md text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                            selectedCategory === child.id ? "text-main bg-main/10" : ""
+                          }`}
+                        >
                             <span>
                               {locale === "ar" ? child.name.ar : child.name.en}
                             </span>
@@ -173,8 +172,7 @@ const ProductsCategoryFilter = ({
                             </span>
                           </button>
                         </div>
-                      );
-                    })}
+                      ))}
                   </AccordionContent>
                 </AccordionItem>
               );
