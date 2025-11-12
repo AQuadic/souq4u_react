@@ -10,6 +10,7 @@ import { YouMayBeInterestedIn } from "./YouMayBeInterestedIn";
 import { useCartOperations } from "@/features/cart/hooks";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import BackArrow from "@/features/products/icons/BackArrow";
 
 export const CartPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -103,10 +104,10 @@ export const CartPage: React.FC = () => {
   const total = calculations.total;
 
   return (
-    <div className="min-h-screen   py-8">
+    <div className="min-h-screen   py-4">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="mb-8">
+        <div className="mb-8 md:block hidden">
           <Breadcrumbs
             items={[
               { label: t("Cart.breadcrumbHome"), href: "/" },
@@ -115,8 +116,17 @@ export const CartPage: React.FC = () => {
           />
         </div>
 
+      <Link to="/" className="md:hidden flex items-center gap-2 mb-6">
+        <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+          <BackArrow />
+        </div>
+        <h2 className="text-xl font-semibold text-black">
+          {t("Navigation.cart")}
+        </h2>
+      </Link>
+
         {/* Main Content */}
-        <h1 className="text-gray-900 dark:text-white text-2xl font-bold mb-8">
+        <h1 className="text-gray-900 dark:text-white text-2xl font-bold mb-8 md:block hidden">
           {t("Cart.title")}
         </h1>
 
