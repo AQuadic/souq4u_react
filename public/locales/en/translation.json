@@ -512,6 +512,8 @@
     "cancel": "Cancel",
     "confirmCancel": "Are you sure you want to cancel this order?",
     "confirm": "Confirm",
-    "cancelling": "Cancelling"
+    "cancelling": "Cancelling",
+    "itemNumber": "Item number",
+    "orderNumber": "Order number"
   }
 }

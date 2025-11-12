@@ -512,6 +512,8 @@
     "cancel": "إلغاء",
     "confirmCancel": "هل أنت متأكد أنك تريد إلغاء هذا الطلب؟",
     "confirm": "تأكيد",
-    "cancelling": "جار الإلغاء"
+    "cancelling": "جار الإلغاء",
+    "itemNumber": "رقم العنصر",
+    "orderNumber": "رقم الطلب"
   }
 }
