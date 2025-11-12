@@ -70,9 +70,9 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ slide }) => {
 
   const redirect = (url: string) => {
     if (/^https?:\/\//i.test(url)) {
-      window.open(url, "_self");
+      window.open(url, "_blank", "noopener,noreferrer");
     } else {
-      navigate(url);
+      window.open(window.location.origin + url, "_blank");
     }
   };
 
