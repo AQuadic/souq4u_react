@@ -223,8 +223,54 @@ const ProductDetailsPage: React.FC = () => {
 
     const normalizeError = (val: unknown): string | undefined => {
       if (!val) return undefined;
-      if (typeof val === "string") return val;
-      if (typeof val === "object") return (val as { message?: string }).message;
+      
+      if (typeof val === "string") {
+        const serverErrorMatch = val.match(/Server Error \d+:\s*({.*})/);
+        if (serverErrorMatch) {
+          try {
+            const errorJson = JSON.parse(serverErrorMatch[1]);
+            if (errorJson.message) {
+              return errorJson.message;
+            }
+          } catch (e) {
+            // If JSON parsing fails, continue with other checks
+          }
+        }
+        
+        if (val.trim().startsWith('{')) {
+          try {
+            const errorJson = JSON.parse(val);
+            if (errorJson.message) {
+              return errorJson.message;
+            }
+          } catch (e) {
+            // Not valid JSON, return as is
+          }
+        }
+        
+        return val;
+      }
+      
+      if (typeof val === "object" && val !== null) {
+        const errorObj = val as any;
+        
+        if (errorObj.message) {
+          return typeof errorObj.message === "string" 
+            ? errorObj.message 
+            : JSON.stringify(errorObj.message);
+        }
+        
+        if (errorObj.error) {
+          return typeof errorObj.error === "string"
+            ? errorObj.error
+            : JSON.stringify(errorObj.error);
+        }
+        
+        if (errorObj.response?.data?.message) {
+          return errorObj.response.data.message;
+        }
+      }
+      
       return undefined;
     };
 

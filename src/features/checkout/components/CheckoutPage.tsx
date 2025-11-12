@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PaymentSelector, type PaymentMethod } from "./PaymentSelector";
 import { CheckoutSummary } from "./CheckoutSummary";
 import { CheckoutCartSummary } from "./CheckoutCartSummary";
@@ -23,6 +23,7 @@ import type { AddressFormData } from "@/features/address";
 import { useAuthStore } from "@/features/auth/stores/auth-store";
 import { useCartWithShipping, useCartOperations } from "@/features/cart/hooks";
 import { useTranslation } from "react-i18next";
+import BackArrow from "@/features/products/icons/BackArrow";
 
 export const CheckoutPage: React.FC = () => {
   const { t } = useTranslation("Checkout");
@@ -433,7 +434,7 @@ export const CheckoutPage: React.FC = () => {
   ]);
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen md:py-8">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <div className="mb-8 md:flex hidden">
@@ -445,15 +446,24 @@ export const CheckoutPage: React.FC = () => {
           />
         </div>
 
+        <Link to="/cart" className="md:hidden flex items-center gap-2 mb-6">
+          <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+            <BackArrow />
+          </div>
+          <h2 className="text-xl font-semibold text-black">
+            {t("Checkout.billingDetails")}
+          </h2>
+        </Link>
+
         <div className="block lg:hidden mb-6">
-          <BillingDetails
+          {/* <BillingDetails
             onAddressSelected={handleAddressSelected}
             onAddressFormSubmit={handleAddressFormSubmit}
             onImmediateCheckout={handleImmediateCheckout}
             onShippingUpdate={handleShippingUpdate}
             isCheckout={true}
             onFormDataChange={handleFormDataChange}
-          />
+          /> */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -463,7 +473,7 @@ export const CheckoutPage: React.FC = () => {
             {isAuthenticated && <CheckoutCartSummary />}
 
             {/* Billing Details */}
-            <div className="hidden lg:block">
+            <div className="">
               <BillingDetails
                 onAddressSelected={handleAddressSelected}
                 onAddressFormSubmit={handleAddressFormSubmit}

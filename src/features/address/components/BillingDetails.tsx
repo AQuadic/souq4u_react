@@ -175,14 +175,6 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
 
   return (
     <div className="rounded-lg md:p-6">
-      <Link to="/cart" className="md:hidden flex items-center gap-2 mb-6">
-        <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
-          <BackArrow />
-        </div>
-        <h2 className="text-xl font-semibold text-black">
-          {t("Checkout.billingDetails")}
-        </h2>
-      </Link>
 
       <h2 className="md:flex hidden text-xl font-semibold text-black mb-6">
         {t("Checkout.title")}
