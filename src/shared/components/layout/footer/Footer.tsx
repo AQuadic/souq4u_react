@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -36,13 +36,13 @@ import { getStoreSetting } from "../api/store";
 import { useQuery } from "@tanstack/react-query";
 
 const socialIcons = [
-  { Icon: Facebook, href: "https://facebook.com" },
-  { Icon: X, href: "https://twitter.com" },
-  { Icon: LinkedIn, href: "https://linkedin.com" },
-  { Icon: Instagram, href: "https://instagram.com" },
-  { Icon: Youtube, href: "https://youtube.com" },
-  { Icon: Tiktok, href: "https://tiktok.com" },
-  { Icon: Snapchat, href: "https://snapchat.com" },
+  { Icon: Facebook, key: "facebook" },
+  { Icon: X, key: "twitter" },
+  { Icon: LinkedIn, key: "linkedin" },
+  { Icon: Instagram, key: "instagram" },
+  { Icon: Youtube, key: "youtube" },
+  { Icon: Tiktok, key: "tiktok" },
+  { Icon: Snapchat, key: "snapchat" },
 ];
 
 const Footer = () => {
@@ -393,6 +393,20 @@ const Footer = () => {
     queryFn: () => getStoreSetting(),
   });
 
+  const activeSocialLinks = useMemo(() => {
+    if (!storeData) return [];
+
+    return socialIcons
+      .map(({ Icon, key }) => {
+        const url = storeData[key as keyof typeof storeData];
+        if (url && typeof url === "string" && url.trim() !== "") {
+          return { Icon, href: url, key };
+        }
+        return null;
+      })
+      .filter(Boolean) as Array<{ Icon: React.ComponentType; href: string; key: string }>;
+  }, [storeData]);
+
   return (
     <div>
       <FooterContactInfo />
@@ -422,10 +436,11 @@ const Footer = () => {
                     : storeData?.slogan?.en || ""}
             </p>
 
+          {!isLoading && !error && activeSocialLinks.length > 0 && (
             <div className="flex items-center justify-center lg:justify-start gap-3">
-              {socialIcons.map(({ Icon, href }) => (
+              {activeSocialLinks.map(({ Icon, href, key }) => (
                 <a
-                  key={href}
+                  key={key}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -435,6 +450,7 @@ const Footer = () => {
                 </a>
               ))}
             </div>
+          )}
           </div>
 
           {/* Section 2 - Explore */}
