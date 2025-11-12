@@ -40,7 +40,7 @@ interface LoginFormProps {
 const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
   const [phone, setPhone] = useState<PhoneValue>({ code: "20", number: "" });
   const [loading, setLoading] = useState(false);
-  const {t} = useTranslation("Auth");
+  const { t } = useTranslation("Auth");
   const { i18n } = useTranslation();
   const locale = i18n.language;
   const toast = useToast();
@@ -86,9 +86,11 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
         }
       };
 
-      const extractApiMessage = (err: unknown): string => {
-        const fallback = t("resendFailed");
-        if (!err) return fallback;
+      const extractApiMessage = (err: unknown): void => {
+        if (!err) {
+          toast.error(t("resendFailed"));
+          return;
+        }
 
         // Try to obtain a parsed ApiError from different shapes
         let parsed: ApiError | null = null;
@@ -98,20 +100,31 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
         else if (typeof err === "object" && err !== null)
           parsed = err as ApiError;
 
-        if (parsed?.errors?.phone?.[0]) return parsed.errors.phone[0];
-        if (parsed?.message) return parsed.message;
-
-        if (typeof err === "string") return err;
-        if (err instanceof Error) return err.message || fallback;
-
-        return fallback;
+        // Show individual toasts for all errors
+        if (parsed?.errors && typeof parsed.errors === "object") {
+          for (const messages of Object.values(parsed.errors)) {
+            if (Array.isArray(messages)) {
+              for (const msg of messages) {
+                toast.error(msg);
+              }
+            } else if (messages) {
+              toast.error(messages);
+            }
+          }
+        } else if (parsed?.message) {
+          toast.error(parsed.message);
+        } else if (typeof err === "string") {
+          toast.error(err);
+        } else if (err instanceof Error) {
+          toast.error(err.message || t("resendFailed"));
+        } else {
+          toast.error(t("resendFailed"));
+        }
       };
 
-      const apiErrorMessage = extractApiMessage(error);
-
-      // Show only the clean message in the toast
+      // Show only the clean message(s) in the toast(s)
       try {
-        toast.error(apiErrorMessage || t("resendFailed"));
+        extractApiMessage(error);
       } catch {
         console.warn("Toast error");
       }
@@ -170,7 +183,7 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
             to="/"
             className="w-full h-12 md:h-14 border border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg font-bold leading-[100%] transition-colors hover:bg-main/10"
           >
-        {t("Auth.continueAsGuest")}
+            {t("Auth.continueAsGuest")}
           </Link>
         </DialogClose>
       ) : (
@@ -178,13 +191,13 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
           to="/"
           className="w-full h-12 md:h-14 border border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg font-bold leading-[100%] transition-colors hover:bg-main/10"
         >
-        {t("Auth.continueAsGuest")}
+          {t("Auth.continueAsGuest")}
         </Link>
       )}
 
       <div className="w-full h-px bg-[#A9A9A9] my-8"></div>
       <div className="dark:text-[#F1F1F1] text-lg font-normal leading-[100%] text-center">
-        {t('Auth.poweredBy')} {""}
+        {t("Auth.poweredBy")} {""}
         <Link to="https://cloudwa.net/" target="_blank">
           (CloudWa)
         </Link>

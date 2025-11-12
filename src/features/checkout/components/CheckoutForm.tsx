@@ -65,49 +65,54 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
   };
 
   const handleCheckoutError = (error: unknown) => {
-    console.error("Checkout error:", error);
+    console.error("🔴 Checkout error:", error);
 
-    // Handle axios/server errors
-    if (error && typeof error === "object" && "response" in error) {
-      const axiosError = error as {
-        response?: {
-          data?: { errors?: Record<string, string[]>; message?: string };
+    // Try to extract error response
+    const axiosError = error as {
+      response?: {
+        data?: {
+          errors?: Record<string, string[]>;
+          message?: string;
         };
       };
-      const serverError = axiosError.response?.data;
+    };
 
-      if (serverError?.errors && typeof serverError.errors === "object") {
-        // Handle validation errors (e.g., {"phone": ["validation.phone"]})
-        const errorMessages = Object.entries(serverError.errors)
-          .map(([field, messages]) => {
-            if (Array.isArray(messages)) {
-              const messageList = messages.map((msg) => {
-                // Make error messages more user-friendly
-                if (msg === "validation.phone") {
-                  return "Please enter a valid phone number";
-                }
-                return msg;
-              });
-              return `${
-                field.charAt(0).toUpperCase() + field.slice(1)
-              }: ${messageList.join(", ")}`;
-            }
-            return `${
-              field.charAt(0).toUpperCase() + field.slice(1)
-            }: ${messages}`;
-          })
-          .join("\n");
+    const errorData = axiosError?.response?.data;
 
-        toast.error(`Validation Error:\n${errorMessages}`);
-      } else if (serverError?.message) {
-        // Handle single error message
-        toast.error(`Error: ${serverError.message}`);
-      } else {
-        toast.error("Server error occurred. Please try again.");
+    console.log("🔍 Error data:", errorData);
+    console.log("🔍 Errors object:", errorData?.errors);
+    console.log("🔍 Message:", errorData?.message);
+
+    // Check if errors object exists and is not empty
+    const hasErrors =
+      errorData?.errors &&
+      typeof errorData.errors === "object" &&
+      Object.keys(errorData.errors).length > 0;
+
+    console.log("🔍 Has errors:", hasErrors);
+
+    if (hasErrors) {
+      console.log("✅ Showing individual error toasts");
+      // Loop through each field's errors
+      const errorsObj = errorData.errors as Record<string, string[]>;
+      for (const field in errorsObj) {
+        const fieldErrors = errorsObj[field];
+        console.log(`📢 Field: ${field}, Errors:`, fieldErrors);
+
+        if (Array.isArray(fieldErrors)) {
+          for (const errorMessage of fieldErrors) {
+            console.log(`🎯 Showing toast: ${errorMessage}`);
+            toast.error(errorMessage);
+          }
+        }
       }
-    } else if (error && typeof error === "object" && "message" in error) {
-      // Handle other errors with message
-      toast.error(`Error: ${(error as Error).message}`);
+      return; // IMPORTANT: Exit here, don't show message
+    }
+
+    console.log("⚠️ No errors object, showing message");
+    // Only show message if no errors object
+    if (errorData?.message) {
+      toast.error(errorData.message);
     } else {
       toast.error("Failed to process checkout. Please try again.");
     }

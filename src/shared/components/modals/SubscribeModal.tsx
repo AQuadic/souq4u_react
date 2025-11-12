@@ -61,26 +61,8 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ isOpen, onClose }) => {
 
       // First check for specific field errors (email or phone)
       if (respData?.errors && typeof respData.errors === "object") {
-        // Check for email errors
-        if (Array.isArray(respData.errors.email) && respData.errors.email[0]) {
-          return respData.errors.email[0];
-        }
-        // Check for phone errors
-        if (Array.isArray(respData.errors.phone) && respData.errors.phone[0]) {
-          return respData.errors.phone[0];
-        }
-        // Check for phone_country errors
-        if (
-          Array.isArray(respData.errors.phone_country) &&
-          respData.errors.phone_country[0]
-        ) {
-          return respData.errors.phone_country[0];
-        }
-        // Get first error from any field
-        const firstError = Object.values(respData.errors)[0];
-        if (Array.isArray(firstError) && firstError[0]) {
-          return firstError[0];
-        }
+        // Return a generic message since we'll show individual errors below
+        return "Please fix the following errors";
       }
 
       // Then check for general message
@@ -107,6 +89,28 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ isOpen, onClose }) => {
       console.error("Failed to parse API error:", error_);
     }
     return null;
+  };
+
+  const showServerErrors = (err: unknown): void => {
+    if (!err || typeof err !== "object") return;
+
+    const apiErr = err as {
+      response?: { data?: { errors?: Record<string, string[]> } };
+    };
+    const respData = apiErr.response?.data;
+
+    // Show individual toasts for all errors
+    if (respData?.errors && typeof respData.errors === "object") {
+      for (const messages of Object.values(respData.errors)) {
+        if (Array.isArray(messages)) {
+          for (const msg of messages) {
+            toast.error(msg);
+          }
+        } else if (messages) {
+          toast.error(messages);
+        }
+      }
+    }
   };
 
   // Validate email format
@@ -181,9 +185,16 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ isOpen, onClose }) => {
       onClose();
     } catch (err) {
       console.error("Subscribe failed:", err);
+      showServerErrors(err);
       const serverMsg =
         getServerErrorMessage(err) || t("Footer.subscribeFailed");
-      toast.error(serverMsg);
+      // Only show general message if there were no specific errors
+      const apiErr = err as {
+        response?: { data?: { errors?: Record<string, string[]> } };
+      };
+      if (!apiErr?.response?.data?.errors) {
+        toast.error(serverMsg);
+      }
     } finally {
       setLoading(false);
     }

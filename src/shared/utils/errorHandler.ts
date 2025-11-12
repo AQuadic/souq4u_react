@@ -78,10 +78,6 @@ const ERROR_MESSAGE_MAPPINGS: Record<string, string> = {
   "Internal Server Error": "Server error occurred. Please try again later.",
 };
 
-const formatFieldName = (field: string): string => {
-  return field.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
-};
-
 const formatValidationMessage = (msg: string): string => {
   return VALIDATION_MESSAGES[msg] || msg.replace("validation.", "Invalid ");
 };
@@ -126,66 +122,6 @@ const getUserFriendlyMessage = (serverMessage: string): string => {
   return cleanMessage || "An error occurred. Please try again.";
 };
 
-const handleValidationErrors = (errors: Record<string, string[]>): string => {
-  return Object.entries(errors)
-    .map(([field, messages]) => {
-      if (Array.isArray(messages)) {
-        const messageList = messages.map(formatValidationMessage);
-        return `${formatFieldName(field)}: ${messageList.join(", ")}`;
-      }
-      return `${formatFieldName(field)}: ${messages}`;
-    })
-    .join("\n");
-};
-
-const handleServerError = (
-  axiosError: ApiError,
-  customMessage?: string
-): void => {
-  const serverError = axiosError.response?.data;
-  const statusCode = axiosError.response?.status;
-
-  // Handle validation errors with detailed field messages
-  if (serverError?.errors && typeof serverError.errors === "object") {
-    const errorMessages = handleValidationErrors(serverError.errors);
-
-    // If there's also a main message, show it first
-    if (serverError?.message) {
-      const friendlyMessage = getUserFriendlyMessage(serverError.message);
-      toast.error(friendlyMessage);
-    } else {
-      const prefix = customMessage ? `${customMessage}\n` : "";
-      toast.error(`${prefix}${errorMessages}`);
-    }
-  } else if (serverError?.message) {
-    // Use user-friendly message mapping for server messages
-    const friendlyMessage = getUserFriendlyMessage(serverError.message);
-    toast.error(
-      customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
-    );
-  } else if (serverError?.error) {
-    const friendlyMessage = getUserFriendlyMessage(serverError.error);
-    toast.error(
-      customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
-    );
-  } else if (statusCode) {
-    const message =
-      STATUS_MESSAGES[statusCode] || `Error ${statusCode}: Please try again.`;
-    toast.error(customMessage ? `${customMessage}: ${message}` : message);
-  } else {
-    toast.error(customMessage || "Server error occurred. Please try again.");
-  }
-};
-
-const handleGenericError = (error: Error, customMessage?: string): void => {
-  const friendlyMessage = error.message.includes("fetch")
-    ? "Network error. Please check your connection and try again."
-    : error.message;
-  toast.error(
-    customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
-  );
-};
-
 /**
  * Handles API errors and displays user-friendly error messages
  * @param error - The error object from API call
@@ -197,15 +133,82 @@ export const handleApiError = (
 ): void => {
   console.error("API Error:", error);
 
+  // Check if it's an axios error with response data
   if (error && typeof error === "object" && "response" in error) {
-    handleServerError(error as ApiError, customMessage);
-  } else if (error && typeof error === "object" && "message" in error) {
-    handleGenericError(error as Error, customMessage);
-  } else {
-    toast.error(
-      customMessage || "An unexpected error occurred. Please try again."
-    );
+    const axiosError = error as ApiError;
+    const serverError = axiosError.response?.data;
+
+    console.log("🔍 serverError.errors:", serverError?.errors);
+    console.log("🔍 serverError.message:", serverError?.message);
+
+    // PRIORITY 1: If there's an errors object with individual field errors, show them
+    if (serverError?.errors && typeof serverError.errors === "object") {
+      const errorKeys = Object.keys(serverError.errors);
+      console.log("✅ Found errors object with keys:", errorKeys);
+
+      if (errorKeys.length > 0) {
+        // Show each error in a separate toast
+        for (const fieldErrors of Object.values(serverError.errors)) {
+          if (Array.isArray(fieldErrors)) {
+            for (const errorMsg of fieldErrors) {
+              console.log("📢 Showing toast:", errorMsg);
+              toast.error(errorMsg);
+            }
+          } else if (fieldErrors) {
+            console.log("📢 Showing toast:", fieldErrors);
+            toast.error(String(fieldErrors));
+          }
+        }
+        return; // STOP HERE - don't show the message field
+      }
+    }
+
+    console.log("⚠️ No errors array, checking message...");
+
+    // PRIORITY 2: If there's a message, show it
+    if (serverError?.message) {
+      const friendlyMessage = getUserFriendlyMessage(serverError.message);
+      toast.error(
+        customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
+      );
+      return;
+    }
+
+    // PRIORITY 3: If there's an error field
+    if (serverError?.error) {
+      const friendlyMessage = getUserFriendlyMessage(serverError.error);
+      toast.error(
+        customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
+      );
+      return;
+    }
+
+    // PRIORITY 4: Status code based message
+    const statusCode = axiosError.response?.status;
+    if (statusCode) {
+      const message =
+        STATUS_MESSAGES[statusCode] || `Error ${statusCode}: Please try again.`;
+      toast.error(customMessage ? `${customMessage}: ${message}` : message);
+      return;
+    }
   }
+
+  // Handle non-axios errors
+  if (error && typeof error === "object" && "message" in error) {
+    const err = error as Error;
+    const friendlyMessage = err.message.includes("fetch")
+      ? "Network error. Please check your connection and try again."
+      : err.message;
+    toast.error(
+      customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
+    );
+    return;
+  }
+
+  // Fallback
+  toast.error(
+    customMessage || "An unexpected error occurred. Please try again."
+  );
 };
 
 /**
