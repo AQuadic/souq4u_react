@@ -35,11 +35,14 @@ const MyAccount: React.FC = () => {
   // Get user data from auth store
   const user = useUser();
   const [open, setOpen] = React.useState(false)
-  const [date, setDate] = React.useState<Date | undefined>(undefined)
+  // const [date, setDate] = React.useState<Date | undefined>(undefined)
 
   // Form state - initialize with user data immediately
   const [name, setName] = useState<string>(user?.name || "");
   const [email, setEmail] = useState<string>(user?.email || "");
+  const [birthday, setBirthday] = useState<string>(user?.email || "");
+  const [gender, setGender] = useState<string>(user?.email || "");
+
   const [phone, setPhone] = useState<PhoneValue>(() => {
     if (user?.phone_country && user?.phone_national) {
       return {
@@ -67,6 +70,8 @@ const MyAccount: React.FC = () => {
     if (user) {
       setName(user.name || "");
       setEmail(user.email || "");
+      setBirthday(user.birthday || "");
+      setGender(user.gender || "");
 
       // Parse phone data
       if (user.phone_country && user.phone_national) {
@@ -125,7 +130,8 @@ const MyAccount: React.FC = () => {
       const formData = new FormData();
       if (name) formData.append("name", name);
       if (email) formData.append("email", email);
-
+      if (birthday) formData.append("birthday", birthday);
+      if (gender) formData.append("gender", gender);
       // phone data
       const phoneData = formatPhoneForApi(phone);
       if (phoneData.phone) formData.append("phone", phoneData.phone);
@@ -264,17 +270,19 @@ const MyAccount: React.FC = () => {
                   id="date"
                   className="w-48 justify-between font-normal"
                 >
-                  {date ? date.toLocaleDateString() : t('Profile.selectDate')}
+                  {birthday ? new Date(birthday).toLocaleDateString() : t('Profile.selectDate')}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={date}
+                  selected={birthday ? new Date(birthday) : undefined}
                   captionLayout="dropdown"
                   onSelect={(date) => {
-                    setDate(date)
+                    if (date) {
+                      setBirthday(date.toISOString().split("T")[0]);
+                    }
                     setOpen(false)
                   }}
                 />
@@ -294,14 +302,34 @@ const MyAccount: React.FC = () => {
           <div className="flex items-center justify-between gap-4 mt-4">
               <div className="w-full border rounded-[8px] dark:border-gray-600">
                   <div className="flex items-center ps-3">
-                      <input id="male" type="radio" value="" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" />
-                      <label htmlFor="male" className="w-full py-3 ms-2 text-sm font-medium text-gray-900">Male</label>
+                    <input
+                      id="male"
+                      type="radio"
+                      value="male"
+                      name="gender"
+                      checked={gender === "male"}
+                      onChange={(e) => setGender(e.target.value)}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
+                    />
+                    <label htmlFor="male" className="w-full py-3 ms-2 text-sm font-medium text-gray-900">
+                      {t("Profile.male")}
+                    </label>
                   </div>
-              </div>
-              <div className="w-full border rounded-[8px] dark:border-gray-600">
+                </div>
+                <div className="w-full border rounded-[8px] dark:border-gray-600">
                   <div className="flex items-center ps-3">
-                      <input id="female" type="radio" value="" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" />
-                      <label htmlFor="female" className="w-full py-3 ms-2 text-sm font-medium text-gray-900">Female</label>
+                    <input
+                      id="female"
+                      type="radio"
+                      value="female"
+                      name="gender"
+                      checked={gender === "female"}
+                      onChange={(e) => setGender(e.target.value)}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
+                    />
+                    <label htmlFor="female" className="w-full py-3 ms-2 text-sm font-medium text-gray-900">
+                      {t("Profile.female")}
+                    </label>
                   </div>
               </div>
           </div>

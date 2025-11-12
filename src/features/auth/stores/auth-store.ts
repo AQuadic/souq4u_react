@@ -28,6 +28,8 @@ export interface User {
   unread_notifications_count: number;
   image: string | null;
   reset_token: string | null;
+  gender?: "male" | "female" | string;
+  birthday?: string;
 }
 
 interface AuthState {

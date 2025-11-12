@@ -481,7 +481,9 @@
     "birthday": "Birthday",
     "selectDate": "Select date",
     "gender": "Gender",
-    "addressAdded": "Address added successfully"
+    "addressAdded": "Address added successfully",
+    "male": "Male",
+    "female": "Female"
   },
   "Orders": {
     "orders": "Orders",
