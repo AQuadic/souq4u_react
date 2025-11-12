@@ -117,7 +117,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                       />
                       <div className="px-2">
                         <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
-                          {t("Common.orderCode")} <span dir="ltr">#{item.code}</span>
+                          {t('Orders.itemNumber')} : <span dir="ltr">#{item.code}</span>
                         </p>
                         <h1 className="md:text-2xl text-base font-semibold leading-tight md:mt-6 mt-4 line-clamp-2">
                           {productName}
@@ -168,7 +168,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                       </div>
                     </div>
                     <div>
-                        <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]" dir="ltr">#{item.order_code}</p>
+                        <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]" dir="ltr">{t('Orders.orderNumber')} : {item.order_code}</p>
                       </div>
                   </div>
                 </Link>
