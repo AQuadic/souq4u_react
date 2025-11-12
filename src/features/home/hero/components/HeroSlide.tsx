@@ -82,7 +82,7 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ slide }) => {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className={`bg-cover rounded-4xl bg-center bg-no-repeat text-white flex flex-col items-center justify-center w-full min-h-[400px] sm:h-[500px] px-4 py-12 sm:py-0 ${
+      className={`bg-cover rounded-4xl bg-center bg-no-repeat text-white flex flex-col items-center justify-center w-full h-[202px] sm:h-[500px] px-4 py-12 sm:py-0 ${
         clickable ? "cursor-pointer" : ""
       } ${isArabic ? "rtl" : "ltr"}`}
       style={{ backgroundImage: `url(${imageUrl})` }}
