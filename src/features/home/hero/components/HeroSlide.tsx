@@ -82,13 +82,17 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ slide }) => {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className={`bg-cover rounded-4xl bg-center bg-no-repeat text-white flex flex-col items-center justify-center w-full h-[202px] sm:h-[500px] px-4 py-12 sm:py-0 ${
+      className={`relative bg-cover rounded-4xl bg-center bg-no-repeat text-white flex flex-col items-center justify-center w-full h-[202px] sm:h-[500px] px-4 py-12 sm:py-0 ${
         clickable ? "cursor-pointer" : ""
       } ${isArabic ? "rtl" : "ltr"}`}
       style={{ backgroundImage: `url(${imageUrl})` }}
       dir={isArabic ? "rtl" : "ltr"}
     >
-      <div className="w-full flex flex-col items-center text-center max-w-[768px]">
+      {!hasButton && (
+        <div className="absolute inset-0 bg-[#000000A6] rounded-4xl"></div>
+      )}
+
+      <div className="relative w-full flex flex-col items-center text-center max-w-[768px]">
         {title && (
           <h1 className="text-3xl sm:text-4xl md:text-[48px] font-bold leading-tight sm:leading-tight mb-4 sm:mb-6">
             <span className="text-main">{firstWord}</span>
