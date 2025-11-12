@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -106,26 +112,8 @@ const Footer = () => {
 
       // First check for specific field errors (email or phone)
       if (respData?.errors && typeof respData.errors === "object") {
-        // Check for email errors
-        if (Array.isArray(respData.errors.email) && respData.errors.email[0]) {
-          return respData.errors.email[0];
-        }
-        // Check for phone errors
-        if (Array.isArray(respData.errors.phone) && respData.errors.phone[0]) {
-          return respData.errors.phone[0];
-        }
-        // Check for phone_country errors
-        if (
-          Array.isArray(respData.errors.phone_country) &&
-          respData.errors.phone_country[0]
-        ) {
-          return respData.errors.phone_country[0];
-        }
-        // Get first error from any field
-        const firstError = Object.values(respData.errors)[0];
-        if (Array.isArray(firstError) && firstError[0]) {
-          return firstError[0];
-        }
+        // Return a generic message since we'll show individual errors below
+        return "Please fix the following errors";
       }
 
       // Then check for general message
@@ -150,6 +138,28 @@ const Footer = () => {
       console.error("Failed to parse API error:", error_);
     }
     return null;
+  };
+
+  const showServerErrors = (err: unknown): void => {
+    if (!err || typeof err !== "object") return;
+
+    const apiErr = err as {
+      response?: { data?: { errors?: Record<string, string[]> } };
+    };
+    const respData = apiErr.response?.data;
+
+    // Show individual toasts for all errors
+    if (respData?.errors && typeof respData.errors === "object") {
+      for (const messages of Object.values(respData.errors)) {
+        if (Array.isArray(messages)) {
+          for (const msg of messages) {
+            toast.error(msg);
+          }
+        } else if (messages) {
+          toast.error(messages);
+        }
+      }
+    }
   };
 
   const stopPolling = useCallback(() => {
@@ -288,16 +298,31 @@ const Footer = () => {
         verificationResp.otp_callback?.reference
       );
     } catch (error: unknown) {
-      let errorMessage = "Resend failed";
       if (error && typeof error === "object") {
         const err = error as {
           message?: string;
-          errors?: { phone?: string[] };
+          errors?: Record<string, string[]>;
         };
-        errorMessage =
-          err?.message || err?.errors?.phone?.[0] || t("resendFailed");
+
+        // Show individual toasts for all errors
+        if (err?.errors && typeof err.errors === "object") {
+          for (const messages of Object.values(err.errors)) {
+            if (Array.isArray(messages)) {
+              for (const msg of messages) {
+                toast.error(msg);
+              }
+            } else if (messages) {
+              toast.error(messages);
+            }
+          }
+        } else if (err?.message) {
+          toast.error(err.message);
+        } else {
+          toast.error(t("resendFailed"));
+        }
+      } else {
+        toast.error(t("resendFailed"));
       }
-      toast.error(errorMessage);
       throw error;
     }
   };
@@ -381,14 +406,25 @@ const Footer = () => {
       setSubscribeError("");
     } catch (err) {
       console.error("Subscribe failed:", err);
+      showServerErrors(err);
       const serverMsg = getServerErrorMessage(err) || t("subscribeFailed");
-      toast.error(serverMsg);
+      // Only show general message if there were no specific errors
+      const apiErr = err as {
+        response?: { data?: { errors?: Record<string, string[]> } };
+      };
+      if (!apiErr?.response?.data?.errors) {
+        toast.error(serverMsg);
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const { data: storeData, isLoading, error } = useQuery({
+  const {
+    data: storeData,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["store-setting", "social"],
     queryFn: () => getStoreSetting(),
   });
@@ -404,7 +440,11 @@ const Footer = () => {
         }
         return null;
       })
-      .filter(Boolean) as Array<{ Icon: React.ComponentType; href: string; key: string }>;
+      .filter(Boolean) as Array<{
+      Icon: React.ComponentType;
+      href: string;
+      key: string;
+    }>;
   }, [storeData]);
 
   return (
@@ -426,31 +466,33 @@ const Footer = () => {
 
             <p className="text-base lg:text-lg font-normal leading-[150%] max-w-[340px] mx-auto lg:mx-0 mb-6 text-center md:text-start">
               {isLoading
-                ? (locale === "ar" ? "جارِ التحميل..." : "Loading...")
+                ? locale === "ar"
+                  ? "جارِ التحميل..."
+                  : "Loading..."
                 : error
-                  ? (locale === "ar"
-                      ? "حدث خطأ أثناء تحميل التفاصيل."
-                      : "Failed to load details.")
-                  : locale === "ar"
-                    ? storeData?.slogan?.ar
-                    : storeData?.slogan?.en || ""}
+                ? locale === "ar"
+                  ? "حدث خطأ أثناء تحميل التفاصيل."
+                  : "Failed to load details."
+                : locale === "ar"
+                ? storeData?.slogan?.ar
+                : storeData?.slogan?.en || ""}
             </p>
 
-          {!isLoading && !error && activeSocialLinks.length > 0 && (
-            <div className="flex items-center justify-center lg:justify-start gap-3">
-              {activeSocialLinks.map(({ Icon, href, key }) => (
-                <a
-                  key={key}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:opacity-80 transition-opacity duration-200"
-                >
-                  <Icon />
-                </a>
-              ))}
-            </div>
-          )}
+            {!isLoading && !error && activeSocialLinks.length > 0 && (
+              <div className="flex items-center justify-center lg:justify-start gap-3">
+                {activeSocialLinks.map(({ Icon, href, key }) => (
+                  <a
+                    key={key}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:opacity-80 transition-opacity duration-200"
+                  >
+                    <Icon />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Section 2 - Explore */}
@@ -491,7 +533,9 @@ const Footer = () => {
             <div className="flex flex-col gap-4 text-center md:text-start">
               {!isAuth && (
                 <Link
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
                   to="/track-order"
                   className=" text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"
                 >
@@ -510,7 +554,9 @@ const Footer = () => {
               </Link>
               {dynamicLinks.map((link) => (
                 <Link
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
                   key={link.href}
                   to={link.href}
                   className="text-base lg:text-xl font-normal leading-[100%] hover:text-main transition-colors duration-200"

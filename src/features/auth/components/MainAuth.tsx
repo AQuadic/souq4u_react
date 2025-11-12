@@ -43,7 +43,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
   const loginUser = useLogin();
   const isAuthenticated = useIsAuthenticated();
   const toast = useToast();
-  const {t }= useTranslation("Auth");
+  const { t } = useTranslation("Auth");
 
   // Handle profile click - either open dialog or navigate to profile
   const handleProfileClick = useCallback(() => {
@@ -229,16 +229,31 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
         verificationResp.otp_callback?.reference
       );
     } catch (error: unknown) {
-      let errorMessage = "Resend failed";
       if (error && typeof error === "object") {
         const err = error as {
           message?: string;
-          errors?: { phone?: string[] };
+          errors?: Record<string, string[]>;
         };
-        errorMessage =
-          err?.message || err?.errors?.phone?.[0] || t("resendFailed");
+
+        // Show individual toasts for all errors
+        if (err?.errors && typeof err.errors === "object") {
+          for (const messages of Object.values(err.errors)) {
+            if (Array.isArray(messages)) {
+              for (const msg of messages) {
+                toast.error(msg);
+              }
+            } else if (messages) {
+              toast.error(messages);
+            }
+          }
+        } else if (err?.message) {
+          toast.error(err.message);
+        } else {
+          toast.error(t("resendFailed"));
+        }
+      } else {
+        toast.error(t("resendFailed"));
       }
-      toast.error(errorMessage);
       throw error;
     }
   };

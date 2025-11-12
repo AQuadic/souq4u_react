@@ -28,6 +28,9 @@ import { Textarea } from "@/shared/components/ui/textarea";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/shared/components/ui/toast";
 
+const isNonEmptyString = (value: string | null | undefined): value is string =>
+  typeof value === "string" && value.length > 0;
+
 interface AddressFormProps {
   initialData?: Partial<AddressFormData>;
   onSubmit: (data: AddressFormData) => void | Promise<void>;
@@ -93,6 +96,39 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   const locale = i18n.language;
   const { t: common } = useTranslation("Common");
   const toast = useToast();
+  const displayServerErrors = (
+    errors?: Record<string, string[]>,
+    fallbackMessage?: string
+  ) => {
+    const showFallback = () => {
+      if (fallbackMessage) {
+        toast.error(fallbackMessage, { duration: 5000 });
+      } else {
+        toast.error("Failed to save address", { duration: 5000 });
+      }
+    };
+
+    if (!errors) {
+      showFallback();
+      return;
+    }
+
+    const normalisedMessages = Object.values(errors)
+      .flatMap((messages) => messages ?? [])
+      .map((message) => (typeof message === "string" ? message.trim() : ""))
+      .filter(isNonEmptyString);
+
+    if (normalisedMessages.length === 0) {
+      showFallback();
+      return;
+    }
+
+    const uniqueMessages = new Set(normalisedMessages);
+
+    for (const message of uniqueMessages) {
+      toast.error(message, { duration: 5000 });
+    }
+  };
   // derive short locale (en | ar) and helper to pick translated name
   const localeShort = (locale || "en").split("-")[0] as "en" | "ar";
   const getTranslated = (names: { en?: string; ar?: string }) =>
@@ -126,7 +162,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     }
 
     const minLength = getPhoneMinLength(countryCode);
-    const cleanNumber = phoneNumber.replace(/[^\d]/g, "");
+    const cleanNumber = phoneNumber.replaceAll(/\D/g, "");
 
     if (cleanNumber.length < minLength) {
       return t("AddressForm.phoneMinLength", { minLength });
@@ -384,12 +420,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         }
       }
 
-      // Show custom toast with only the message
-      if (serverMessage) {
-        toast.error(serverMessage, { duration: 5000 });
-      } else {
-        toast.error("Failed to save address", { duration: 5000 });
-      }
+      // Surface backend validation messages as individual toasts
+      displayServerErrors(serverErrors, serverMessage);
 
       // Don't call onSubmit or onSubmitSuccess if there was an error - form stays open
     }
