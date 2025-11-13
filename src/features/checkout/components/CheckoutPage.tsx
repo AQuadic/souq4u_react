@@ -28,7 +28,7 @@ import BackArrow from "@/features/products/icons/BackArrow";
 export const CheckoutPage: React.FC = () => {
   const { t } = useTranslation("Checkout");
   const navigate = useNavigate();
-  const { cart, clearCart } = useCartStore();
+  const { cart, clearCart, setCart } = useCartStore();
   const { isAuthenticated } = useAuthStore();
 
   const { appliedCoupon, isCouponLoading, applyCoupon, clearCoupon } =
@@ -48,6 +48,7 @@ export const CheckoutPage: React.FC = () => {
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
   const [shippingCityId, setShippingCityId] = useState<string>("");
   const [shippingAreaId, setShippingAreaId] = useState<string>("");
+  const [shippingRequestId, setShippingRequestId] = useState(0);
 
   const checkoutSuccessRef = useRef(false);
   const initialCartCheckDone = useRef(false);
@@ -57,7 +58,15 @@ export const CheckoutPage: React.FC = () => {
     city_id: shippingCityId,
     area_id: shippingAreaId,
     enabled: !!shippingCityId && !!shippingAreaId,
+    requestId: shippingRequestId,
   });
+
+  // Update cart in store when shipping data is fetched
+  useEffect(() => {
+    if (cartWithShipping?.data) {
+      setCart(cartWithShipping.data);
+    }
+  }, [cartWithShipping, setCart]);
 
   useEffect(() => {
     // Only check cart on initial mount, not on subsequent cart changes
@@ -117,9 +126,10 @@ export const CheckoutPage: React.FC = () => {
   }, []);
 
   const handleShippingUpdate = useCallback((cityId: string, areaId: string) => {
+    console.log("Shipping updated:", { cityId, areaId });
     setShippingCityId(cityId);
     setShippingAreaId(areaId);
-    console.log("Shipping updated:", { cityId, areaId });
+    setShippingRequestId((prev) => prev + 1);
   }, []);
 
   const handleFormDataChange = useCallback(

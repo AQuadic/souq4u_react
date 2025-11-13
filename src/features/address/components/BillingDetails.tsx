@@ -6,8 +6,6 @@ import { useAddresses } from "../hooks";
 import type { AddressFormData } from "../types";
 import { SavedAddresses } from "./SavedAddresses";
 import { AddressForm } from "./AddressForm";
-import BackArrow from "@/features/products/icons/BackArrow";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 interface BillingDetailsProps {
@@ -175,7 +173,6 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
 
   return (
     <div className="rounded-lg md:p-6">
-
       <h2 className="md:flex hidden text-xl font-semibold text-black mb-6">
         {t("Checkout.title")}
       </h2>
