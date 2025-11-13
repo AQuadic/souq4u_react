@@ -14,7 +14,7 @@ const HomeTryApp = () => {
   const titleAfter = titleParts.slice(1).join("___BRAND___") ?? "";
 
   return (
-    <section className="container flex justify-between items-center max-sm:flex-col gap-6">
+    <section className="container flex justify-between items-center max-sm:flex-col gap-6 mb-[60px] sm:mb-[120px]">
       <div>
         <h1 className="text-lg lg:text-[40px] font-bold font-anton-sc flex items-center gap-2">
           {titleBefore && <>{titleBefore} </>}
