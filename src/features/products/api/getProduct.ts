@@ -7,6 +7,7 @@ export interface GetProductsParams {
   only_discount?: boolean | number;
   pagination?: "normal" | boolean;
   category_id?: number;
+  color_id?: number;
   min_price?: number;
   max_price?: number;
   is_featured?: boolean | number;
@@ -141,6 +142,7 @@ export async function getProducts(
   const paramsPayload: Record<string, unknown> = {
     pagination: params?.pagination ?? "normal",
     category_id: params?.category_id,
+    color_id: params?.color_id,
     q: params?.q,
     sort_by: params?.sort_by,
     sort_order: params?.sort_order,
@@ -205,6 +207,7 @@ export async function getProductsPaginated(
   const paramsPayload: Record<string, unknown> = {
     pagination: "normal",
     category_id: params?.category_id,
+    color_id: params?.color_id,
     q: params?.q,
     sort_by: params?.sort_by,
     sort_order: params?.sort_order,

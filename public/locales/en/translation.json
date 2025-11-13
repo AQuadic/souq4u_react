@@ -120,6 +120,10 @@
     "filterByPrice": "Filter by Price",
     "egp": "EGP",
     "categories": "Categories",
+    "color": "Color",
+    "filters": "Filters",
+    "failedToLoadColors": "Failed to load colors",
+    "noColorsAvailable": "No colors available",
 
     "reviewSummary": {
       "ariaLabel": "Product Review Summary",

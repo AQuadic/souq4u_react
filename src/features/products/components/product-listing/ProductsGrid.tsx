@@ -17,18 +17,28 @@ import ProductsSorting from "./ProductsSorting";
 import ProductCardListing from "../ProductCardListing";
 import { useProductFilters } from "../../hooks/useProductFilters";
 import ProductsCategoryFilter from "./ProductsCategoryFilter";
+import ProductsColorFilter from "./ProductsColorFilter";
 import ProductsPagination from "@/shared/components/pagenation/ProductsPagenation";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import BackArrow from "../../icons/BackArrow";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetBody,
+  SheetClose,
+} from "@/shared/components/ui/sheet";
 
 const ProductsGrid: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-  const { filters, setCategory, setPriceRange, setSorting } =
+  const { filters, setCategory, setPriceRange, setSorting, setColor } =
     useProductFilters();
 
   const { search } = useLocation();
@@ -43,7 +53,7 @@ const ProductsGrid: React.FC = () => {
     onlyDiscountParam === "1" || onlyDiscountParam === "true";
 
   const activeCategoryId = categoryIdFromUrl
-    ? parseInt(categoryIdFromUrl)
+    ? Number.parseInt(categoryIdFromUrl)
     : filters.categoryId;
 
   // Fetch price range from API
@@ -68,6 +78,7 @@ const ProductsGrid: React.FC = () => {
       filters.categoryId,
       filters.minPrice,
       filters.maxPrice,
+      filters.colorId,
       isMostViewedActive,
       isOnlyDiscountedActive,
     ],
@@ -86,6 +97,7 @@ const ProductsGrid: React.FC = () => {
           searchParams.get("is_most_view") === "1" ||
           searchParams.get("is_most_view") === "true",
         category_id: filters.categoryId,
+        color_id: filters.colorId,
         min_price: filters.minPrice,
         max_price: filters.maxPrice,
       }),
@@ -134,11 +146,11 @@ const ProductsGrid: React.FC = () => {
 
       <div className="md:block hidden">
         <Breadcrumbs
-        items={[
-          { label: t("Navigation.home"), href: "/" },
-          { label: t("Products.title") },
-        ]}
-      />
+          items={[
+            { label: t("Navigation.home"), href: "/" },
+            { label: t("Products.title") },
+          ]}
+        />
       </div>
 
       <Link to="/" className="md:hidden flex items-center gap-2 mb-6">
@@ -185,7 +197,7 @@ const ProductsGrid: React.FC = () => {
       )}
 
       <div className="flex lg:flex-row flex-col gap-8 mt-10">
-        <div>
+        <div className="md:block hidden">
           <ProductsCategoryFilter setCategory={setCategory} />
           <ProductsPriceFilter
             minPrice={filters.minPrice ?? priceRangeData?.min_price ?? 0}
@@ -193,6 +205,10 @@ const ProductsGrid: React.FC = () => {
             actualMinPrice={priceRangeData?.min_price ?? 0}
             actualMaxPrice={priceRangeData?.max_price ?? 10000}
             setPriceRange={setPriceRange}
+          />
+          <ProductsColorFilter
+            selectedColorId={filters.colorId}
+            setColor={setColor}
           />
         </div>
 
@@ -203,7 +219,41 @@ const ProductsGrid: React.FC = () => {
             setSorting={setSorting}
             displayed={products.length}
             total={totalProducts}
+            onFiltersClick={() => setIsFiltersOpen(true)}
           />
+
+          {/* Mobile Filters Sheet */}
+          <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+            <SheetContent side="bottom" className="h-[90vh] flex flex-col">
+              <SheetHeader className="flex flex-row items-center justify-between">
+                <SheetTitle>{t("Products.filters")}</SheetTitle>
+                <SheetClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100">
+                  <X className="h-6 w-6" />
+                  <span className="sr-only">Close</span>
+                </SheetClose>
+              </SheetHeader>
+              <SheetBody className="flex-1 overflow-y-auto">
+                <div className="space-y-6">
+                  <ProductsCategoryFilter setCategory={setCategory} />
+                  <ProductsPriceFilter
+                    minPrice={
+                      filters.minPrice ?? priceRangeData?.min_price ?? 0
+                    }
+                    maxPrice={
+                      filters.maxPrice ?? priceRangeData?.max_price ?? 10000
+                    }
+                    actualMinPrice={priceRangeData?.min_price ?? 0}
+                    actualMaxPrice={priceRangeData?.max_price ?? 10000}
+                    setPriceRange={setPriceRange}
+                  />
+                  <ProductsColorFilter
+                    selectedColorId={filters.colorId}
+                    setColor={setColor}
+                  />
+                </div>
+              </SheetBody>
+            </SheetContent>
+          </Sheet>
 
           {isFetching && !isLoading && (
             <div className="flex items-center justify-center py-4 mb-4 bg-gray-100 rounded-lg mt-6">

@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import ProductsFilter from "../../icons/ProductsFilter";
+import FilterIcon from "../../icons/FilterIcon";
 
 interface ProductsSortingProps {
   view: "grid" | "list";
@@ -23,12 +23,14 @@ interface ProductsSortingProps {
   ) => void;
   total?: number;
   displayed?: number;
+  onFiltersClick?: () => void;
 }
 
 const ProductsSorting: React.FC<ProductsSortingProps> = ({
   view,
   setView,
   setSorting,
+  onFiltersClick,
   // total,
   // displayed,
 }) => {
@@ -66,9 +68,13 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
             <ListViewIcon selected={view === "list"} darkMode={darkMode} />
           </button>
 
-          <div className="md:hidden flex">
-            <ProductsFilter />
-          </div>
+          <button
+            className="md:hidden flex items-center justify-center w-12 h-12 border dark:border-[#FDFDFD] border-[#C0C0C0] rounded-md text-main"
+            onClick={onFiltersClick}
+            aria-label="Open filters"
+          >
+            <FilterIcon />
+          </button>
 
           <Select onValueChange={handleSortChange}>
             <SelectTrigger className="w-full h-12 dark:border-[#FDFDFD] border-[#C0C0C0]">
