@@ -345,7 +345,7 @@
       "triggerLabel": "Sign Out",
       "titleLine1": "Do you really want to",
       "titleLine2": "Sign out?",
-      "title": "Do you really want to Sign out?",
+      "title": "Do you really want to log out?",
       "description": "You will be signed out of your account. Any unsaved changes may be lost.",
       "yes": "Yes",
       "no": "No"
