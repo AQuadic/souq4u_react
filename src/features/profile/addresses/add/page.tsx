@@ -13,7 +13,7 @@ const AddAddressPage: React.FC = () => {
   const createAddressMutation = useCreateAddress();
   const toast = useToast();
 
-  const isRtl = i18n.language.startsWith("ar");
+  // const isRtl = i18n.language.startsWith("ar");
 
   const handleSubmit = async (formData: AddressFormData) => {
     try {
@@ -53,9 +53,9 @@ const AddAddressPage: React.FC = () => {
   };
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4">
       <div className="flex items-center mb-6">
-        <button
+        {/* <button
           onClick={() => navigate(-1)}
           aria-label={t("back")}
           className={`p-2 rounded-md hover:bg-slate-100 transition-colors ${
@@ -63,8 +63,8 @@ const AddAddressPage: React.FC = () => {
           }`}
         >
           <span style={{ transform: isRtl ? "scaleX(-1)" : "none" }}>‹</span>
-        </button>
-        <h1 className="text-xl font-bold">{t("Profile.AddAddress.header")}</h1>
+        </button> */}
+        <h1 className="text-xl md:text-[32px] font-bold">{t("Profile.AddAddress.header")}</h1>
       </div>
 
       <AddressForm
