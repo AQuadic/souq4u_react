@@ -75,7 +75,7 @@ export const CartCard: React.FC<CartCardProps> = ({
     if (!translatedAttributes || translatedAttributes.length === 0) return null;
 
     return (
-      <div className="mt-2 flex flex-row gap-2">
+      <div className="mt-2 flex flex-wrap gap-2">
         {translatedAttributes.map((attr) => (
           <div
             key={attr.id}
