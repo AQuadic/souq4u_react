@@ -8,8 +8,8 @@ import { useTranslation } from "react-i18next";
 // keep keys here so messages can be provided via i18next files
 const links = [
   { href: "/profile/account", key: "Profile.account" },
-  { href: "/profile/orders", key: "Profile.orders" },
   { href: "/profile/favorites", key: "Profile.favorites" },
+  { href: "/profile/orders", key: "Profile.orders" },
   { href: "/profile/addresses", key: "Profile.addresses" },
   { href: "/signout", key: "Auth.logoutDialog.triggerLabel", isLogout: true },
 ];
@@ -43,7 +43,7 @@ export default function Sidebar() {
               key={link.href}
               to={link.href} // ✅ 'to' instead of 'href'
               className={`transition-colors text-base hover:text-main ${
-                isActive ? "text-main font-bold" : ""
+                isActive ? "text-black font-bold" : ""
               }`}
             >
               {label}

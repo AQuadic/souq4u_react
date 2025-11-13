@@ -424,8 +424,9 @@
   "Profile": {
     "title": "My Profile",
     "account": "My Account",
+    "fullName": "Full Name",
     "email": "Email",
-    "phone": "Phone",
+    "phone": "Phone Number",
     "updateSuccess": "Profile updated successfully!",
     "updateFailed": "Failed to update profile",
     "inputPlaceholder": "Write here",

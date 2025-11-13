@@ -17,7 +17,7 @@ const FavEmptyState = () => {
       <h2 className=" text-2xl font-semibold mt-8">
         {t("Profile.FavoritesEmpty.title")}
       </h2>
-      <p className="text-[#C0C0C0] text-lg font-medium font-poppins mt-4 text-center">
+      <p className="text-[#C0C0C0] text-lg font-medium font-poppins mt-4 text-center md:w-[303px]">
         {descLines.length > 0
           ? descLines.map((line) => (
               <React.Fragment key={`fav-desc-${line}`}>

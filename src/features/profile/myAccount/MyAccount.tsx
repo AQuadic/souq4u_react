@@ -193,7 +193,7 @@ const MyAccount: React.FC = () => {
   return (
     <section>
       <h1 className=" text-[32px] font-bold leading-[100%] md:flex hidden">
-        {t("Profile.title") || "Profile.My Account"}
+        {t("Profile.account") || "Profile.My Account"}
       </h1>
 
       <Link to='/profile/mobileAccount' className="flex gap-2 md:hidden">
@@ -210,7 +210,7 @@ const MyAccount: React.FC = () => {
             htmlFor="name"
             className=" text-base font-normal leading-[100%]"
           >
-            {t("Profile.account") || "Full Name"}
+            {t("Profile.fullName") || "Full Name"}
           </label>
           <input
             id="name"
