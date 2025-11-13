@@ -281,7 +281,7 @@ const MainAuth: React.FC<MainAuthProps> = ({ onProfileClick }) => {
         }}
       >
         <DialogContent
-              className="w-full md:max-w-[600px] lg:max-w-[691px] rounded-[20px] md:rounded-[40px] border-none py-8 md:py-12 lg:py-10 max-h-[90vh] overflow-y-auto scroll-hidden z-[40] mx-auto"
+              className="w-full md:max-w-[600px] lg:max-w-[691px] rounded-[20px] md:rounded-[40px] border-none py-8 md:py-12 lg:py-10 max-h-[90vh] overflow-y-auto scroll-hidden z-[50] mx-auto"
               style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
