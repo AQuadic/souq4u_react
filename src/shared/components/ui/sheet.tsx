@@ -60,9 +60,9 @@ export const SheetTrigger = React.forwardRef<
   };
 
   if (asChild && React.isValidElement(props.children)) {
-    return React.cloneElement(props.children as React.ReactElement, {
-      onClick: handleClick,
-    });
+    return React.cloneElement(props.children as React.ReactElement<{ onClick?: (e: React.MouseEvent<any>) => void }>,
+      { onClick: handleClick }
+    );
   }
 
   return <button ref={ref} onClick={handleClick} {...props} />;
