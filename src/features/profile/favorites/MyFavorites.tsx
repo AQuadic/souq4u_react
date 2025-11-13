@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ProductCard from "@/features/products/components/ProductCard";
 import { getFavorites } from "../favorites/api/getFavorites";
 import { Product } from "@/features/products/api/getProduct";
+import { getProduct } from "@/features/products/api/getProduct"; // Make sure you have this API
 import FavEmptyState from "./FavEmptyState";
 import BackArrow from "@/features/products/icons/BackArrow";
 import { Link } from "react-router-dom";
@@ -26,36 +27,49 @@ export interface ApiFavoriteItem {
 }
 
 const MyFavorites = () => {
-  const [localFavData, setLocalFavData] = useState<ApiFavoriteItem[] | null>(
-    null
-  );
+  const [products, setProducts] = useState<Product[]>([]);
   const queryClient = useQueryClient();
+  const { t } = useTranslation("Profile");
 
-  const {
-    data: favData = [],
-    isLoading,
-    isError,
-  } = useQuery<ApiFavoriteItem[]>({
+  const { data: favData = [], isLoading, isError } = useQuery<ApiFavoriteItem[]>({
     queryKey: ["favorites"],
     queryFn: getFavorites,
   });
 
-  const {t} = useTranslation("Profile");
-
-  // Keep a local copy of favorites so we can remove items from the UI immediately
   useEffect(() => {
-    if (favData) setLocalFavData(favData);
+    const fetchFavoriteProducts = async () => {
+      if (!favData || favData.length === 0) {
+        setProducts([]);
+        return;
+      }
+
+      try {
+        const productsData = await Promise.all(
+          favData.map(async (favItem) => {
+            const productDetails: Product = await getProduct(favItem.favorable_id);
+
+            return {
+              ...productDetails,
+              is_favorite: true,
+            };
+          })
+        );
+
+        setProducts(productsData);
+      } catch (error) {
+        console.error("Failed to fetch product details", error);
+      }
+    };
+
+    fetchFavoriteProducts();
   }, [favData]);
 
   const handleToggleFavorite = (productId: number) => {
-    // Remove the item locally (favorites page should remove unfavourited items)
-    setLocalFavData((prev) => {
-      if (!prev) return prev;
-      const next = prev.filter((item) => item.favorable.id !== productId);
-      // Keep react-query cache in sync
+    setProducts((prev) => {
+      const next = prev.filter((p) => p.id !== productId);
       queryClient.setQueryData<ApiFavoriteItem[] | undefined>(
         ["favorites"],
-        next
+        favData.filter((item) => item.favorable.id !== productId)
       );
       return next;
     });
@@ -70,9 +84,7 @@ const MyFavorites = () => {
         
   if (isError) return <div>Error loading favorites.</div>;
 
-  const sourceFavs = localFavData ?? favData;
-
-  if (!sourceFavs || sourceFavs.length === 0) {
+  if (!products || products.length === 0) {
     return (
       <div>
         <h2 className="text-[32px] font-bold mb-6">{t("Profile.favorites")}</h2>
@@ -80,47 +92,6 @@ const MyFavorites = () => {
       </div>
     );
   }
-
-  const products: Product[] = sourceFavs.map((item) => {
-    const fav = item.favorable;
-    return {
-      id: fav.id,
-      name: fav.name,
-      short_description: fav.short_description,
-      images: fav.image
-        ? [
-            {
-              id: fav.id,
-              uuid: "dummy-uuid",
-              url: fav.image.url,
-              size: 0,
-              responsive_urls: [],
-              is_active: 1,
-            },
-          ]
-        : [],
-      variants: [
-        {
-          id: fav.id,
-          product_id: fav.id,
-          sku: `SKU-${fav.id}`,
-          final_price: 100,
-          price: 120,
-          has_discount: true,
-          discount_percentage: 20,
-          // Mark a favorite-derived variant as in-stock so product cards don't
-          // treat the product as out-of-stock (the UI treats missing/false
-          // `is_stock` or undefined `stock` as unavailable).
-          is_stock: true,
-          stock: 1,
-        },
-      ],
-      is_active: 1,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      is_favorite: true,
-    };
-  });
 
   return (
     <section>
