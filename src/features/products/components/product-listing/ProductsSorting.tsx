@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import ProductsFilter from "../../icons/ProductsFilter";
+import FilterIcon from "../../icons/FilterIcon";
 
 interface ProductsSortingProps {
   view: "grid" | "list";
@@ -23,12 +23,14 @@ interface ProductsSortingProps {
   ) => void;
   total?: number;
   displayed?: number;
+  onFiltersClick?: () => void;
 }
 
 const ProductsSorting: React.FC<ProductsSortingProps> = ({
   view,
   setView,
   setSorting,
+  onFiltersClick,
   // total,
   // displayed,
 }) => {
@@ -58,17 +60,21 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
     <section>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button className="" onClick={() => setView("grid")}>
+          <button className="md:flex hidden" onClick={() => setView("grid")}>
             <GridViewIcon selected={view === "grid"} darkMode={darkMode} />
           </button>
 
-          <button className="" onClick={() => setView("list")}>
+          <button className="md:flex hidden" onClick={() => setView("list")}>
             <ListViewIcon selected={view === "list"} darkMode={darkMode} />
           </button>
 
-          {/* <div className="md:hidden flex">
-            <ProductsFilter />
-          </div> */}
+          <button
+            className="md:hidden flex items-center"
+            onClick={onFiltersClick}
+            aria-label="Open filters"
+          >
+            <FilterIcon />
+          </button>
 
           <Select onValueChange={handleSortChange}>
             <SelectTrigger className="w-full h-12 dark:border-[#FDFDFD] border-[#C0C0C0]">

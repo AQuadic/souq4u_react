@@ -7,6 +7,7 @@ export interface ProductFilters {
   categoryId?: number;
   minPrice?: number;
   maxPrice?: number;
+  colorId?: number;
   sortBy?: "id" | "price" | "created_at" | "updated_at";
   sortOrder?: "asc" | "desc";
   onlyDiscount?: boolean;
@@ -50,7 +51,14 @@ export function useProductFilters() {
     setFilters((prev) => ({ ...prev, minPrice, maxPrice }));
   };
 
-  const setSorting = (sortBy: ProductFilters["sortBy"], sortOrder: ProductFilters["sortOrder"]) => {
+  const setColor = (colorId?: number) => {
+    setFilters((prev) => ({ ...prev, colorId }));
+  };
+
+  const setSorting = (
+    sortBy: ProductFilters["sortBy"],
+    sortOrder: ProductFilters["sortOrder"]
+  ) => {
     setFilters((prev) => ({ ...prev, sortBy, sortOrder }));
   };
 
@@ -66,6 +74,7 @@ export function useProductFilters() {
     filters,
     setCategory,
     setPriceRange,
+    setColor,
     setSorting,
     toggleDiscountOnly,
     resetFilters,
