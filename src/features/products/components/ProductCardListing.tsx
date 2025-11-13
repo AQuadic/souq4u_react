@@ -98,6 +98,19 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
     }
   };
 
+  const colorSwatches: string[] = [];
+    product.variants?.forEach((v) =>
+      v?.attributes?.forEach((attr) => {
+        // attribute.value.special_value is used in ProductSizeSelector as "special_value" (hex color)
+        const value = (
+          attr as {
+            value?: { special_value?: string | null };
+          }
+        )?.value?.special_value;
+        if (value && !colorSwatches.includes(value)) colorSwatches.push(value);
+      })
+    );
+
   return (
     <Link
       to={`/products/${product.id}`}
@@ -161,8 +174,8 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
             {useTranslatedText(categoryName, "Category Name")}
           </h2>
           <h2 className=" text-base font-bold leading-[150%]">
-            {productName.slice(0, 16)}
-            {productName.length > 16 ? "…" : ""}
+            {productName.slice(0, 60)}
+            {productName.length > 60 ? "…" : ""}
           </h2>
           <div className="flex items-center gap-1 mt-4">
             <p className=" text-sm font-medium leading-3 font-Poppins">
@@ -198,6 +211,26 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
               </div>
             )}
           </div>
+          {colorSwatches.length > 0 && (
+            <div className="flex items-center gap-2 mt-2">
+              <div className="flex items-center gap-1">
+                {colorSwatches.slice(0, 6).map((c) => (
+                  <span
+                    key={c}
+                    title={c}
+                    aria-label={`color-${c}`}
+                    className="w-[18px] h-[18px] rounded-full "
+                    style={{ backgroundColor: c }}
+                  />
+                ))}
+                {colorSwatches.length > 6 && (
+                  <span className="text-xs text-gray-500">
+                    +{colorSwatches.length - 6}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </Link>

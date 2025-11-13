@@ -127,7 +127,9 @@ const MyFavorites = () => {
       <h2 className="text-[32px] font-bold mb-6 md:flex hidden">{t("Profile.favorites")}</h2>
 
       <Link to='/profile/account' className="mb-6 md:hidden flex items-center gap-2">
-        <BackArrow />
+        <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+          <BackArrow />
+        </div>
         <h2 className="text-[32px] font-bold">{t("Profile.favorites")}</h2>
       </Link>
 
