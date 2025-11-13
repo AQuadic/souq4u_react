@@ -215,19 +215,19 @@ const ContactInput: React.FC<ContactInputProps> = ({
     });
   };
 
-  const getInputIcon = () => {
-    if (detectedType === "email")
-      return (
-        <Mail size={20} className="text-muted-foreground dark:text-white/60" />
-      );
-    if (detectedType === "phone")
-      return (
-        <Phone size={20} className="text-muted-foreground dark:text-white/60" />
-      );
-    return (
-      <Search size={20} className="text-muted-foreground dark:text-white/60" />
-    );
-  };
+  // const getInputIcon = () => {
+  //   if (detectedType === "email")
+  //     return (
+  //       <Mail size={20} className="text-muted-foreground dark:text-white/60" />
+  //     );
+  //   if (detectedType === "phone")
+  //     return (
+  //       <Phone size={20} className="text-muted-foreground dark:text-white/60" />
+  //     );
+  //   return (
+  //     <Search size={20} className="text-muted-foreground dark:text-white/60" />
+  //   );
+  // };
 
   const getInputPlaceholder = () => {
     if (detectedType === "email")
@@ -284,7 +284,7 @@ const ContactInput: React.FC<ContactInputProps> = ({
                 language === "ar" ? "right-4" : "left-4"
               )}
             >
-              {getInputIcon()}
+              {/* {getInputIcon()} */}
             </div>
           )}
           <Input
@@ -326,7 +326,7 @@ const ContactInput: React.FC<ContactInputProps> = ({
               "border-input hover:border-foreground/50",
               "focus:border-primary focus:ring-2 focus:ring-primary/20",
               "dark:border-white/20 dark:hover:border-white/40 dark:focus:border-white dark:bg-transparent dark:text-white dark:placeholder:text-white/60",
-              language === "ar" ? "text-right pr-12" : "pl-12",
+              language === "ar" ? "text-right pr-4" : "pl-4",
               error &&
                 "border-destructive focus:border-destructive focus:ring-destructive/20",
               inputClassName
