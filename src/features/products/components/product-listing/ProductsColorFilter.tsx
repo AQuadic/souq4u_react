@@ -62,7 +62,7 @@ const ProductsColorFilter: React.FC<ProductsColorFilterProps> = ({
         <AccordionItem value="color-filter" className="border-none">
           <AccordionTrigger className="hover:no-underline [&>svg]:hidden p-0">
             <div className="flex items-center justify-between w-full">
-              <h1 className="md:text-2xl text-base font-semibold leading-[100%] p-4 ltr:border-l-4 rtl:border-r-4 border-main">
+              <h1 className="md:text-2xl text-base font-semibold leading-[100%] p-4">
                 {t("Products.color")}
               </h1>
               <div className="ltr:mr-4 rtl:ml-4">

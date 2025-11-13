@@ -53,7 +53,7 @@ const ProductsPriceFilter: React.FC<Props> = ({
 
   return (
     <section className="w-[276px] h-[156px] dark:bg-[#242529] bg-[#FDFDFD] overflow-y-auto mt-6 mx-auto">
-      <h1 className="md:text-2xl text-base font-semibold leading-[100%] p-4 ltr:border-l-4 rtl:border-r-4 border-main">
+      <h1 className="md:text-2xl text-base font-semibold leading-[100%] p-4">
         {t("ProductsGrid.filterByPrice")}
       </h1>
       <div className="w-full h-px bg-[#FDFDFD]"></div>
@@ -70,10 +70,13 @@ const ProductsPriceFilter: React.FC<Props> = ({
         </div>
         <p className="flex justify-between text-xs font-medium leading-[100%] mt-4">
           <span className="text-[#5D5D5D]">
-            {t("ProductsGrid.from")} {localRange[0].toLocaleString()} {t("ProductsGrid.egp")}
+            {t("ProductsGrid.from")} {localRange[0].toLocaleString()}{" "}
+            {t("ProductsGrid.egp")}
           </span>
           <span className="text-[#5D5D5D]">
-            {t("ProductsGrid.to")} <span className="text-main">{localRange[1].toLocaleString()}</span> {t("ProductsGrid.egp")}
+            {t("ProductsGrid.to")}{" "}
+            <span className="text-main">{localRange[1].toLocaleString()}</span>{" "}
+            {t("ProductsGrid.egp")}
           </span>
         </p>
       </div>

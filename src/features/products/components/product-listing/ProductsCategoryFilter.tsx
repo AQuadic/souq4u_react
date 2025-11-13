@@ -11,7 +11,10 @@ import {
 import { ChevronRight, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Category, getCategories } from "@/features/categories/api/getCategories";
+import {
+  Category,
+  getCategories,
+} from "@/features/categories/api/getCategories";
 
 const ProductsCategoryFilter = ({
   setCategory,
@@ -34,7 +37,7 @@ const ProductsCategoryFilter = ({
       setSelectedCategory(categoryId);
       setCategory(categoryId || undefined);
     }
-  }, [searchParams]);
+  }, [searchParams, selectedCategory, setCategory]);
 
   const {
     data: categories,
@@ -57,13 +60,15 @@ const ProductsCategoryFilter = ({
 
   return (
     <section className="w-[276px] h-auto dark:bg-[#242529] bg-[#FDFDFD] overflow-y-auto mx-auto">
-      <h1 className="md:text-2xl text-base font-semibold leading-[100%] p-4 ltr:border-l-4 rtl:border-r-4  border-main">
+      <h1 className="md:text-2xl text-base font-semibold leading-[100%] p-4">
         {t("Products.categories")}
       </h1>
       <div className="w-full h-px dark:bg-[#FDFDFD] bg-[#EAEAEA]"></div>
 
       <div className="p-2">
-        {isLoading && <p className="text-sm text-gray-400">{t("Common.loading")}</p>}
+        {isLoading && (
+          <p className="text-sm text-gray-400">{t("Common.loading")}</p>
+        )}
         {isError && <p className="text-sm text-red-400">{error.message}</p>}
 
         <Accordion
@@ -115,64 +120,66 @@ const ProductsCategoryFilter = ({
                     {cat.children!.map((child) => (
                       <div key={child.id} className="relative">
                         {/* Curved connector for each item */}
-                          <div className="absolute ltr:left-[-20px] rtl:right-[-20px] top-[6px]">
+                        <div className="absolute ltr:left-[-20px] rtl:right-[-20px] top-[6px]">
+                          <svg
+                            width="24"
+                            height="20"
+                            viewBox="0 0 24 20"
+                            className="text-gray-300 dark:text-gray-600"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            {locale === "ar" ? (
+                              <path
+                                d="M24 2 Q 16 10, 8 14 L 0 14"
+                                stroke="currentColor"
+                                strokeWidth="1"
+                                fill="none"
+                              />
+                            ) : (
+                              <path
+                                d="M0 2 Q 8 10, 16 14 L 24 14"
+                                stroke="currentColor"
+                                strokeWidth="1"
+                                fill="none"
+                              />
+                            )}
+                          </svg>
+                          {/* Arrow */}
+                          <div className="absolute top-[10px] ltr:right-[-4px] rtl:left-[-4px] rotate-[10deg]">
                             <svg
-                              width="24"
-                              height="20"
-                              viewBox="0 0 24 20"
-                              className="text-gray-300 dark:text-gray-600"
-                              fill="none"
                               xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 8 8"
+                              width="8"
+                              height="8"
+                              className="text-gray-300 dark:text-gray-600"
+                              fill="currentColor"
                             >
                               {locale === "ar" ? (
-                                <path
-                                  d="M24 2 Q 16 10, 8 14 L 0 14"
-                                  stroke="currentColor"
-                                  strokeWidth="1"
-                                  fill="none"
-                                />
+                                <path d="M6 0L0 4l6 4V0z" />
                               ) : (
-                                <path
-                                  d="M0 2 Q 8 10, 16 14 L 24 14"
-                                  stroke="currentColor"
-                                  strokeWidth="1"
-                                  fill="none"
-                                />
+                                <path d="M2 0L8 4l-6 4V0z" />
                               )}
                             </svg>
-                            {/* Arrow */}
-                            <div className="absolute top-[10px] ltr:right-[-4px] rtl:left-[-4px] rotate-[10deg]">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 8 8"
-                                width="8"
-                                height="8"
-                                className="text-gray-300 dark:text-gray-600"
-                                fill="currentColor"
-                              >
-                                {locale === "ar" ? (
-                                  <path d="M6 0L0 4l6 4V0z" />
-                                ) : (
-                                  <path d="M2 0L8 4l-6 4V0z" />
-                                )}
-                              </svg>
-                            </div>
                           </div>
+                        </div>
                         <button
                           onClick={() => handleClick(child.id)}
                           className={`w-full flex items-center justify-between px-3 py-1.5 text-sm rounded-md text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                            selectedCategory === child.id ? "text-main bg-main/10" : ""
+                            selectedCategory === child.id
+                              ? "text-main bg-main/10"
+                              : ""
                           }`}
                         >
-                            <span>
-                              {locale === "ar" ? child.name.ar : child.name.en}
-                            </span>
-                            <span className="text-gray-500 text-xs">
-                              ({child.active_products_count})
-                            </span>
-                          </button>
-                        </div>
-                      ))}
+                          <span>
+                            {locale === "ar" ? child.name.ar : child.name.en}
+                          </span>
+                          <span className="text-gray-500 text-xs">
+                            ({child.active_products_count})
+                          </span>
+                        </button>
+                      </div>
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
               );
