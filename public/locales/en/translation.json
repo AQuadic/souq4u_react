@@ -488,7 +488,8 @@
     "gender": "Gender",
     "addressAdded": "Address added successfully",
     "male": "Male",
-    "female": "Female"
+    "female": "Female",
+    "savedAddresses": "Saved Addresses"
   },
   "Orders": {
     "orders": "Orders",

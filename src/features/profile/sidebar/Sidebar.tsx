@@ -10,7 +10,7 @@ const links = [
   { href: "/profile/account", key: "Profile.account" },
   { href: "/profile/favorites", key: "Profile.favorites" },
   { href: "/profile/orders", key: "Profile.orders" },
-  { href: "/profile/addresses", key: "Profile.addresses" },
+  { href: "/profile/addresses", key: "Profile.savedAddresses" },
   { href: "/signout", key: "Auth.logoutDialog.triggerLabel", isLogout: true },
 ];
 
