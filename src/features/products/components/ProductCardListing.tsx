@@ -120,25 +120,25 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
         <div className="flex items-center justify-between">
           <button
             onClick={handleFavoriteClick}
-            className="absolute ltr:right-6 rtl:left-6 top-8"
+            className="absolute ltr:right-6 rtl:left-6 md:top-8 top-2"
             disabled={loading}
           >
             {favorite ? <Favorite /> : <Unfavorite />}
           </button>
 
-          <div className="w-[150px] text-[#FFFFFF] h-14 bg-main rounded-[8px] text-lg font-bold flex items-center justify-center absolute ltr:right-6 rtl:left-6 top-40">
+          <div className="md:w-[150px] px-1 text-[#FFFFFF] md:h-14 h-10 bg-main rounded-[8px] md:text-lg font-bold flex items-center justify-center absolute ltr:right-6 rtl:left-6 md:top-40">
             {t("Common.readMore")}
           </div>
         </div>
 
-        <div className="relative w-[200px] h-[200px]">
+        <div className="relative md:w-[200px] md:h-[200px]">
           {product.images?.[0]?.url ? (
             <img
               src={product.images[0].url}
               alt={productName}
               className={`object-contain ${
                 isOutOfStock ? "opacity-50" : ""
-              } w-full max-w-[276px] h-[204px]`}
+              } w-full md:max-w-[276px] md:h-[204px] h-[100px]`}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
@@ -161,7 +161,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
 
           {/* Out of Stock Overlay */}
           {isOutOfStock && (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[70%] bg-black/80 rounded-lg px-4 py-2 flex items-center justify-center">
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:w-[70%] w-full bg-black/80 rounded-lg px-4 py-2 flex items-center justify-center">
               <div className="text-white text-base font-bold text-center">
                 {t("Common.outOfStock")}
               </div>
@@ -188,7 +188,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
                 {shortDescription}
                 </p> */}
 
-          <div className="mt-10 flex items-center gap-2  justify-between">
+          <div className="mt-10 flex flex-wrap items-center gap-2  justify-between">
             <h2 className="text-main text-base font-bold leading-4">
               {product.variants?.[0]?.final_price ?? 0}{" "}
               <span className="font-normal">{t("Common.currency")}</span>
