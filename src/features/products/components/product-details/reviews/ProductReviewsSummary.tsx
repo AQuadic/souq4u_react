@@ -74,7 +74,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
       style={{ height: "auto" }}
     >
       {/* outer: light-friendly + dark fallback */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-[var(--color-cart-bg)] border border-slate-200 dark:border-transparent">
+      <div className="p-4 rounded-2xl bg-[#F7F7F7]">
         {/* inner card */}
         <div className="rounded-xl p-5 bg-transparent">
           <div className="flex items-center gap-3">
@@ -90,7 +90,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
 
             <div className="flex-1">
               <div className="">
-                <div className="text-sm text-slate-900 dark:text-white font-medium mt-4">
+                <div className="text-sm text-slate-900 font-medium mt-4">
                   {isLoading ? common("loading") : `${average} / 5`}
                 </div>
                 <div className="flex items-center">
@@ -98,15 +98,15 @@ const ProductReviewsSummary: React.FC<Props> = ({
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={`star-${star}`}
-                        className={`w-4 h-4 ${
+                        className={`w-6 h-6 ${
                           star <= Math.round(average)
-                            ? 'text-yellow-400'
-                            : 'text-slate-300 dark:text-gray-600'
+                            ? 'text-[#F2CB1F]'
+                            : 'text-slate-300'
                         }`}
                       />
                     ))}
                   </div>
-                  <div className="ml-2 text-sm text-slate-500 dark:text-gray-400">
+                  <div className="ml-2 text-sm text-slate-500">
                     ({isLoading ? common("loading") : total})
                   </div>
                 </div>
@@ -144,7 +144,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
                   {/* semantic progress element for assistive tech (visually hidden) */}
                   <progress className="sr-only" value={w} max={100} />
 
-                  <div className="w-full rounded-full h-3 bg-slate-200 dark:bg-white/10 overflow-hidden">
+                  <div className="w-full rounded-full h-3  dark:bg-white/10 overflow-hidden">
                     <motion.div
                       className="h-full bg-main rounded-full"
                       initial={{ width: 0 }}
