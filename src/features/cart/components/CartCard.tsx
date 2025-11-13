@@ -6,6 +6,7 @@ import type { MultilingualText } from "@/shared/utils/translationUtils";
 import { Minus, Plus } from "lucide-react";
 import { useCartToast } from "@/features/cart/hooks/useCartToast";
 import { useTranslation } from "react-i18next";
+import RemoveIcon from "./icons/RemoveIcon";
 
 interface CartCardData {
   id: string;
@@ -164,51 +165,54 @@ export const CartCard: React.FC<CartCardProps> = ({
         {/* Product Details */}
         <div className="flex-1 flex flex-col justify-between">
           <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-gray-900 dark:text-white md:text-lg text-base font-semibold mb-1">
+            <div className="w-full">
+              <div className="flex items-center justify-between">
+                <h3 className="text-gray-900 dark:text-white md:text-lg text-base font-semibold mb-1">
                 {name}
-              </h3>
+                </h3>
+                <div className="text-[#121212] md:text-xl text-lg font-bold">
+                  {item.price.toLocaleString()}{" "}
+                  <span className="text-sm font-normal">
+                    {t("Common.currency")}
+                  </span>
+                </div>
+              </div>
 
               {renderAttributes()}
-
-              <div className="text-[var(--color-main)] md:text-xl text-lg font-bold">
-                {item.price.toLocaleString()}{" "}
-                <span className="text-sm font-normal">
-                  {t("Common.currency")}
-                </span>
-              </div>
             </div>
-
-            {/* Remove Button */}
-            <button
-              onClick={handleRemove}
-              className="text-gray-600 dark:text-white/70 hover:text-[var(--color-main)] dark:hover:text-[var(--color-main)] transition-colors flex items-center gap-1 text-sm cursor-pointer"
-            >
-              <span className="text-lg">🗑️</span>
-              <span className="md:flex hidden">{t("Cart.removeItem")}</span>
-            </button>
           </div>
 
+          <div className="flex items-center justify-between">
+          {/* Remove Button */}
+          <button
+            onClick={handleRemove}
+            className="text-gray-600 dark:text-white/70 hover:text-[var(--color-main)] dark:hover:text-[var(--color-main)] transition-colors flex items-center gap-1 text-sm cursor-pointer"
+          >
+            <RemoveIcon />
+            <span className="md:flex hidden">{t("Cart.removeItem")}</span>
+          </button>
+          
           {/* Quantity Controls */}
-          <div className="flex items-center gap-4 mt-4">
+          <div className="flex items-center gap-4 mt-4 border border-gray-300 w-fit rounded-[8px] py-1">
             <button
               onClick={handleQuantityDecrease}
               disabled={item.quantity <= 1}
-              className="w-8 h-8 rounded border border-gray-300 dark:border-white/20 flex items-center justify-center text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-8 h-8 rounded dark:border-white/20 flex items-center justify-center text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Minus size={16} />
             </button>
 
-            <span className="text-gray-900 dark:text-white text-lg min-w-[30px] text-center">
+            <span className="text-main text-lg min-w-[30px] text-center">
               {item.quantity}
             </span>
 
             <button
               onClick={handleQuantityIncrease}
-              className="w-8 h-8 rounded border border-gray-300 dark:border-white/20 flex items-center justify-center text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              className="w-8 h-8 rounded dark:border-white/20 flex items-center justify-center text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
             >
               <Plus size={16} />
             </button>
+          </div>
           </div>
         </div>
       </div>
