@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useAuthStore } from "@/features/auth/stores/auth-store";
 import { useAddresses } from "../hooks";
-import type { AddressFormData } from "../types";
+import type { Address, AddressFormData } from "../types";
 import { SavedAddresses } from "./SavedAddresses";
 import { AddressForm } from "./AddressForm";
 import BackArrow from "@/features/products/icons/BackArrow";
@@ -79,6 +79,18 @@ export const ClothesBillingDetails: React.FC<BillingDetailsProps> = ({
     // Don't close the form here - let onSubmitSuccess handle it
   };
 
+  const handleAddressCreated = useCallback(
+    (newAddress: Address) => {
+      setSelectedAddress(newAddress.id);
+      onAddressSelected(newAddress.id);
+
+      if (newAddress.city_id && newAddress.area_id && onShippingUpdate) {
+        onShippingUpdate(newAddress.city_id, newAddress.area_id);
+      }
+    },
+    [onAddressSelected, onShippingUpdate, setSelectedAddress]
+  );
+
   const handleFormSubmitSuccess = () => {
     if (isAuthenticated) {
       // Reset the manually opened flag
@@ -107,6 +119,7 @@ export const ClothesBillingDetails: React.FC<BillingDetailsProps> = ({
           isCheckout={isCheckout}
           onFormDataChange={onFormDataChange}
           onSubmitSuccess={handleFormSubmitSuccess}
+          onAddressCreated={handleAddressCreated}
         />
       </div>
     );
@@ -156,6 +169,7 @@ export const ClothesBillingDetails: React.FC<BillingDetailsProps> = ({
           isCheckout={isCheckout}
           onFormDataChange={onFormDataChange}
           onSubmitSuccess={handleFormSubmitSuccess}
+          onAddressCreated={handleAddressCreated}
         />
       )}
     </div>

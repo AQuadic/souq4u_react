@@ -7,7 +7,7 @@ import {
   useCreateAddress,
   useUpdateAddress,
 } from "../hooks";
-import type { AddressFormData, City, Area } from "../types";
+import type { Address, AddressFormData, City, Area } from "../types";
 import { Input } from "@/shared/components/ui/input";
 import {
   Select,
@@ -49,6 +49,8 @@ interface AddressFormProps {
   handleApiInternally?: boolean;
   /** Callback when submission is successful */
   onSubmitSuccess?: () => void;
+  /** Notifies parent when an address is created or updated */
+  onAddressCreated?: (address: Address) => void;
 }
 
 export const AddressForm: React.FC<AddressFormProps> = ({
@@ -64,6 +66,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   onFormDataChange,
   handleApiInternally = true,
   onSubmitSuccess,
+  onAddressCreated,
 }) => {
   const [formData, setFormData] = useState<AddressFormData>({
     title: "",
@@ -323,7 +326,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
       // Handle editing existing address
       if (isEditing && addressId) {
-        await updateAddressMutation.mutateAsync({
+        const updatedAddress = await updateAddressMutation.mutateAsync({
           id: addressId,
           data: {
             title: finalTitle,
@@ -341,10 +344,11 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             user_name: formData.user_name || "",
           },
         });
+        onAddressCreated?.(updatedAddress);
         onSubmit(payload);
         onSubmitSuccess?.();
       } else if (showSaveOption && formData.saveAddress) {
-        await createAddressMutation.mutateAsync({
+        const createdAddress = await createAddressMutation.mutateAsync({
           title: finalTitle,
           city_id: formData.city_id,
           country_id: formData.country_id || "1", // Default to Egypt for now
@@ -359,6 +363,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           email: formData.email,
           user_name: formData.user_name,
         });
+        onAddressCreated?.(createdAddress);
         onSubmit(payload);
         onSubmitSuccess?.();
       } else if (onImmediateCheckout && !formData.saveAddress) {
