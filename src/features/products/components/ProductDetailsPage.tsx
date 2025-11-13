@@ -46,11 +46,14 @@ const ProductDetailsPage: React.FC = () => {
   const [selectedVariantId, setSelectedVariantId] = useState<
     number | undefined
   >();
+  const [localIsFavorite, setLocalIsFavorite] = useState<boolean>(false);
 
   const addProductId = useRecentlyViewedStore((state) => state.addProductId);
   const cart = useCartStore((s) => s.cart);
 
-  const favoriteHandlerRef = useRef<((e: React.MouseEvent) => Promise<void>) | null>(null);
+  const favoriteHandlerRef = useRef<
+    ((e: React.MouseEvent) => Promise<void>) | null
+  >(null);
 
   const {
     data: product,
@@ -75,6 +78,13 @@ const ProductDetailsPage: React.FC = () => {
       addProductId(product.id);
     }
   }, [product?.id, addProductId]);
+
+  // Sync local favorite state with product data
+  useEffect(() => {
+    if (product) {
+      setLocalIsFavorite(product.is_favorite ?? false);
+    }
+  }, [product]);
 
   const selectedVariant = React.useMemo(() => {
     if (!product?.variants?.length) return null;
@@ -204,7 +214,12 @@ const ProductDetailsPage: React.FC = () => {
 
   const handleToggleFavorite = (e?: React.MouseEvent) => {
     if (favoriteHandlerRef.current) {
-      const event = e || { preventDefault: () => {}, stopPropagation: () => {} } as React.MouseEvent;
+      const event =
+        e ||
+        ({
+          preventDefault: () => {},
+          stopPropagation: () => {},
+        } as React.MouseEvent);
       favoriteHandlerRef.current(event);
     }
   };
@@ -231,7 +246,7 @@ const ProductDetailsPage: React.FC = () => {
 
     const normalizeError = (val: unknown): string | undefined => {
       if (!val) return undefined;
-      
+
       if (typeof val === "string") {
         const serverErrorMatch = val.match(/Server Error \d+:\s*({.*})/);
         if (serverErrorMatch) {
@@ -244,8 +259,8 @@ const ProductDetailsPage: React.FC = () => {
             // If JSON parsing fails, continue with other checks
           }
         }
-        
-        if (val.trim().startsWith('{')) {
+
+        if (val.trim().startsWith("{")) {
           try {
             const errorJson = JSON.parse(val);
             if (errorJson.message) {
@@ -255,30 +270,30 @@ const ProductDetailsPage: React.FC = () => {
             // Not valid JSON, return as is
           }
         }
-        
+
         return val;
       }
-      
+
       if (typeof val === "object" && val !== null) {
         const errorObj = val as any;
-        
+
         if (errorObj.message) {
-          return typeof errorObj.message === "string" 
-            ? errorObj.message 
+          return typeof errorObj.message === "string"
+            ? errorObj.message
             : JSON.stringify(errorObj.message);
         }
-        
+
         if (errorObj.error) {
           return typeof errorObj.error === "string"
             ? errorObj.error
             : JSON.stringify(errorObj.error);
         }
-        
+
         if (errorObj.response?.data?.message) {
           return errorObj.response.data.message;
         }
       }
-      
+
       return undefined;
     };
 
@@ -428,7 +443,7 @@ const ProductDetailsPage: React.FC = () => {
             key={selectedVariant?.id || "default"}
             images={combinedImages}
             productName={productName}
-            isFavorite={product.is_favorite ?? false}
+            isFavorite={localIsFavorite}
             onToggleFavorite={handleToggleFavorite}
           />
         </div>
@@ -481,6 +496,7 @@ const ProductDetailsPage: React.FC = () => {
             setFavoriteHandler={(handler) => {
               favoriteHandlerRef.current = handler;
             }}
+            onFavoriteStateChange={setLocalIsFavorite}
           />
         </div>
       </div>

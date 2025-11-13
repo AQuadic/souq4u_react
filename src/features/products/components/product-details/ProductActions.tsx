@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ProductQuantitySelector } from "./ProductQuantitySelector";
 import { ProductSizeSelector } from "./ProductSizeSelector";
@@ -54,7 +54,10 @@ interface ProductActionsProps {
   shortDescription?: string;
   description?: string;
   storeType?: string;
-  setFavoriteHandler?: (handler: (e: React.MouseEvent) => Promise<void>) => void;
+  setFavoriteHandler?: (
+    handler: (e: React.MouseEvent) => Promise<void>
+  ) => void;
+  onFavoriteStateChange?: (isFavorite: boolean) => void;
 }
 
 export const ProductActions: React.FC<ProductActionsProps> = ({
@@ -72,6 +75,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   onToggleFavorite,
   guideImage,
   setFavoriteHandler,
+  onFavoriteStateChange,
   // shortDescription,
   // description,
 }) => {
@@ -81,59 +85,91 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   const toast = useToast();
   const queryClient = useQueryClient();
   const [favorite, setFavorite] = useState(product.is_favorite);
-    useEffect(() => {
+
+  // Sync local favorite state with product prop changes
+  useEffect(() => {
+    setFavorite(product.is_favorite);
+  }, [product.is_favorite]);
+
+  const handleFavoriteClick = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+
+      if (!isAuthenticated) {
+        // use product namespace translation key; fall back to common or literal
+        const loginMsg =
+          t("Products.loginRequiredForFavorites") ||
+          t("Products.loginRequiredForFavorites") ||
+          "You must be logged in to add favorites";
+        toast.error(loginMsg);
+        return;
+      }
+
+      setLoading(true);
+
+      // Optimistically update the UI immediately
+      const newFavoriteState = !favorite;
+      setFavorite(newFavoriteState);
+      if (onFavoriteStateChange) {
+        onFavoriteStateChange(newFavoriteState);
+      }
+
+      try {
+        await addFavorite({
+          favorable_id: product.id,
+          favorable_type: "product",
+        });
+
+        // Invalidate favorites query so any pages listing favorites refetch and stay in sync
+        queryClient.invalidateQueries({ queryKey: ["favorites"] });
+        toast.success(
+          newFavoriteState
+            ? t("Products.addedToFavorites") ||
+                t("Products.addedToFavorites") ||
+                "Added to favorites"
+            : t("Products.removedFromFavorites") ||
+                t("Products.removedFromFavorites") ||
+                "Removed from favorites"
+        );
+        if (onToggleFavorite) {
+          onToggleFavorite(product.id);
+        }
+      } catch (err: unknown) {
+        // Revert the optimistic update on error
+        setFavorite(!newFavoriteState);
+        if (onFavoriteStateChange) {
+          onFavoriteStateChange(!newFavoriteState);
+        }
+
+        // log error for debugging and show translated error message
+        console.error("Failed to update favorites", err);
+        toast.error(
+          t("failedToUpdateFavorites") ||
+            t("error") ||
+            "Failed to update favorites"
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [
+      isAuthenticated,
+      favorite,
+      onFavoriteStateChange,
+      product.id,
+      onToggleFavorite,
+      queryClient,
+      toast,
+      t,
+    ]
+  );
+
+  // Set the favorite handler for the parent component to call
+  useEffect(() => {
     if (setFavoriteHandler) {
       setFavoriteHandler(handleFavoriteClick);
     }
-  }, [setFavoriteHandler, favorite, loading]);
-  const handleFavoriteClick = async (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    if (!isAuthenticated) {
-      // use product namespace translation key; fall back to common or literal
-      const loginMsg =
-        t("Products.loginRequiredForFavorites") ||
-        t("Products.loginRequiredForFavorites") ||
-        "You must be logged in to add favorites";
-      toast.error(loginMsg);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await addFavorite({
-        favorable_id: product.id,
-        favorable_type: "product",
-      });
-      // Update local favorite state
-      setFavorite((prev) => !prev);
-
-      // Invalidate favorites query so any pages listing favorites refetch and stay in sync
-      queryClient.invalidateQueries({ queryKey: ["favorites"] });
-      toast.success(
-        !favorite
-          ? t("Products.addedToFavorites") ||
-              t("Products.addedToFavorites") ||
-              "Added to favorites"
-          : t("Products.removedFromFavorites") ||
-              t("Products.removedFromFavorites") ||
-              "Removed from favorites"
-      );
-      if (onToggleFavorite) {
-        onToggleFavorite(product.id);
-      }
-    } catch (err: unknown) {
-      // log error for debugging and show translated error message
-      console.error("Failed to update favorites", err);
-      toast.error(
-        t("failedToUpdateFavorites") ||
-          t("error") ||
-          "Failed to update favorites"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [setFavoriteHandler, handleFavoriteClick]);
 
   return (
     <div>
