@@ -512,7 +512,7 @@ const ProductDetailsPage: React.FC = () => {
             theme={{
               gridClassName: "xl:grid-cols-4 grid-cols-2",
               titleClassName:
-                "text-main md:text-[32px] text-2xl font-normal leading-[100%] capitalize font-anton-sc ltr:text-left rtl:text-right",
+                "text-[#121212] md:text-[32px] text-2xl font-bold leading-[100%] capitalize font-anton-sc ltr:text-left rtl:text-right",
             }}
           />
 
