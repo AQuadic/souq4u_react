@@ -74,6 +74,29 @@ const ProductCard: React.FC<ProductCardProps> = ({
     })
   );
 
+  const sizeOptions: string[] = [];
+  product.variants?.forEach((v) =>
+    v?.attributes?.forEach((attr) => {
+      const isSize =
+        attr?.attribute?.name?.en?.toLowerCase() === "size" ||
+        attr?.attribute?.name?.ar === "مقاس";
+
+      const sizeValue =
+        (attr as {
+          value?: { value?: MultilingualText | string | null };
+        })?.value?.value;
+
+      const displaySize =
+        typeof sizeValue === "object"
+          ? sizeValue?.en || sizeValue?.ar
+          : sizeValue;
+
+      if (isSize && displaySize && !sizeOptions.includes(displaySize)) {
+        sizeOptions.push(displaySize);
+      }
+    })
+  );
+
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
 
@@ -120,7 +143,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Link
       to={`/products/${product.id}`}
-      className="rounded-3xl  w-full sm:w-[276px] md:h-[455px] flex flex-col bg-[#F7F7F7]"
+      className="rounded-3xl w-full sm:w-[276px] h-full flex flex-col bg-[#F7F7F7]"
     >
       <div className="  dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl p-4 relative  transition-shadow duration-300 ">
         <div className="flex items-center justify-between">
@@ -223,7 +246,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
               </div>
             )}
           </div>
-          {colorSwatches.length > 0 && (
+          
+          <div className="flex items-center gap-4">
+            {colorSwatches.length > 0 && (
             <div className="flex items-center gap-2 mt-2">
               <div className="flex items-center gap-1">
                 {colorSwatches.slice(0, 6).map((c) => (
@@ -243,6 +268,25 @@ const ProductCard: React.FC<ProductCardProps> = ({
               </div>
             </div>
           )}
+
+          {sizeOptions.length > 0 && (
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
+              {sizeOptions.slice(0, 6).map((s) => (
+                <span
+                  key={s}
+                  className="px-2 py-1 text-xs font-medium border border-gray-300 rounded-md bg-white text-black"
+                >
+                  {s}
+                </span>
+              ))}
+              {sizeOptions.length > 6 && (
+                <span className="text-xs text-gray-500">
+                  +{sizeOptions.length - 6}
+                </span>
+              )}
+            </div>
+          )}
+          </div>
         </div>
       </div>
     </Link>

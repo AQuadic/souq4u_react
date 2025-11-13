@@ -133,7 +133,7 @@ const MyFavorites = () => {
         <h2 className="text-[32px] font-bold">{t("Profile.favorites")}</h2>
       </Link>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="grid lg:grid-cols-3 grid-cols-2 gap-4">
         {products.map((product) => (
           <ProductCard
             key={product.id}

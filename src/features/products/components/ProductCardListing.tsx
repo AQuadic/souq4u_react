@@ -111,6 +111,29 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
       })
     );
 
+    const sizeOptions: string[] = [];
+    product.variants?.forEach((v) =>
+      v?.attributes?.forEach((attr) => {
+        const isSize =
+          attr?.attribute?.name?.en?.toLowerCase() === "size" ||
+          attr?.attribute?.name?.ar === "مقاس";
+  
+        const sizeValue =
+          (attr as {
+            value?: { value?: MultilingualText | string | null };
+          })?.value?.value;
+  
+        const displaySize =
+          typeof sizeValue === "object"
+            ? sizeValue?.en || sizeValue?.ar
+            : sizeValue;
+  
+        if (isSize && displaySize && !sizeOptions.includes(displaySize)) {
+          sizeOptions.push(displaySize);
+        }
+      })
+    );
+
   return (
     <Link
       to={`/products/${product.id}`}
@@ -211,7 +234,8 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
               </div>
             )}
           </div>
-          {colorSwatches.length > 0 && (
+          <div className="flex items-center gap-4">
+            {colorSwatches.length > 0 && (
             <div className="flex items-center gap-2 mt-2">
               <div className="flex items-center gap-1">
                 {colorSwatches.slice(0, 6).map((c) => (
@@ -231,6 +255,25 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
               </div>
             </div>
           )}
+
+          {sizeOptions.length > 0 && (
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
+              {sizeOptions.slice(0, 6).map((s) => (
+                <span
+                  key={s}
+                  className="px-2 py-1 text-xs font-medium border border-gray-300 rounded-md bg-white text-black"
+                >
+                  {s}
+                </span>
+              ))}
+              {sizeOptions.length > 6 && (
+                <span className="text-xs text-gray-500">
+                  +{sizeOptions.length - 6}
+                </span>
+              )}
+            </div>
+          )}
+          </div>
         </div>
       </div>
     </Link>
