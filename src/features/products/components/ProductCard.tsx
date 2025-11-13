@@ -120,7 +120,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Link
       to={`/products/${product.id}`}
-      className="rounded-3xl md:py-4 w-full sm:w-[276px] md:h-[455px] flex flex-col bg-[#F7F7F7]"
+      className="rounded-3xl  w-full sm:w-[276px] md:h-[455px] flex flex-col bg-[#F7F7F7]"
     >
       <div className="  dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl p-4 relative  transition-shadow duration-300 ">
         <div className="flex items-center justify-between">

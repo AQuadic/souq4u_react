@@ -388,7 +388,7 @@
     "selectLanguage": "Select Language"
   },
   "HomeTryApp": {
-    "title": "Try the {{brand}} App Now!",
+    "title": "Try {{brand}} App Now!",
     "description": "Now, Buy And Sell All You Have\nWith Our Mobile Application.",
     "googlePlayAlt": "google play",
     "appStoreAlt": "app store",
