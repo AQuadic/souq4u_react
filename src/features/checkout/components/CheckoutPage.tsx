@@ -474,7 +474,6 @@ export const CheckoutPage: React.FC = () => {
           {/* Left Column - Forms */}
           <div className="lg:col-span-2 space-y-6 ">
             {/* Cart Summary with Images - only show if user is authenticated */}
-            {isAuthenticated && <CheckoutCartSummary />}
 
             {/* Billing Details */}
             <div className="">
@@ -486,6 +485,8 @@ export const CheckoutPage: React.FC = () => {
                 onFormDataChange={handleFormDataChange}
               />
             </div>
+
+            {isAuthenticated && <CheckoutCartSummary />}
 
             {/* Payment Method */}
             <PaymentSelector

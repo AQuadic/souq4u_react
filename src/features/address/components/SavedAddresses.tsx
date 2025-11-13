@@ -163,9 +163,9 @@ export const SavedAddresses: React.FC<SavedAddressesProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium dark:text-white">
+        {/* <h3 className="text-lg font-medium dark:text-white">
           {t("saveAddress.selectAddress")}
-        </h3>
+        </h3> */}
       </div>
 
       <div className="space-y-3">

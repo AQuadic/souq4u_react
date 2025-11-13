@@ -166,8 +166,8 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
 
   return (
     <div className="rounded-lg md:p-6">
-      <h2 className="md:flex hidden text-xl font-semibold text-black mb-6">
-        {t("Checkout.title")}
+      <h2 className="md:flex hidden text-xl md:text-[32px] font-bold text-black mb-6">
+        {t("Checkout.billingDetails")}
       </h2>
       {!showAddressForm && addresses.length > 0 ? (
         <SavedAddresses

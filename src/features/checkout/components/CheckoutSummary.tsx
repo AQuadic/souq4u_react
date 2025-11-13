@@ -76,7 +76,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
 
   return (
     <div className="bg-[#F7F7F7] dark:bg-[var(--color-cart-bg)] text-slate-900 dark:text-slate-100 p-6 rounded-lg sticky top-6">
-      <h2 className="text-slate-900 dark:text-white text-xl font-semibold mb-6">
+      <h2 className="text-slate-900 text-xl md:text-3xl font-semibold mb-6">
         {t("Checkout.summary")}
       </h2>
       {/* Promocode - mobile only: placed directly under title on small screens */}
