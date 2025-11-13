@@ -593,7 +593,7 @@ const Footer = () => {
               <button
                 onClick={handleSubscribeClick}
                 disabled={loading}
-                className="w-full h-12 bg-main hover:bg-main/90 rounded-[8px] text-[#FDFDFD] text-base lg:text-lg font-bold leading-[100%] transition-colors duration-200 disabled:opacity-60 cursor-pointer"
+                className="w-full md:w-1/2 h-12 bg-main hover:bg-main/90 rounded-[8px] text-[#FDFDFD] text-base lg:text-lg font-bold leading-[100%] transition-colors duration-200 disabled:opacity-60 cursor-pointer"
               >
                 {loading ? t("Footer.subscribing") : t("Footer.subscribe")}
               </button>
