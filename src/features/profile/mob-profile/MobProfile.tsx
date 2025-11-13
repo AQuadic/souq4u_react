@@ -107,12 +107,12 @@ const MobProfile = () => {
 
         {/* Fourth section */}
         <div className="w-full h-full bg-[#F7F7F7] rounded-[8px] my-4 py-3 px-4">
-            <Link to='/' className="flex items-center gap-2">
+            <Link to='/pages/privacy-policy' className="flex items-center gap-2">
                 <PrivacyPolicyIcon />
                 <p className="text-sm font-semibold">{t('Profile.privacy')}</p>
             </Link>
 
-            <Link to='/' className="flex items-center gap-2 mt-5">
+            <Link to='/pages/terms-and-conditions' className="flex items-center gap-2 mt-5">
                 <TermsIcon />
                 <p className="text-sm font-semibold">{t('Profile.terms')}</p>
             </Link>
