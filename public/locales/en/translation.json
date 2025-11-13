@@ -116,7 +116,7 @@
     "defaultSorting": "Default Sorting",
     "asc": "Price: Low to High",
     "desc": "Price: High to Low",
-    "showingResults": "Showing {displayed} of {total} results",
+    "showingResults": "Showing {{displayed}} of {{total}} results",
     "filterByPrice": "Filter by Price",
     "egp": "EGP",
     "categories": "Categories",

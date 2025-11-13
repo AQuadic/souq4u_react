@@ -31,8 +31,8 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
   setView,
   setSorting,
   onFiltersClick,
-  // total,
-  // displayed,
+  total,
+  displayed,
 }) => {
   const { t } = useTranslation();
   const darkMode = document.documentElement.classList.contains("dark");
@@ -96,12 +96,12 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
           </Select>
         </div>
 
-        {/* <p className="md:flex hidden text-lg font-medium leading-[100%]">
-          {("showingResults", {
+        <p className="md:flex hidden text-lg font-medium leading-[100%]">
+          {t("Products.showingResults", {
             displayed: displayed ?? 0,
             total: total ?? 0,
           })}
-        </p> */}
+        </p>
       </div>
 
       <div className="md:flex hidden w-full h-px dark:bg-[#FDFDFD] bg-[#EAEAEA] my-4"></div>
