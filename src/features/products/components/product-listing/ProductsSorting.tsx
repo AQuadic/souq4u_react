@@ -58,17 +58,17 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
     <section>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button className="md:flex hidden" onClick={() => setView("grid")}>
+          <button className="" onClick={() => setView("grid")}>
             <GridViewIcon selected={view === "grid"} darkMode={darkMode} />
           </button>
 
-          <button className="md:flex hidden" onClick={() => setView("list")}>
+          <button className="" onClick={() => setView("list")}>
             <ListViewIcon selected={view === "list"} darkMode={darkMode} />
           </button>
 
-          <div className="md:hidden flex">
+          {/* <div className="md:hidden flex">
             <ProductsFilter />
-          </div>
+          </div> */}
 
           <Select onValueChange={handleSortChange}>
             <SelectTrigger className="w-full h-12 dark:border-[#FDFDFD] border-[#C0C0C0]">
