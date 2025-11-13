@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
@@ -46,10 +46,11 @@ const ProductDetailsPage: React.FC = () => {
   const [selectedVariantId, setSelectedVariantId] = useState<
     number | undefined
   >();
-  const [isFavorite, setIsFavorite] = useState(false);
 
   const addProductId = useRecentlyViewedStore((state) => state.addProductId);
   const cart = useCartStore((s) => s.cart);
+
+  const favoriteHandlerRef = useRef<((e: React.MouseEvent) => Promise<void>) | null>(null);
 
   const {
     data: product,
@@ -200,6 +201,13 @@ const ProductDetailsPage: React.FC = () => {
       setIsRtl(dir === "rtl");
     }
   }, []);
+
+  const handleToggleFavorite = (e?: React.MouseEvent) => {
+    if (favoriteHandlerRef.current) {
+      const event = e || { preventDefault: () => {}, stopPropagation: () => {} } as React.MouseEvent;
+      favoriteHandlerRef.current(event);
+    }
+  };
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
@@ -420,8 +428,8 @@ const ProductDetailsPage: React.FC = () => {
             key={selectedVariant?.id || "default"}
             images={combinedImages}
             productName={productName}
-            isFavorite={isFavorite}
-            onToggleFavorite={() => setIsFavorite(!isFavorite)}
+            isFavorite={product.is_favorite ?? false}
+            onToggleFavorite={handleToggleFavorite}
           />
         </div>
 
@@ -470,6 +478,9 @@ const ProductDetailsPage: React.FC = () => {
             shortDescription={shortDescription}
             description={description}
             product={{ id: product.id, is_favorite: product.is_favorite }}
+            setFavoriteHandler={(handler) => {
+              favoriteHandlerRef.current = handler;
+            }}
           />
         </div>
       </div>

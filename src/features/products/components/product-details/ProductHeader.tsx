@@ -28,9 +28,11 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
 
       {/* Mobile Back Button */}
       {showMobileBreadcrumb && (
-        <Link to="/" className="md:hidden flex items-center gap-2">
-          <BackArrow />
-          <p className="text-[#FDFDFD] text-xl font-semibold leading-[100%]">
+        <Link to="/" className="md:hidden flex items-center gap-2 mb-4">
+          <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+            <BackArrow />
+          </div>
+          <p className="text-xl font-semibold leading-[100%]">
             {t("Products.productDetails")}
           </p>
         </Link>

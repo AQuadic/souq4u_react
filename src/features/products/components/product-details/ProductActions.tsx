@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ProductQuantitySelector } from "./ProductQuantitySelector";
 import { ProductSizeSelector } from "./ProductSizeSelector";
@@ -54,6 +54,7 @@ interface ProductActionsProps {
   shortDescription?: string;
   description?: string;
   storeType?: string;
+  setFavoriteHandler?: (handler: (e: React.MouseEvent) => Promise<void>) => void;
 }
 
 export const ProductActions: React.FC<ProductActionsProps> = ({
@@ -70,6 +71,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   onAddToCart,
   onToggleFavorite,
   guideImage,
+  setFavoriteHandler,
   // shortDescription,
   // description,
 }) => {
@@ -79,7 +81,11 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   const toast = useToast();
   const queryClient = useQueryClient();
   const [favorite, setFavorite] = useState(product.is_favorite);
-
+    useEffect(() => {
+    if (setFavoriteHandler) {
+      setFavoriteHandler(handleFavoriteClick);
+    }
+  }, [setFavoriteHandler, favorite, loading]);
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
 
