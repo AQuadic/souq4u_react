@@ -224,7 +224,10 @@ const ProductsGrid: React.FC = () => {
 
           {/* Mobile Filters Sheet */}
           <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-            <SheetContent side="bottom" className="h-[90vh] flex flex-col">
+            <SheetContent
+              side="bottom"
+              className="inset-0 h-screen flex flex-col rounded-none"
+            >
               <SheetHeader className="flex flex-row items-center justify-between">
                 <SheetTitle>{t("Products.filters")}</SheetTitle>
                 <SheetClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100">

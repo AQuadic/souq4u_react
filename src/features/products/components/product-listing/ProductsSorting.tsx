@@ -69,7 +69,7 @@ const ProductsSorting: React.FC<ProductsSortingProps> = ({
           </button>
 
           <button
-            className="md:hidden flex items-center justify-center w-12 h-12 border dark:border-[#FDFDFD] border-[#C0C0C0] rounded-md text-main"
+            className="md:hidden flex items-center"
             onClick={onFiltersClick}
             aria-label="Open filters"
           >
