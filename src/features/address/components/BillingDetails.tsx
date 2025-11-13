@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useAuthStore } from "@/features/auth/stores/auth-store";
 import { useAddresses } from "../hooks";
-import type { AddressFormData } from "../types";
+import type { Address, AddressFormData } from "../types";
 import { SavedAddresses } from "./SavedAddresses";
 import { AddressForm } from "./AddressForm";
 import { useTranslation } from "react-i18next";
@@ -108,6 +108,18 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
     }
   };
 
+  const handleAddressCreated = useCallback(
+    (newAddress: Address) => {
+      setSelectedAddress(newAddress.id);
+      onAddressSelected(newAddress.id);
+
+      if (newAddress.city_id && newAddress.area_id && onShippingUpdate) {
+        onShippingUpdate(newAddress.city_id, newAddress.area_id);
+      }
+    },
+    [onAddressSelected, onShippingUpdate, setSelectedAddress]
+  );
+
   const handleAddNewAddress = () => {
     manuallyOpenedFormRef.current = true;
     setShowAddressForm(true);
@@ -148,6 +160,7 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
           isCheckout={isCheckout}
           onFormDataChange={onFormDataChange}
           onSubmitSuccess={handleFormSubmitSuccess}
+          onAddressCreated={handleAddressCreated}
         />
       </div>
     );
@@ -194,6 +207,7 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
           isCheckout={isCheckout}
           onFormDataChange={onFormDataChange}
           onSubmitSuccess={handleFormSubmitSuccess}
+          onAddressCreated={handleAddressCreated}
         />
       )}
     </div>
