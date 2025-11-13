@@ -88,7 +88,7 @@ const AddressCard: React.FC<AddressCardProps> = ({
 
           <div className="flex items-center gap-2">
             <Phone />
-            <p className="dark:text-gray-300 text-sm leading-relaxed">
+            <p className="dark:text-gray-300 text-sm leading-relaxed" dir="ltr">
               {address.phone}
             </p>
           </div>
