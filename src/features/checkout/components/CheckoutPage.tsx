@@ -46,18 +46,18 @@ export const CheckoutPage: React.FC = () => {
   const [lastCouponCode, setLastCouponCode] = useState<string | null>(null);
   const [checkoutCompleted, setCheckoutCompleted] = useState(false);
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
-  const [shippingCityId, setShippingCityId] = useState<string>("");
-  const [shippingAreaId, setShippingAreaId] = useState<string>("");
+  const [shippingAddressId, setShippingAddressId] = useState<number | null>(
+    null
+  );
   const [shippingRequestId, setShippingRequestId] = useState(0);
 
   const checkoutSuccessRef = useRef(false);
   const initialCartCheckDone = useRef(false);
 
-  // Fetch cart with shipping information when city and area are selected
+  // Fetch cart with shipping information when an address selection changes
   const { data: cartWithShipping } = useCartWithShipping({
-    city_id: shippingCityId,
-    area_id: shippingAreaId,
-    enabled: !!shippingCityId && !!shippingAreaId,
+    address_id: shippingAddressId ?? undefined,
+    enabled: shippingAddressId !== null,
     requestId: shippingRequestId,
   });
 
@@ -117,19 +117,14 @@ export const CheckoutPage: React.FC = () => {
 
   const handleAddressSelected = useCallback((addressId: number | null) => {
     setSelectedAddressId(addressId);
+    setShippingAddressId(addressId);
+    setShippingRequestId((prev) => prev + 1);
     console.log("Address selected:", addressId);
   }, []);
 
   const handleAddressFormSubmit = useCallback((data: AddressFormData) => {
     setAddressFormData(data);
     console.log("Address form data submitted:", data);
-  }, []);
-
-  const handleShippingUpdate = useCallback((cityId: string, areaId: string) => {
-    console.log("Shipping updated:", { cityId, areaId });
-    setShippingCityId(cityId);
-    setShippingAreaId(areaId);
-    setShippingRequestId((prev) => prev + 1);
   }, []);
 
   const handleFormDataChange = useCallback(
@@ -470,7 +465,6 @@ export const CheckoutPage: React.FC = () => {
             onAddressSelected={handleAddressSelected}
             onAddressFormSubmit={handleAddressFormSubmit}
             onImmediateCheckout={handleImmediateCheckout}
-            onShippingUpdate={handleShippingUpdate}
             isCheckout={true}
             onFormDataChange={handleFormDataChange}
           /> */}
@@ -488,7 +482,6 @@ export const CheckoutPage: React.FC = () => {
                 onAddressSelected={handleAddressSelected}
                 onAddressFormSubmit={handleAddressFormSubmit}
                 onImmediateCheckout={handleImmediateCheckout}
-                onShippingUpdate={handleShippingUpdate}
                 isCheckout={true}
                 onFormDataChange={handleFormDataChange}
               />

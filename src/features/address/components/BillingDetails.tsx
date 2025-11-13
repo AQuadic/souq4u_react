@@ -12,7 +12,6 @@ interface BillingDetailsProps {
   onAddressSelected: (addressId: number | null) => void;
   onAddressFormSubmit: (formData: AddressFormData) => void;
   onImmediateCheckout?: (formData: AddressFormData) => void;
-  onShippingUpdate?: (cityId: string, areaId: string) => void;
   isCheckout?: boolean;
   onFormDataChange?: (
     formData: AddressFormData,
@@ -24,7 +23,6 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
   onAddressSelected,
   onAddressFormSubmit,
   onImmediateCheckout,
-  onShippingUpdate,
   isCheckout = false,
   onFormDataChange,
 }) => {
@@ -76,10 +74,7 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
         const firstAddress = addresses[0];
         setSelectedAddress(firstAddress.id);
         onAddressSelected(firstAddress.id);
-
-        if (firstAddress.city_id && firstAddress.area_id && onShippingUpdate) {
-          onShippingUpdate(firstAddress.city_id, firstAddress.area_id);
-        }
+        onAddressSelected(firstAddress.id);
       }
     }
   }, [
@@ -90,39 +85,25 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
     addresses,
     setSelectedAddress,
     onAddressSelected,
-    onShippingUpdate,
   ]);
 
   const handleAddressSelect = (addressId: number) => {
     setSelectedAddress(addressId);
     onAddressSelected(addressId);
-
-    // Find the selected address and trigger shipping update
-    const selectedAddress = addresses.find((addr) => addr.id === addressId);
-    if (
-      selectedAddress?.city_id &&
-      selectedAddress?.area_id &&
-      onShippingUpdate
-    ) {
-      onShippingUpdate(selectedAddress.city_id, selectedAddress.area_id);
-    }
   };
 
   const handleAddressCreated = useCallback(
     (newAddress: Address) => {
       setSelectedAddress(newAddress.id);
       onAddressSelected(newAddress.id);
-
-      if (newAddress.city_id && newAddress.area_id && onShippingUpdate) {
-        onShippingUpdate(newAddress.city_id, newAddress.area_id);
-      }
     },
-    [onAddressSelected, onShippingUpdate, setSelectedAddress]
+    [onAddressSelected, setSelectedAddress]
   );
 
   const handleAddNewAddress = () => {
     manuallyOpenedFormRef.current = true;
     setShowAddressForm(true);
+    onAddressSelected(null);
   };
 
   const handleFormSubmit = (formData: AddressFormData) => {
@@ -156,7 +137,6 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
           onSubmit={handleFormSubmit}
           showSaveOption={false}
           onImmediateCheckout={onImmediateCheckout}
-          onShippingUpdate={onShippingUpdate}
           isCheckout={isCheckout}
           onFormDataChange={onFormDataChange}
           onSubmitSuccess={handleFormSubmitSuccess}
@@ -203,7 +183,6 @@ export const BillingDetails: React.FC<BillingDetailsProps> = ({
           showSaveOption={isAuthenticated}
           onCancel={addresses.length > 0 ? handleCancelForm : undefined}
           onImmediateCheckout={onImmediateCheckout}
-          onShippingUpdate={onShippingUpdate}
           isCheckout={isCheckout}
           onFormDataChange={onFormDataChange}
           onSubmitSuccess={handleFormSubmitSuccess}

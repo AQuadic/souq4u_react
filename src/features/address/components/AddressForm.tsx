@@ -31,6 +31,58 @@ import { useToast } from "@/shared/components/ui/toast";
 const isNonEmptyString = (value: string | null | undefined): value is string =>
   typeof value === "string" && value.length > 0;
 
+const parsePhoneFromInitialData = (
+  initialData?: Partial<AddressFormData>
+): PhoneValue | null => {
+  const phoneStr = initialData?.phone;
+  if (!phoneStr) {
+    return null;
+  }
+
+  const cleanOrOriginal = phoneStr.startsWith("+")
+    ? phoneStr.substring(1)
+    : phoneStr;
+
+  if (initialData?.phone_country) {
+    const country = getCountryByIso2(initialData.phone_country);
+    const countryCode = country?.phone?.[0];
+
+    if (countryCode && cleanOrOriginal.startsWith(countryCode)) {
+      return {
+        code: countryCode,
+        number: cleanOrOriginal.substring(countryCode.length),
+      };
+    }
+  }
+
+  const codeMatch = /^\+?(\d{1,3})/.exec(phoneStr);
+  if (codeMatch) {
+    const code = codeMatch[1];
+    const withoutCode = cleanOrOriginal.substring(code.length);
+    return { code, number: withoutCode };
+  }
+
+  return { code: "20", number: cleanOrOriginal };
+};
+
+const normalizeLocalPhone = (phoneNumber: string): string =>
+  phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber;
+
+const hasRequiredFields = (
+  data: AddressFormData,
+  options: { requireTitle: boolean; phoneNumber: string }
+): boolean => {
+  if (options.requireTitle && !data.title.trim()) {
+    return false;
+  }
+
+  if (!data.city_id || !data.area_id || !data.details.trim()) {
+    return false;
+  }
+
+  return options.phoneNumber.trim().length > 0;
+};
+
 interface AddressFormProps {
   initialData?: Partial<AddressFormData>;
   onSubmit: (data: AddressFormData) => void | Promise<void>;
@@ -39,7 +91,6 @@ interface AddressFormProps {
   isEditing?: boolean;
   addressId?: number;
   onImmediateCheckout?: (data: AddressFormData) => void;
-  onShippingUpdate?: (cityId: string, areaId: string) => void;
   isCheckout?: boolean;
   onFormDataChange?: (
     data: AddressFormData,
@@ -61,7 +112,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   isEditing = false,
   addressId,
   onImmediateCheckout,
-  onShippingUpdate,
   isCheckout = false,
   onFormDataChange,
   handleApiInternally = true,
@@ -259,12 +309,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   };
 
   // Effect to handle shipping update when both city and area are selected
-  useEffect(() => {
-    if (formData.city_id && formData.area_id && onShippingUpdate) {
-      onShippingUpdate(formData.city_id, formData.area_id);
-    }
-  }, [formData.city_id, formData.area_id, onShippingUpdate]);
-
   // Effect to notify parent of form data changes (for checkout flow)
   useEffect(() => {
     if (onFormDataChange) onFormDataChange(formData, phone);

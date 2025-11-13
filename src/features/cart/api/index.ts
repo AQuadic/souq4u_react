@@ -14,6 +14,7 @@ export interface CartRequest {
   lng?: number;
   city_id?: string;
   area_id?: string;
+  address_id?: number | string;
   items?: CartItemRequest[];
 }
 
@@ -36,20 +37,25 @@ export interface CartResponse {
   message?: string;
 }
 
+const getBrowserWindow = () => globalThis.window ?? undefined;
+
 // Session storage functions for coupon
 const getStoredCoupon = (): string | null => {
-  if (typeof window === "undefined") return null;
-  return sessionStorage.getItem("applied_coupon");
+  const win = getBrowserWindow();
+  if (!win) return null;
+  return win.sessionStorage.getItem("applied_coupon");
 };
 
 const storeCoupon = (couponCode: string): void => {
-  if (typeof window === "undefined") return;
-  sessionStorage.setItem("applied_coupon", couponCode);
+  const win = getBrowserWindow();
+  if (!win) return;
+  win.sessionStorage.setItem("applied_coupon", couponCode);
 };
 
 const clearStoredCoupon = (): void => {
-  if (typeof window === "undefined") return;
-  sessionStorage.removeItem("applied_coupon");
+  const win = getBrowserWindow();
+  if (!win) return;
+  win.sessionStorage.removeItem("applied_coupon");
 };
 
 // Export coupon session storage functions
@@ -63,9 +69,11 @@ export const cartApi = {
     params?: Omit<CartRequest, "items"> & { coupon_code?: string }
   ): Promise<CartResponse> => {
     try {
-      const requestParams: Omit<CartRequest, "items"> & {
-        coupon_code?: string;
-      } = { ...(params || {}) };
+      const requestParams = Object.fromEntries(
+        Object.entries(params ?? {}).filter(
+          ([, value]) => value !== undefined && value !== null
+        )
+      ) as Omit<CartRequest, "items"> & { coupon_code?: string };
 
       const storedCoupon = getStoredCoupon();
       if (storedCoupon && !requestParams.coupon_code) {
@@ -110,7 +118,7 @@ export const cartApi = {
     data?: Partial<RemoveFromCartRequest> & { coupon_code?: string }
   ): Promise<CartResponse> => {
     try {
-      const requestParams = { ...(data || {}) };
+      const requestParams = data ? { ...data } : {};
 
       const storedCoupon = getStoredCoupon();
       if (storedCoupon && !requestParams.coupon_code) {
@@ -177,15 +185,16 @@ export const cartApi = {
 };
 
 export const getCartSessionId = (): string | undefined => {
-  if (typeof window === "undefined") return undefined;
+  const win = getBrowserWindow();
+  if (!win) return undefined;
 
-  let sessionId = localStorage.getItem("cart_session_id") || undefined;
+  let sessionId = win.localStorage.getItem("cart_session_id") ?? undefined;
 
   if (!sessionId) {
     sessionId = `session_${Date.now()}_${Math.random()
       .toString(36)
       .substring(2, 11)}`;
-    localStorage.setItem("cart_session_id", sessionId);
+    win.localStorage.setItem("cart_session_id", sessionId);
   }
 
   return sessionId;
