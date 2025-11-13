@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { getStoreSetting } from "../api/store";
+import FreeDelivery from "./icons/FreeDelivery";
 
 const HeaderBanner = () => {
   const { t, i18n } = useTranslation();
@@ -20,7 +21,8 @@ const HeaderBanner = () => {
   if (isError || !data || !data.quick_slider) return null;
 
   return (
-    <section className="text-center py-2 bg-main text-white max-sm:text-sm">
+    <section className="text-center py-2 bg-main text-white max-sm:text-sm flex items-center justify-center gap-2">
+      <FreeDelivery />
       <b>{data.quick_slider[i18n.language] || data.quick_slider["en"]}</b>
     </section>
   );
