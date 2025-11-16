@@ -281,7 +281,7 @@ const MyAccount: React.FC = () => {
                   captionLayout="dropdown"
                   onSelect={(date) => {
                     if (date) {
-                      setBirthday(date.toISOString().split("T")[0]);
+                      setBirthday(date.toLocaleDateString("en-CA"));
                     }
                     setOpen(false)
                   }}
