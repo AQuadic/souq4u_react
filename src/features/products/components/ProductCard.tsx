@@ -207,16 +207,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       <div className=" border-t-0 dark:border-r-[1.5px] dark:border-b-[1.5px] dark:border-l-[1.5px] border-solid border-[var(--Card-BG-Color,#242529)] rounded-br-3xl rounded-bl-3xl p-4 flex flex-col h-full">
-        <div className="flex items-center justify-between">
-          <h2 className=" lg:text-base text-sm lg:font-bold font-semibold leading-[150%]">
-            {productName.slice(0, 16)}
-            {productName.length > 16 ? "…" : ""}
+        <div className="flex items-center justify-between mt-4">
+          <h2 className=" lg:text-base text-sm lg:font-bold font-semibold truncate w-full">
+            {productName}
           </h2>
           <div className="flex items-center gap-1">
             <p className=" text-sm font-medium leading-3 font-Poppins">
               {product.rating}
             </p>
-            <Star />
+            <Star className="w-[14px] h-[14px] sm:w-6 sm:h-6" />
           </div>
         </div>
 
