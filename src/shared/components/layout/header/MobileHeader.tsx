@@ -16,6 +16,7 @@ import {
   useHeaderNavigation,
 } from "@/features/static-pages";
 import LogoutDialog from "@/features/profile/sidebar/LogoutDialog";
+import NotificationDropdown from "./notifications/NotificationDropdown";
 // import {
 //   Accordion,
 //   AccordionContent,
@@ -55,15 +56,16 @@ const MobileHeader = () => {
         <img src="/logo.png" width={80} height={40} alt="souq4u" />
       </Link>
       <div className="flex items-center gap-5 relative">
-        <button onClick={openCart} className="relative">
+        {/* <button onClick={openCart} className="relative">
           <Cart />
-          {/* Badge: show when there are items in cart */}
+          Badge: show when there are items in cart
           {cartItemsCount > 0 && (
             <span className="absolute -top-2 -left-2 min-w-[18px] h-[18px] rounded-full bg-main text-white text-[10px] font-bold flex items-center justify-center px-[5px] z-40 pointer-events-none">
               {cartItemsCount}
             </span>
           )}
-        </button>
+        </button> */}
+        <NotificationDropdown />
         <HeaderSearch />
         <button onClick={() => setIsOpen(true)} className="">
           <Menu />
