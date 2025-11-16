@@ -120,14 +120,14 @@ export default function NotificationsPage() {
                   <div
                     key={n.id}
                     onClick={() => handleNotificationClick(n)}
-                    className={`flex items-center gap-3 p-4 border-b border-[#C5C5C5] cursor-pointer transition
+                    className={`flex items-center gap-3 md:p-4 p-2 border-b border-[#C5C5C5] cursor-pointer transition
                       ${
                         n.read_at
                           ? "bg-transparent text-black"
                           : "bg-[#F1F1F1] border-[#D7D7D7] hover:bg-[#cfcfcf] text-black"
                       }`}
                   >
-                    <div className="relative px-4">
+                    <div className="relative md:px-4">
                       <img
                         src={n.image?.url || "/logo.png"}
                         alt={n.title?.en || "Notification"}
@@ -169,7 +169,7 @@ export default function NotificationsPage() {
                   <div
                     key={n.id}
                     onClick={() => handleNotificationClick(n)}
-                    className={`flex items-center gap-3 px-4 py-2 cursor-pointer border-b border-[#C5C5C5] transition
+                    className={`flex items-center gap-3 md:px-4 px-2 py-2 cursor-pointer border-b border-[#C5C5C5] transition
                       ${
                         n.read_at
                           ? "bg-transparent text-white"
@@ -180,7 +180,7 @@ export default function NotificationsPage() {
                       <img
                         src={n.image?.url || "/logo.png"}
                         alt={n.title?.en || "Notification"}
-                        className={`w-[50px] h-[50px] object-cover rounded-full ${
+                        className={`md:w-[50px] w-10 md:h-[50px] h-10 object-cover rounded-full ${
                           n.read_at ? "" : ""
                         }`}
                       />
@@ -189,8 +189,8 @@ export default function NotificationsPage() {
                       )}
                     </div>
 
-                    <div className="flex-1 flex items-center justify-between gap-2">
-                      <p className="text-sm font-medium leading-[150%] truncate text-black">
+                    <div className="flex-1 flex flex-wrap items-center justify-between gap-2">
+                      <p className="md:text-sm text-xs font-medium leading-[150%] truncate text-black">
                         {isArabic ? n.body?.ar : n.body?.en}
                       </p>
                       <span className="text-xs whitespace-nowrap text-[#A1A1A1]">
