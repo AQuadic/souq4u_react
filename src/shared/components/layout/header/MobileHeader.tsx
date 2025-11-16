@@ -10,7 +10,7 @@ import { useCartSlider } from "@/features/cart/hooks/useCartSlider";
 import { useCartStore } from "@/features/cart/stores";
 // import MainAuth from "@/features/auth/components/MainAuth";
 import HeaderSearch from "./HeaderSearch";
-// import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import {
   usePagesContextSafe,
   useHeaderNavigation,
@@ -30,7 +30,7 @@ const MobileHeader = () => {
   const locale = i18n.language || "en";
   const location = useLocation();
   const { isOpen: isCartOpen, openCart, closeCart } = useCartSlider();
-  // const { user } = useAuth();
+  const { user } = useAuth();
 
   // Get pages from context and build navigation links
   const pages = usePagesContextSafe();
@@ -65,7 +65,7 @@ const MobileHeader = () => {
             </span>
           )}
         </button> */}
-        <NotificationDropdown />
+        {user && <NotificationDropdown />}
         <HeaderSearch />
         <button onClick={() => setIsOpen(true)} className="">
           <Menu />
