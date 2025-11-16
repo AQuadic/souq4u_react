@@ -121,7 +121,11 @@ export default function NotificationDropdown() {
 
       <DropdownMenuContent
         align={isArabic ? "start" : "end"}
-        className="md:w-[436px] w-full bg-[#FDFDFD] text-white rounded-3xl border-none"
+        className="md:w-[436px] w-[350px] ltr:ml-5 rtl:mr-5 bg-[#FDFDFD] text-white rounded-3xl border-none"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
       >
         <div dir={isArabic ? "rtl" : "ltr"}>
           {hasNotifications ? (
