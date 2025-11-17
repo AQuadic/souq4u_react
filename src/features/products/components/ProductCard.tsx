@@ -166,7 +166,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </button>
         </div>
 
-        <div className="relative lg:w-[246px] w-[86px] lg:h-[150px] h-[126px] flex items-center justify-center mx-auto lg:mt-8">
+        <div className="relative lg:w-[246px] w-[120px] lg:h-[155px] h-full flex items-center justify-center mx-auto lg:mt-8">
           {product.images?.[0]?.url ? (
             <img
               src={product.images[0].url}
