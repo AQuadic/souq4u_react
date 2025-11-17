@@ -40,7 +40,7 @@ const FooterContactInfo = () => {
 
   return (
     <section className="bg-main">
-      <div className="container flex lg:flex-row flex-col items-center justify-center lg:gap-4 py-[20px]">
+      <div className="container flex lg:flex-row flex-col items-center justify-center lg:gap-4 lg:py-[20px]">
 
         {hasLocation && (
           <>
@@ -48,7 +48,7 @@ const FooterContactInfo = () => {
               href={mapsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 pb-12 lg:pb-0"
+              className="flex items-center gap-2 py-10 lg:py-0"
             >
               <Location />
               <h1 className="text-[#FDFDFD] lg:text-lg text-base font-semibold leading-[100%] ">
@@ -77,7 +77,7 @@ const FooterContactInfo = () => {
         {storeData?.email && (
           <a
             href={`mailto:${storeData.email}`}
-            className="flex items-center gap-2 pt-12 lg:pt-0"
+            className="flex items-center gap-2 py-10 lg:py-0"
           >
             <Email />
             <p className="text-[#FDFDFD] lg:text-2xl text-base font-semibold leading-[100%]">
