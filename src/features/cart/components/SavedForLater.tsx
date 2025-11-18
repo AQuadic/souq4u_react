@@ -56,6 +56,8 @@ const SavedForLater = () => {
                     url: f.image.url,
                     responsive_urls: [f.image.url],
                     is_active: 1,
+                    file_name: "",
+                    mime_type: "image/jpeg",
                   },
                 ]
               : [],

@@ -185,11 +185,11 @@ export const useCartStore = create<CartStore>()(
 
             if ((response as any)?.data?.items) {
               // response is CartResponse { data: Cart }
-              responseData = (response as any).data as Partial<Cart> &
-                Record<string, unknown>;
+              responseData = (response as any)
+                .data as unknown as Partial<Cart> & Record<string, unknown>;
             } else if (response && (response as any).items) {
               // response is already the Cart object
-              responseData = response as Partial<Cart> &
+              responseData = response as unknown as Partial<Cart> &
                 Record<string, unknown>;
             } else {
               // Fallback - keep existing cart if structure unexpected
@@ -258,10 +258,10 @@ export const useCartStore = create<CartStore>()(
             let responseData: Partial<Cart> & Record<string, unknown>;
 
             if ((response as any)?.data?.items) {
-              responseData = (response as any).data as Partial<Cart> &
-                Record<string, unknown>;
+              responseData = (response as any)
+                .data as unknown as Partial<Cart> & Record<string, unknown>;
             } else if ((response as any)?.items) {
-              responseData = response as Partial<Cart> &
+              responseData = response as unknown as Partial<Cart> &
                 Record<string, unknown>;
             } else {
               console.warn(
