@@ -177,12 +177,66 @@ export const useCartStore = create<CartStore>()(
           try {
             const response = await cartApi.applyCoupon(couponCode);
 
-            // Update cart with the response data that includes coupon calculations
+            // Normalize response to Cart shape. The API helpers sometimes
+            // return an object like { data: { items: [...], calculations: {...} } }
+            // or may return the cart directly. Handle both cases so the store
+            // is always updated with a proper Cart object and UI will re-render.
+            let responseData: Partial<Cart> & Record<string, unknown>;
+
+            if ((response as any)?.data?.items) {
+              // response is CartResponse { data: Cart }
+              responseData = (response as any).data as Partial<Cart> &
+                Record<string, unknown>;
+            } else if (response && (response as any).items) {
+              // response is already the Cart object
+              responseData = response as Partial<Cart> &
+                Record<string, unknown>;
+            } else {
+              // Fallback - keep existing cart if structure unexpected
+              console.warn(
+                "Unexpected applyCoupon response structure:",
+                response
+              );
+              responseData = {
+                items: [],
+                calculations: {
+                  subtotal: 0,
+                  addons: 0,
+                  product_discount: 0,
+                  discount: 0,
+                  total_discount: 0,
+                  tax: 0,
+                  delivery_fees: 0,
+                  total: 0,
+                },
+              };
+            }
+
+            const cart: Cart = {
+              items: Array.isArray(responseData.items)
+                ? responseData.items
+                : [],
+              calculations: responseData.calculations || {
+                subtotal: 0,
+                addons: 0,
+                product_discount: 0,
+                discount: 0,
+                total_discount: 0,
+                tax: 0,
+                delivery_fees: 0,
+                total: 0,
+              },
+            };
+
+            // Persist applied coupon from session storage to keep consistency
+            const storedCoupon = getCouponFromSession();
+
             set({
-              cart: response.data,
-              appliedCoupon: couponCode,
+              cart,
+              appliedCoupon: storedCoupon ?? couponCode,
               isCouponLoading: false,
             });
+            ensureCouponClearedIfCartEmpty(cart);
           } catch (error) {
             console.error("Failed to apply coupon:", error);
             set({
@@ -197,15 +251,63 @@ export const useCartStore = create<CartStore>()(
           set({ isCouponLoading: true, error: null });
 
           try {
-            // Clear coupon using the new API method
+            // Clear coupon using the API method which clears session and
+            // returns the updated cart. Normalize the response same as applyCoupon.
             const response = await cartApi.clearCoupon();
 
-            // Update cart with the response data without coupon
+            let responseData: Partial<Cart> & Record<string, unknown>;
+
+            if ((response as any)?.data?.items) {
+              responseData = (response as any).data as Partial<Cart> &
+                Record<string, unknown>;
+            } else if ((response as any)?.items) {
+              responseData = response as Partial<Cart> &
+                Record<string, unknown>;
+            } else {
+              console.warn(
+                "Unexpected clearCoupon response structure:",
+                response
+              );
+              responseData = {
+                items: [],
+                calculations: {
+                  subtotal: 0,
+                  addons: 0,
+                  product_discount: 0,
+                  discount: 0,
+                  total_discount: 0,
+                  tax: 0,
+                  delivery_fees: 0,
+                  total: 0,
+                },
+              };
+            }
+
+            const cart: Cart = {
+              items: Array.isArray(responseData.items)
+                ? responseData.items
+                : [],
+              calculations: responseData.calculations || {
+                subtotal: 0,
+                addons: 0,
+                product_discount: 0,
+                discount: 0,
+                total_discount: 0,
+                tax: 0,
+                delivery_fees: 0,
+                total: 0,
+              },
+            };
+
+            // Ensure session and store state cleared
+            clearCouponFromSession();
+
             set({
-              cart: response.data,
+              cart,
               appliedCoupon: null,
               isCouponLoading: false,
             });
+            ensureCouponClearedIfCartEmpty(cart);
           } catch (error) {
             console.error("Failed to clear coupon:", error);
             set({

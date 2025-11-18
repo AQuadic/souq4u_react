@@ -156,6 +156,8 @@ export const CheckoutPage: React.FC = () => {
     async (code: string) => {
       try {
         await applyCoupon(code);
+        // trigger cart-with-shipping refetch so checkout totals update
+        setShippingRequestId((prev) => prev + 1);
       } catch (error) {
         console.error("Failed to apply promocode:", error);
       }
@@ -166,6 +168,8 @@ export const CheckoutPage: React.FC = () => {
   const handleClearPromocode = useCallback(async () => {
     try {
       await clearCoupon();
+      // trigger cart-with-shipping refetch so checkout totals update
+      setShippingRequestId((prev) => prev + 1);
     } catch (error) {
       console.error("Failed to clear promocode:", error);
     }
