@@ -2,13 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/shared/components/ui/accordion";
-import { ChevronRight, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import {
@@ -27,17 +20,12 @@ const ProductsCategoryFilter = ({
   const [searchParams] = useSearchParams();
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [openItem, setOpenItem] = useState<string | null>(null);
 
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category_id");
     const categoryId = categoryFromUrl ? Number(categoryFromUrl) : null;
-
-    if (categoryId !== selectedCategory) {
-      setSelectedCategory(categoryId);
-      setCategory(categoryId || undefined);
-    }
-  }, [searchParams, selectedCategory, setCategory]);
+    setSelectedCategory(categoryId);
+  }, [searchParams]);
 
   const {
     data: categories,
@@ -71,13 +59,7 @@ const ProductsCategoryFilter = ({
         )}
         {isError && <p className="text-sm text-red-400">{error.message}</p>}
 
-        <Accordion
-          type="single"
-          collapsible
-          value={openItem ?? undefined}
-          onValueChange={(val) => setOpenItem(val)}
-          className="w-full space-y-1"
-        >
+        <div className="w-full space-y-1">
           {categories?.map((cat) => {
             const hasChildren = cat.children && cat.children.length > 0;
             const totalCount = hasChildren
@@ -89,99 +71,120 @@ const ProductsCategoryFilter = ({
 
             if (hasChildren) {
               return (
-                <AccordionItem
-                  key={cat.id}
-                  value={`cat-${cat.id}`}
-                  className="border-none"
-                >
-                  <AccordionTrigger
+                <div key={cat.id} className="border-none">
+                  <button
                     onClick={() => handleClick(cat.id)}
-                    className={`group flex items-center justify-between py-2 px-3 text-sm rounded-md transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 [&>svg]:hidden`}
+                    className={`group w-full flex items-center justify-between py-2 px-3 text-sm rounded-md transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                      selectedCategory === cat.id
+                        ? "text-main bg-main/10 font-medium"
+                        : ""
+                    }`}
                   >
                     <div className="flex items-center gap-2">
-                      <div className="">
-                        {openItem === `cat-${cat.id}` ? (
-                          <ChevronDown size={16} />
-                        ) : (
-                          <ChevronRight size={16} />
-                        )}
-                      </div>
                       <span className="flex items-center gap-1">
                         {locale === "ar" ? cat.name.ar : cat.name.en}
                       </span>
                     </div>
                     <span className="text-sm">({totalCount})</span>
-                  </AccordionTrigger>
+                  </button>
 
-                  <AccordionContent className="mt-1 space-y-1 ltr:ml-8 rtl:mr-8 relative">
+                  <div className="mt-1 space-y-1 ltr:ml-8 rtl:mr-8 relative">
                     {/* Vertical connecting line */}
-                    <div className="absolute ltr:left-[-20px] rtl:right-[-20px] top-0 bottom-[35px] w-px bg-gray-300 dark:bg-gray-600 pointer-events-none"></div>
+                    <div className="absolute ltr:left-[-20px] rtl:right-[-20px] top-0 bottom-[12px] w-px bg-gray-300 dark:bg-gray-600 pointer-events-none"></div>
 
-                    {cat.children!.map((child) => (
-                      <div key={child.id} className="relative">
-                        {/* Curved connector for each item */}
-                        <div className="absolute ltr:left-[-20px] rtl:right-[-20px] top-[6px]">
-                          <svg
-                            width="24"
-                            height="20"
-                            viewBox="0 0 24 20"
-                            className="text-gray-300 dark:text-gray-600"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                    {cat.children!.map((child) => {
+                      return (
+                        <div key={child.id} className="relative">
+                          {/* Curved connector for each item - LTR */}
+                          {locale !== "ar" && (
+                            <>
+                              <svg
+                                className="absolute left-[-20px] top-[10px] text-gray-300 dark:text-gray-600"
+                                width="20"
+                                height="10"
+                                viewBox="0 0 20 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0.5 0 L 0.5 5 Q 0.5 9, 4 9 L 20 9"
+                                  stroke="currentColor"
+                                  strokeWidth="1"
+                                  fill="none"
+                                  strokeLinecap="square"
+                                />
+                              </svg>
+                              {/* Arrow - LTR */}
+                              <div className="absolute left-[-3px] top-[17px]">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 6 6"
+                                  width="5"
+                                  height="5"
+                                  className="text-gray-300 dark:text-gray-600"
+                                  fill="currentColor"
+                                >
+                                  <polygon points="5,3 0,0 0,6" />
+                                </svg>
+                              </div>
+                            </>
+                          )}
+
+                          {/* Curved connector for each item - RTL */}
+                          {locale === "ar" && (
+                            <>
+                              <svg
+                                className="absolute right-[-20px] top-[10px] text-gray-300 dark:text-gray-600"
+                                width="20"
+                                height="10"
+                                viewBox="0 0 20 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M19.5 0 L 19.5 5 Q 19.5 9, 16 9 L 0 9"
+                                  stroke="currentColor"
+                                  strokeWidth="1"
+                                  fill="none"
+                                  strokeLinecap="square"
+                                />
+                              </svg>
+                              {/* Arrow - RTL */}
+                              <div className="absolute right-[-3px] top-[17px]">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 6 6"
+                                  width="5"
+                                  height="5"
+                                  className="text-gray-300 dark:text-gray-600"
+                                  fill="currentColor"
+                                >
+                                  <polygon points="0,3 5,0 5,6" />
+                                </svg>
+                              </div>
+                            </>
+                          )}
+
+                          <button
+                            onClick={() => handleClick(child.id)}
+                            className={`w-full flex items-center justify-between px-3 py-1.5 text-sm rounded-md text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                              selectedCategory === child.id
+                                ? "text-main bg-main/10"
+                                : ""
+                            }`}
                           >
-                            {locale === "ar" ? (
-                              <path
-                                d="M24 2 Q 16 10, 8 14 L 0 14"
-                                stroke="currentColor"
-                                strokeWidth="1"
-                                fill="none"
-                              />
-                            ) : (
-                              <path
-                                d="M0 2 Q 8 10, 16 14 L 24 14"
-                                stroke="currentColor"
-                                strokeWidth="1"
-                                fill="none"
-                              />
-                            )}
-                          </svg>
-                          {/* Arrow */}
-                          <div className="absolute top-[10px] ltr:right-[-4px] rtl:left-[-4px] rotate-[10deg]">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 8 8"
-                              width="8"
-                              height="8"
-                              className="text-gray-300 dark:text-gray-600"
-                              fill="currentColor"
-                            >
-                              {locale === "ar" ? (
-                                <path d="M6 0L0 4l6 4V0z" />
-                              ) : (
-                                <path d="M2 0L8 4l-6 4V0z" />
-                              )}
-                            </svg>
-                          </div>
+                            <span>
+                              {locale === "ar" ? child.name.ar : child.name.en}
+                            </span>
+                            <span className="text-gray-500 text-xs">
+                              ({child.active_products_count})
+                            </span>
+                          </button>
                         </div>
-                        <button
-                          onClick={() => handleClick(child.id)}
-                          className={`w-full flex items-center justify-between px-3 py-1.5 text-sm rounded-md text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                            selectedCategory === child.id
-                              ? "text-main bg-main/10"
-                              : ""
-                          }`}
-                        >
-                          <span>
-                            {locale === "ar" ? child.name.ar : child.name.en}
-                          </span>
-                          <span className="text-gray-500 text-xs">
-                            ({child.active_products_count})
-                          </span>
-                        </button>
-                      </div>
-                    ))}
-                  </AccordionContent>
-                </AccordionItem>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             }
 
@@ -203,7 +206,7 @@ const ProductsCategoryFilter = ({
               </button>
             );
           })}
-        </Accordion>
+        </div>
       </div>
     </section>
   );
