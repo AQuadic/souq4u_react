@@ -10,14 +10,16 @@ interface Props {
   reviewable_id: number;
   reviewable_type?: string;
   product?: {
-    images?: Array<{
+    image?: {
       url?: string;
       responsive_urls?: string[];
-    }>;
-    name?: string | {
-      ar?: string;
-      en?: string;
     };
+    name?:
+      | string
+      | {
+          ar?: string;
+          en?: string;
+        };
   };
 }
 
@@ -63,8 +65,8 @@ const ProductReviewsSummary: React.FC<Props> = ({
   };
 
   const productImage =
-    product?.images?.[0]?.responsive_urls?.slice(-1)[0] ||
-    product?.images?.[0]?.url ||
+    product?.image?.responsive_urls?.slice(-1)[0] ||
+    product?.image?.url ||
     "/images/products/productIMG.png";
 
   return (
@@ -81,7 +83,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
             <div className="flex-shrink-0">
               <img
                 src={productImage}
-                alt='product image'
+                alt="product image"
                 width={48}
                 height={48}
                 className="w-12 h-12 rounded-md object-cover"
@@ -100,8 +102,8 @@ const ProductReviewsSummary: React.FC<Props> = ({
                         key={`star-${star}`}
                         className={`w-6 h-6 ${
                           star <= Math.round(average)
-                            ? 'text-[#F2CB1F]'
-                            : 'text-slate-300'
+                            ? "text-[#F2CB1F]"
+                            : "text-slate-300"
                         }`}
                       />
                     ))}

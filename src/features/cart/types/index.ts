@@ -1,11 +1,13 @@
 // Cart types based on the new API response structure
 import { MultilingualText } from "../../../shared/utils/translationUtils";
 export interface CartImageInfo {
-  id: number;
-  uuid: string;
-  size: number;
+  id?: number;
+  file_name: string;
   url: string;
+  uuid: string;
+  mime_type: string;
   responsive_urls: string[];
+  size?: number;
 }
 
 export interface CartVariantAttribute {
@@ -40,7 +42,8 @@ export interface CartVariant {
   stock: number;
   is_stock: boolean;
   is_active: boolean;
-  images: Array<{
+  image?: CartImageInfo;
+  images?: Array<{
     url: string;
   }>;
   attributes: CartVariantAttribute[];

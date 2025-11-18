@@ -64,7 +64,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
       {/* Header */}
       <div
         className={cn(
-          "flex items-center gap-4 mb-6",
+          "flex items-center gap-4 mb-6"
           // language === "ar" ? "flex-row-reverse" : "flex-row"
         )}
       >
@@ -103,13 +103,13 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
       <div className="bg-card dark:bg-white/5 backdrop-blur-sm border border-border dark:border-white/10 rounded-2xl p-4 sm:p-6 mb-6">
         <div
           className={cn(
-            "flex items-center justify-between mb-4  gap-4 sm:gap-0",
+            "flex items-center justify-between mb-4  gap-4 sm:gap-0"
             // language === "ar" && "sm:flex-row-reverse"
           )}
         >
           <div
             className={cn(
-              "flex items-center gap-3",
+              "flex items-center gap-3"
               // language === "ar" && "flex-row-reverse"
             )}
           >
@@ -167,17 +167,17 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
               className={cn(
                 "flex gap-4 p-4 rounded-xl",
                 "bg-accent/50 dark:bg-white/5",
-                "flex-col sm:flex-row sm:items-center",
+                "flex-col sm:flex-row sm:items-center"
                 // language === "ar" && "sm:flex-row-reverse"
               )}
             >
               {/* Product Image */}
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-muted dark:bg-white/10 rounded-lg overflow-hidden flex-shrink-0 mx-auto sm:mx-0">
                 {(() => {
-                  if (item.variant.images && item.variant.images.length > 0) {
+                  if (item.variant.image) {
                     return (
                       <img
-                        src={item.variant.images[0].url}
+                        src={item.variant.image.url}
                         alt={getProductName(item)}
                         width={80}
                         height={80}
@@ -224,7 +224,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
                 )}
                 <div
                   className={cn(
-                    "flex items-center gap-4 mt-2 justify-center sm:justify-start",
+                    "flex items-center gap-4 mt-2 justify-center sm:justify-start"
                     // language === "ar" && "sm:justify-end"
                   )}
                 >
@@ -268,7 +268,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
         <div className="space-y-4">
           <div
             className={cn(
-              "flex items-start gap-3",
+              "flex items-start gap-3"
               // language === "ar" && "flex-row-reverse"
             )}
           >
@@ -288,7 +288,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
 
           <div
             className={cn(
-              "flex items-start gap-3",
+              "flex items-start gap-3"
               // language === "ar" && "flex-row-reverse"
             )}
           >
@@ -312,7 +312,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
           {order.email && (
             <div
               className={cn(
-                "flex items-start gap-3",
+                "flex items-start gap-3"
                 // language === "ar" && "flex-row-reverse"
               )}
             >
@@ -333,7 +333,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
 
           <div
             className={cn(
-              "flex items-start gap-3",
+              "flex items-start gap-3"
               // language === "ar" && "flex-row-reverse"
             )}
           >
@@ -424,7 +424,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
         </h3>
         <div
           className={cn(
-            "flex items-center gap-3",
+            "flex items-center gap-3"
             // language === "ar" && "flex-row-reverse"
           )}
         >
@@ -444,7 +444,7 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
 
         <div
           className={cn(
-            "flex items-center gap-3 mt-4",
+            "flex items-center gap-3 mt-4"
             // language === "ar" && "flex-row-reverse"
           )}
         >

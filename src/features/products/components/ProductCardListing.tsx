@@ -99,40 +99,41 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
   };
 
   const colorSwatches: string[] = [];
-    product.variants?.forEach((v) =>
-      v?.attributes?.forEach((attr) => {
-        // attribute.value.special_value is used in ProductSizeSelector as "special_value" (hex color)
-        const value = (
-          attr as {
-            value?: { special_value?: string | null };
-          }
-        )?.value?.special_value;
-        if (value && !colorSwatches.includes(value)) colorSwatches.push(value);
-      })
-    );
-
-    const sizeOptions: string[] = [];
-    product.variants?.forEach((v) =>
-      v?.attributes?.forEach((attr) => {
-        const isSize =
-          attr?.attribute?.name?.en?.toLowerCase() === "size" ||
-          attr?.attribute?.name?.ar === "مقاس";
-  
-        const sizeValue =
-          (attr as {
-            value?: { value?: MultilingualText | string | null };
-          })?.value?.value;
-  
-        const displaySize =
-          typeof sizeValue === "object"
-            ? sizeValue?.en || sizeValue?.ar
-            : sizeValue;
-  
-        if (isSize && displaySize && !sizeOptions.includes(displaySize)) {
-          sizeOptions.push(displaySize);
+  product.variants?.forEach((v) =>
+    v?.attributes?.forEach((attr) => {
+      // attribute.value.special_value is used in ProductSizeSelector as "special_value" (hex color)
+      const value = (
+        attr as {
+          value?: { special_value?: string | null };
         }
-      })
-    );
+      )?.value?.special_value;
+      if (value && !colorSwatches.includes(value)) colorSwatches.push(value);
+    })
+  );
+
+  const sizeOptions: string[] = [];
+  product.variants?.forEach((v) =>
+    v?.attributes?.forEach((attr) => {
+      const isSize =
+        attr?.attribute?.name?.en?.toLowerCase() === "size" ||
+        attr?.attribute?.name?.ar === "مقاس";
+
+      const sizeValue = (
+        attr as {
+          value?: { value?: MultilingualText | string | null };
+        }
+      )?.value?.value;
+
+      const displaySize =
+        typeof sizeValue === "object"
+          ? sizeValue?.en || sizeValue?.ar
+          : sizeValue;
+
+      if (isSize && displaySize && !sizeOptions.includes(displaySize)) {
+        sizeOptions.push(displaySize);
+      }
+    })
+  );
 
   return (
     <Link
@@ -155,9 +156,9 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
         </div>
 
         <div className="relative md:w-[200px] md:h-[200px]">
-          {product.images?.[0]?.url ? (
+          {product.image?.url ? (
             <img
-              src={product.images[0].url}
+              src={product.image.url}
               alt={productName}
               className={`object-contain ${
                 isOutOfStock ? "opacity-50" : ""
@@ -227,8 +228,12 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
                 <div className="px-2 h-5 border border-[#C50000] text-[#C50000] rounded-[8px] flex items-center justify-center">
                   <h2 className=" text-xs font-normal leading-3 uppercase">
                     {i18n.dir() === "rtl"
-                      ? `${t("Products.off")} ${parseFloat(discountPercentage.toFixed(1))}%`
-                      : `${parseFloat(discountPercentage.toFixed(1))}% ${t("Products.off")}`}
+                      ? `${t("Products.off")} ${parseFloat(
+                          discountPercentage.toFixed(1)
+                        )}%`
+                      : `${parseFloat(discountPercentage.toFixed(1))}% ${t(
+                          "Products.off"
+                        )}`}
                   </h2>
                 </div>
               </div>
@@ -236,43 +241,43 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
           </div>
           <div className="flex items-center gap-4">
             {colorSwatches.length > 0 && (
-            <div className="flex items-center gap-2 mt-2">
-              <div className="flex items-center gap-1">
-                {colorSwatches.slice(0, 6).map((c) => (
+              <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-1">
+                  {colorSwatches.slice(0, 6).map((c) => (
+                    <span
+                      key={c}
+                      title={c}
+                      aria-label={`color-${c}`}
+                      className="w-[18px] h-[18px] rounded-full "
+                      style={{ backgroundColor: c }}
+                    />
+                  ))}
+                  {colorSwatches.length > 6 && (
+                    <span className="text-xs text-gray-500">
+                      +{colorSwatches.length - 6}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {sizeOptions.length > 0 && (
+              <div className="flex items-center gap-2 mt-2 flex-wrap">
+                {sizeOptions.slice(0, 6).map((s) => (
                   <span
-                    key={c}
-                    title={c}
-                    aria-label={`color-${c}`}
-                    className="w-[18px] h-[18px] rounded-full "
-                    style={{ backgroundColor: c }}
-                  />
+                    key={s}
+                    className="px-2 py-1 text-xs font-medium border border-gray-300 rounded-md bg-white text-black"
+                  >
+                    {s}
+                  </span>
                 ))}
-                {colorSwatches.length > 6 && (
+                {sizeOptions.length > 6 && (
                   <span className="text-xs text-gray-500">
-                    +{colorSwatches.length - 6}
+                    +{sizeOptions.length - 6}
                   </span>
                 )}
               </div>
-            </div>
-          )}
-
-          {sizeOptions.length > 0 && (
-            <div className="flex items-center gap-2 mt-2 flex-wrap">
-              {sizeOptions.slice(0, 6).map((s) => (
-                <span
-                  key={s}
-                  className="px-2 py-1 text-xs font-medium border border-gray-300 rounded-md bg-white text-black"
-                >
-                  {s}
-                </span>
-              ))}
-              {sizeOptions.length > 6 && (
-                <span className="text-xs text-gray-500">
-                  +{sizeOptions.length - 6}
-                </span>
-              )}
-            </div>
-          )}
+            )}
           </div>
         </div>
       </div>

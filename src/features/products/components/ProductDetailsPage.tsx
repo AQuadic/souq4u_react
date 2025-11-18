@@ -107,44 +107,28 @@ const ProductDetailsPage: React.FC = () => {
         ? (product.name as { en: string; ar: string }).en
         : product?.name || "Product";
 
-    // Priority 1: Use variant-specific images if available
-    if (
-      selectedVariant?.images &&
-      Array.isArray(selectedVariant.images) &&
-      selectedVariant.images.length > 0
-    ) {
-      selectedVariant.images.forEach(
-        (image: { id?: number; url?: string }, index: number) => {
-          if (image?.url) {
-            images.push({
-              id: image.id || index + 2000,
-              url: image.url,
-              alt: `${productNameStr} - Variant Image ${index + 1}`,
-            });
-          }
-        }
-      );
+    // Priority 1: Use variant-specific image if available
+    if (selectedVariant?.image?.url) {
+      images.push({
+        id: selectedVariant.image.id || 2000,
+        url: selectedVariant.image.url,
+        alt: `${productNameStr} - Variant Image`,
+      });
     }
-    // Priority 2: Fallback to product images if no variant images
-    else if (product?.images && Array.isArray(product.images)) {
-      product.images.forEach(
-        (image: { id?: number; url?: string }, index: number) => {
-          if (image?.url) {
-            images.push({
-              id: image.id || index + 1000,
-              url: image.url,
-              alt: `${productNameStr} - Image ${index + 1}`,
-            });
-          }
-        }
-      );
+    // Priority 2: Fallback to product image if no variant image
+    else if (product?.image?.url) {
+      images.push({
+        id: product.image.id || 1000,
+        url: product.image.url,
+        alt: `${productNameStr} - Product Image`,
+      });
     }
 
     return images;
   }, [
-    product?.images,
+    product?.image,
     product?.name,
-    selectedVariant?.images,
+    selectedVariant?.image,
     selectedVariant?.id,
   ]);
 
@@ -189,7 +173,7 @@ const ProductDetailsPage: React.FC = () => {
             ? selectedVariant.final_price ?? 0
             : selectedVariant.price ?? 0,
           variant_id: selectedVariant.id,
-          image: product.images?.[0]?.url,
+          image: product.image?.url,
           type: "product",
         }
       : null;

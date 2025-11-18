@@ -1,9 +1,11 @@
 export interface OrderImage {
-  id: number;
-  uuid: string;
-  size: number;
+  id?: number;
+  file_name: string;
   url: string;
+  uuid: string;
+  mime_type: string;
   responsive_urls: string[];
+  size?: number;
 }
 
 export interface OrderVariantAttribute {
@@ -40,7 +42,8 @@ export interface OrderVariant {
   stock: number;
   is_stock: boolean;
   is_active: boolean;
-  images: OrderImage[];
+  image?: OrderImage;
+  images?: OrderImage[];
   attributes: OrderVariantAttribute[];
 }
 

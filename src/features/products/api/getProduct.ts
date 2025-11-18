@@ -36,12 +36,14 @@ export interface PaginatedResponse<T> {
 }
 
 export interface ProductImage {
-  id: number;
-  uuid: string;
-  size: number;
+  id?: number;
+  file_name: string;
   url: string;
+  uuid: string;
+  mime_type: string;
   responsive_urls: string[];
-  is_active: number;
+  size?: number;
+  is_active?: number;
   name?: { ar: string; en: string };
   order_column?: number;
 }
@@ -75,6 +77,7 @@ export interface ProductVariant {
   is_stock?: boolean;
   is_out_of_stock?: boolean;
   stock?: number;
+  image?: ProductImage;
   images?: ProductImage[];
   attributes?: ProductAttribute[];
 }
@@ -105,7 +108,8 @@ export interface Product {
   name: string | { ar: string; en: string };
   short_description?: ShortDescription;
   description?: Description;
-  images: ProductImage[];
+  image?: ProductImage;
+  images?: ProductImage[];
   variants?: ProductVariant[];
   is_active: number;
   created_at: string;

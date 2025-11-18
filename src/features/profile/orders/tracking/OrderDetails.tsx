@@ -63,7 +63,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
           locale === "ar" ? item.product_name?.ar : item.product_name?.en;
 
         const productImage =
-          item.variant?.images?.[0]?.url || "/images/products/productIMG.png";
+          item.variant?.image?.url || "/images/products/productIMG.png";
         // const price = item.final_price;
 
         const productId =

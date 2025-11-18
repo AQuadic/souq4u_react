@@ -11,14 +11,16 @@ import ReviewsEmptyState from "./ReviewsEmptyState";
 interface Props {
   productId: number;
   product?: {
-    images?: Array<{
+    image?: {
       url?: string;
       responsive_urls?: string[];
-    }>;
-    name?: string | {
-      ar?: string;
-      en?: string;
     };
+    name?:
+      | string
+      | {
+          ar?: string;
+          en?: string;
+        };
   };
 }
 
