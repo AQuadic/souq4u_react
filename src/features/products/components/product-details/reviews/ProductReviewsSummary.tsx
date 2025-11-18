@@ -65,8 +65,8 @@ const ProductReviewsSummary: React.FC<Props> = ({
   };
 
   const productImage =
-    product?.image?.responsive_urls?.slice(-1)[0] ||
-    product?.image?.url ||
+    product?.images?.[0]?.responsive_urls?.slice(-1)[0] ||
+    product?.images?.[0]?.url ||
     "/images/products/productIMG.png";
 
   return (

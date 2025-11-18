@@ -174,10 +174,10 @@ const TrackingResult: React.FC<TrackingResultProps> = ({
               {/* Product Image */}
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-muted dark:bg-white/10 rounded-lg overflow-hidden flex-shrink-0 mx-auto sm:mx-0">
                 {(() => {
-                  if (item.variant.image) {
+                  if (item.variant.images && item.variant.images.length > 0) {
                     return (
                       <img
-                        src={item.variant.image.url}
+                        src={item.variant.images[0].url}
                         alt={getProductName(item)}
                         width={80}
                         height={80}
