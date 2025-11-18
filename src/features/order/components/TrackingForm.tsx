@@ -89,59 +89,19 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
   return (
     <div className="container my-8 mx-auto flex flex-col items-center justify-center flex-1 text-center">
       <div className={cn("mb-8", currentLang === "ar" ? "text-right" : " ")}>
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-2 text-center">
-          {currentLang === "ar" ? "تتبع طلبك" : "Track Your Order"}
+        <h1 className="text-main text-xl sm:text-2xl md:text-3xl font-bold mb-2 text-center uppercase">
+          {currentLang === "ar" ? "تتبع طلبك" : "Tracking Order"}
         </h1>
-        <p className="text-muted-foreground text-sm sm:text-base text-center">
+        {/* <p className="text-muted-foreground text-sm sm:text-base text-center">
           {currentLang === "ar"
             ? "أدخل رمز الطلب ومعلومات الاتصال لتتبع طلبك"
             : "Enter your order code and contact information to track your order"}
-        </p>
+        </p> */}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6 w-full">
-        {/* Order Code Input */}
-        <div className="space-y-2">
-          <label
-            htmlFor="order-code"
-            className={cn(
-              "text-sm font-medium text-foreground block",
-              currentLang === "ar" ? "text-right" : "text-left"
-            )}
-          >
-            {currentLang === "ar" ? "رمز الطلب" : "Order Code"}{" "}
-            <span className="text-destructive">*</span>
-          </label>
-          <div className="relative">
-            <Input
-              id="order-code"
-              type="text"
-              value={orderCode}
-              onChange={(e) => setOrderCode(e.target.value)}
-              placeholder={
-                currentLang === "ar" ? "أدخل رمز طلبك" : "Enter your order code"
-              }
-              className={cn(
-                "h-12 border-2 rounded-full",
-                "bg-background text-foreground placeholder:text-muted-foreground",
-                "border-input hover:border-foreground/50",
-                "focus:border-primary focus:ring-2 focus:ring-primary/20",
-                "dark:border-white/20 dark:hover:border-white/40 dark:focus:border-white dark:bg-transparent dark:text-white dark:placeholder:text-white/60",
-                currentLang === "ar" ? "text-right" : " ",
-                errors.orderCode &&
-                  "border-destructive focus:border-destructive focus:ring-destructive/20"
-              )}
-              disabled={isLoading}
-            />
-            {errors.orderCode && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.orderCode}
-              </p>
-            )}
-          </div>
-        </div>
 
-        {/* Contact Information Input */}
+                {/* Contact Information Input */}
         <div className="space-y-2">
           <label
             htmlFor="contact-info"
@@ -152,7 +112,7 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
           >
             {currentLang === "ar"
               ? "البريد الإلكتروني أو رقم الهاتف"
-              : "Email or Phone Number"}{" "}
+              : "Phone / E-mail"}{" "}
             <span className="text-destructive">*</span>
           </label>
 
@@ -176,7 +136,7 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
               default:
                 currentLang === "ar"
                   ? "أدخل بريدك الإلكتروني أو رقم هاتفك"
-                  : "Enter your email or phone number",
+                  : "Enter Your Phone / E-mail",
             }}
             error={errors.contactInfo}
             disabled={isLoading}
@@ -184,12 +144,54 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
           />
         </div>
 
+
+        {/* Order Code Input */}
+        <div className="space-y-2">
+          <label
+            htmlFor="order-code"
+            className={cn(
+              "text-sm font-medium text-foreground block",
+              currentLang === "ar" ? "text-right" : "text-left"
+            )}
+          >
+            {currentLang === "ar" ? "رمز الطلب" : "Order Number"}{" "}
+            <span className="text-destructive">*</span>
+          </label>
+          <div className="relative">
+            <Input
+              id="order-code"
+              type="text"
+              value={orderCode}
+              onChange={(e) => setOrderCode(e.target.value)}
+              placeholder={
+                currentLang === "ar" ? "أدخل رمز طلبك" : "Enter Your Order Number"
+              }
+              className={cn(
+                "h-12 border-2 rounded-md",
+                "bg-trasnparent text-foreground placeholder:text-muted-foreground",
+                "border-input hover:border-foreground/50",
+                "focus:border-primary focus:ring-2 focus:ring-primary/20",
+                "dark:border-white/20 dark:hover:border-white/40 dark:focus:border-white dark:bg-transparent dark:text-white dark:placeholder:text-white/60",
+                currentLang === "ar" ? "text-right" : " ",
+                errors.orderCode &&
+                  "border-destructive focus:border-destructive focus:ring-destructive/20"
+              )}
+              disabled={isLoading}
+            />
+            {errors.orderCode && (
+              <p className="text-destructive text-sm mt-1">
+                {errors.orderCode}
+              </p>
+            )}
+          </div>
+        </div>
+
         {/* Submit Button */}
         <button
           type="submit"
           disabled={isLoading}
           className={cn(
-            "w-full h-12 sm:h-14 font-medium rounded-full transition-all duration-200 text-sm sm:text-base",
+            "w-full h-12 sm:h-14 font-medium rounded-md transition-all duration-200 text-sm sm:text-lg",
             "bg-main text-primary-foreground",
             "hover:bg-main/90 active:scale-98",
             "dark:bg-white dark:text-black dark:hover:bg-white/90",
@@ -200,15 +202,15 @@ const TrackingForm: React.FC<TrackingFormProps> = ({
         >
           {isLoading ? (
             <div className="flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-current/20 border-t-current rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-current/20 border-t-current !rounded-md animate-spin" />
               {currentLang === "ar"
                 ? "جاري تتبع الطلب..."
                 : "Tracking Order..."}
             </div>
           ) : (
             <div className="flex items-center justify-center gap-2">
-              <Search size={18} />
-              {currentLang === "ar" ? "تتبع الطلب" : "Track Order"}
+              {/* <Search size={18} /> */}
+              {currentLang === "ar" ? "بحث" : "Search"}
             </div>
           )}
         </button>

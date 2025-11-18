@@ -27,7 +27,7 @@ export const CheckoutCartSummary: React.FC<CheckoutCartSummaryProps> = ({
 
   return (
     <div className={`rounded-lg md:p-6 ${className}`}>
-      <h2 className="text-xl font-semibold mb-6">{t("Common.yourOrder")}</h2>
+      <h2 className="text-xl md:text-[32px] font-bold mb-6">{t("Common.yourOrder")}</h2>
 
       <div className="space-y-4">
         {cart.items.map((item) => (

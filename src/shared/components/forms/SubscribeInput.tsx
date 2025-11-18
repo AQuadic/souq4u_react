@@ -89,7 +89,7 @@ const SubscribeInput: React.FC<SubscribeInputProps> = ({
         }
         disabled={disabled}
         className={cn(
-          "w-full h-12  rounded-[8px] px-4 placeholder:text-[#9CA3AF] placeholder:text-base placeholder:font-medium focus:outline-none focus:border-main transition-colors duration-200 bg-[#F1F1F1] border-none",
+          "w-full h-12 !bg-[#F1F1F1]  rounded-[8px] px-4 placeholder:text-[#9CA3AF] placeholder:text-base placeholder:font-medium focus:outline-none focus:border-main transition-colors duration-200 border-none",
           error && "border-red-400 focus:border-red-400"
         )}
       />

@@ -223,7 +223,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         </motion.button>
         <button
           onClick={handleFavoriteClick}
-          className="ltr:ml-auto rtl:mr-auto"
+          className="ltr:ml-auto rtl:mr-auto md:flex hidden"
           disabled={loading}
         >
           {favorite ? <Favorite /> : <Unfavorite />}

@@ -13,7 +13,7 @@ const AddAddressPage: React.FC = () => {
   const createAddressMutation = useCreateAddress();
   const toast = useToast();
 
-  const isRtl = i18n.language.startsWith("ar");
+  // const isRtl = i18n.language.startsWith("ar");
 
   const handleSubmit = async (formData: AddressFormData) => {
     try {
@@ -45,17 +45,84 @@ const AddAddressPage: React.FC = () => {
 
       // Navigate back to addresses list after successful creation
       navigate("/profile/addresses");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to create address:", error);
-      // Error is already handled by the mutation hook and toast
+      
+      let serverErrors: Record<string, string[]> | undefined;
+      let serverMessage: string | undefined;
+
+      if (error && typeof error === "object") {
+        if ("response" in error) {
+          const axiosError = error as {
+            response?: {
+              data?: {
+                errors?: Record<string, string[]>;
+                message?: string;
+              };
+            };
+          };
+          serverErrors = axiosError.response?.data?.errors;
+          serverMessage = axiosError.response?.data?.message;
+        }
+        else if ("cause" in error) {
+          const causeError = (error as { cause?: unknown }).cause;
+          if (
+            causeError &&
+            typeof causeError === "object" &&
+            "response" in causeError
+          ) {
+            const axiosError = causeError as {
+              response?: {
+                data?: {
+                  errors?: Record<string, string[]>;
+                  message?: string;
+                };
+              };
+            };
+            serverErrors = axiosError.response?.data?.errors;
+            serverMessage = axiosError.response?.data?.message;
+          }
+        }
+      }
+
+      if (serverErrors && Object.keys(serverErrors).length > 0) {
+        const allMessages: string[] = [];
+        
+        for (const [fieldName, messages] of Object.entries(serverErrors)) {
+          if (Array.isArray(messages)) {
+            for (const msg of messages) {
+              if (typeof msg === "string" && msg.trim().length > 0) {
+                allMessages.push(msg.trim());
+              }
+            }
+          }
+        }
+
+        if (allMessages.length > 0) {
+          const uniqueMessages = Array.from(new Set(allMessages));
+          
+          uniqueMessages.forEach((message) => {
+            toast.error(message, { duration: 5000 });
+          });
+        } else if (serverMessage) {
+          toast.error(serverMessage, { duration: 5000 });
+        } else {
+          toast.error("Failed to save address", { duration: 5000 });
+        }
+      } else if (serverMessage) {
+        toast.error(serverMessage, { duration: 5000 });
+      } else {
+        toast.error("Failed to save address", { duration: 5000 });
+      }
+      
       // Don't navigate - let the user fix the error
     }
   };
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4">
       <div className="flex items-center mb-6">
-        <button
+        {/* <button
           onClick={() => navigate(-1)}
           aria-label={t("back")}
           className={`p-2 rounded-md hover:bg-slate-100 transition-colors ${
@@ -63,8 +130,8 @@ const AddAddressPage: React.FC = () => {
           }`}
         >
           <span style={{ transform: isRtl ? "scaleX(-1)" : "none" }}>‹</span>
-        </button>
-        <h1 className="text-xl font-bold">{t("Profile.AddAddress.header")}</h1>
+        </button> */}
+        <h1 className="text-xl md:text-[32px] font-bold">{t("Profile.AddAddress.header")}</h1>
       </div>
 
       <AddressForm

@@ -54,7 +54,7 @@ export const PaymentSelector: React.FC<PaymentSelectorProps> = ({
 
   return (
     <div className="md:p-6 rounded-lg">
-      <h2 className="text-gray-900 dark:text-white text-xl font-semibold mb-6">
+      <h2 className="text-gray-900 md:text-[32px] text-xl font-bold mb-6">
         {t("Checkout.paymentTitle")}
       </h2>
 

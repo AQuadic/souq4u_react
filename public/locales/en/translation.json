@@ -252,7 +252,7 @@
     "breadcrumbCheckout": "Checkout",
     "cartEmpty": "Your cart is empty",
     "loading": "Loading...",
-    "summary": "Order Summary",
+    "summary": "Summary",
     "totalItem": "Total Items",
     "subtotal": "Subtotal",
     "totalProducts": "Total Products",
@@ -345,7 +345,7 @@
       "triggerLabel": "Sign Out",
       "titleLine1": "Do you really want to",
       "titleLine2": "Sign out?",
-      "title": "Do you really want to Sign out?",
+      "title": "Do you really want to log out?",
       "description": "You will be signed out of your account. Any unsaved changes may be lost.",
       "yes": "Yes",
       "no": "No"
@@ -453,7 +453,7 @@
       "desc": "You can add an item to your favorites by clicking the \"Star\" icon."
     },
     "AddAddress": {
-      "header": "Add Address",
+      "header": "Add New Address",
       "back": "Back"
     },
     "review": "Review",
@@ -488,7 +488,8 @@
     "gender": "Gender",
     "addressAdded": "Address added successfully",
     "male": "Male",
-    "female": "Female"
+    "female": "Female",
+    "savedAddresses": "Saved Addresses"
   },
   "Orders": {
     "orders": "Orders",

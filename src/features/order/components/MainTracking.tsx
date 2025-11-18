@@ -150,7 +150,7 @@ const MainTracking = () => {
   }
 
   return (
-    <div className="p-4 rounded-lg min-h-[400px]">
+    <div className="p-4 rounded-lg min-h-[400px] bg-[#F7F7F7]">
       <TrackingForm
         onSubmit={handleFormSubmit}
         isLoading={isLoading}

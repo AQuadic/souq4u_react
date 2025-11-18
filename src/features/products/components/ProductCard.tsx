@@ -146,7 +146,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       to={`/products/${product.id}`}
       className="rounded-3xl w-full sm:w-[276px] h-full flex flex-col bg-[#F7F7F7]"
     >
-      <div className="  dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl p-4 relative  transition-shadow duration-300 ">
+      <div className="  dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl md:p-4 p-2 relative  transition-shadow duration-300 ">
         <div className="flex items-center justify-between">
           {showTopRated && product.is_top_rated === 1 && (
             <div className="flex items-center gap-2">
@@ -167,14 +167,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </button>
         </div>
 
-        <div className="relative lg:w-[246px] w-[86px] lg:h-[150px] h-[126px] flex items-center justify-center mx-auto lg:mt-8 mt-4">
+        <div className="relative lg:w-[246px] w-[120px] lg:h-[155px] h-full flex items-center justify-center mx-auto lg:mt-8">
           {product.image?.url ? (
             <img
               src={product.image.url}
               alt={productName}
               className={`object-contain ${
                 isOutOfStock ? "opacity-50" : ""
-              } w-[244px] h-[207px]`}
+              } w-[244px] md:h-[207px]`}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
@@ -207,16 +207,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       <div className=" border-t-0 dark:border-r-[1.5px] dark:border-b-[1.5px] dark:border-l-[1.5px] border-solid border-[var(--Card-BG-Color,#242529)] rounded-br-3xl rounded-bl-3xl p-4 flex flex-col h-full">
-        <div className="flex items-center justify-between">
-          <h2 className=" lg:text-base text-sm lg:font-bold font-semibold leading-[150%]">
-            {productName.slice(0, 16)}
-            {productName.length > 16 ? "…" : ""}
+        <div className="flex items-center justify-between md:mt-4">
+          <h2 className=" lg:text-base text-sm lg:font-bold font-semibold truncate w-full">
+            {productName}
           </h2>
           <div className="flex items-center gap-1">
             <p className=" text-sm font-medium leading-3 font-Poppins">
               {product.rating}
             </p>
-            <Star />
+            <Star className="w-[14px] h-[14px] sm:w-6 sm:h-6" />
           </div>
         </div>
 
