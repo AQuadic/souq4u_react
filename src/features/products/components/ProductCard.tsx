@@ -144,40 +144,44 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Link
       to={`/products/${product.id}`}
-      className="rounded-3xl w-full sm:w-[276px] h-full flex flex-col bg-[#F7F7F7]"
+      className="rounded-3xl w-full sm:w-[276px] h-[360px] sm:h-auto flex flex-col bg-[#F7F7F7] overflow-hidden"
     >
-      <div className="  dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl md:p-4 p-2 relative  transition-shadow duration-300 ">
-        <div className="flex items-center justify-between">
+      <div className="dark:bg-[#242529] rounded-tl-3xl rounded-tr-3xl overflow-hidden relative h-[180px] sm:h-[200px] md:h-[240px] lg:h-[260px] transition-shadow duration-300">
+        {/* Top overlays (badges / favorite) positioned above the image */}
+        <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-30">
           {showTopRated && product.is_top_rated === 1 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 bg-black/20 rounded-md px-2 py-1">
               <TopRated />
-              <p className=" lg:text-xs text-[8px] font-normal leading-3">
+              <p className=" lg:text-xs text-[8px] font-normal leading-3 text-white">
                 {t("Products.topRated")}
               </p>
             </div>
           )}
+
           <button
             onClick={handleFavoriteClick}
-            className="ltr:ml-auto rtl:mr-auto"
+            className="ltr:ml-auto rtl:mr-auto z-40"
             disabled={loading}
+            aria-label={
+              favorite ? t("Products.unfavorite") : t("Products.favorite")
+            }
           >
-            {/* Color swatches: render small 18x18 circles under price for available colors */}
-
             {favorite ? <Favorite /> : <Unfavorite />}
           </button>
         </div>
 
-        <div className="relative lg:w-[246px] w-[120px] lg:h-[155px] h-full flex items-center justify-center mx-auto lg:mt-8">
+        {/* Image fills the top area */}
+        <div className="absolute inset-0 flex items-center justify-center z-0">
           {product.image?.url ? (
             <img
               src={product.image.url}
               alt={productName}
-              className={`object-contain ${
+              className={`object-cover ${
                 isOutOfStock ? "opacity-50" : ""
-              } w-[244px] md:h-[207px]`}
+              } w-full h-full`}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
               <svg
                 className="w-16 h-16 text-gray-400/50 dark:text-gray-600/50"
                 fill="none"
@@ -195,9 +199,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           )}
 
-          {/* Out of Stock Overlay */}
+          {/* Out of Stock Overlay (above image but below buttons) */}
           {isOutOfStock && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 lg:w-[70%] w-full bg-black/80 rounded-lg lg:px-4 py-2 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-20">
               <div className="text-white lg:text-base text-xs font-bold text-center">
                 {t("Common.outOfStock")}
               </div>
@@ -206,7 +210,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      <div className=" border-t-0 dark:border-r-[1.5px] dark:border-b-[1.5px] dark:border-l-[1.5px] border-solid border-[var(--Card-BG-Color,#242529)] rounded-br-3xl rounded-bl-3xl p-4 flex flex-col h-full">
+      <div className=" border-t-0 dark:border-r-[1.5px] dark:border-b-[1.5px] dark:border-l-[1.5px] border-solid border-[var(--Card-BG-Color,#242529)] rounded-br-3xl rounded-bl-3xl p-4 flex flex-col">
         <div className="flex items-center justify-between md:mt-4">
           <h2 className=" lg:text-base text-sm lg:font-bold font-semibold truncate w-full">
             {productName}
