@@ -169,17 +169,6 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
           </span>
         </div>
 
-        {taxes > 0 && (
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("Cart.taxes")}
-            </span>
-            <span className="font-medium text-slate-900 dark:text-white">
-              {taxes.toLocaleString()} {t("Common.currency")}
-            </span>
-          </div>
-        )}
-
         {totalDiscount > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-600 dark:text-slate-200">
@@ -201,6 +190,18 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
             </span>
           </div>
         )}
+
+        {taxes > 0 && (
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-slate-600 dark:text-slate-200">
+              {t("Cart.taxes")}
+            </span>
+            <span className="font-medium text-slate-900 dark:text-white">
+              {taxes.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
+
       </div>
 
       {/* Promocode Section (desktop: visible md+; hidden on mobile because we show mobile-only block above) */}

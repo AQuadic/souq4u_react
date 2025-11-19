@@ -141,6 +141,17 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
           </span>
         </div>
 
+        {totalDiscount > 0 && (
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 dark:text-white text-sm">
+              {t("Cart.discount")}
+            </span>
+            <span className="text-green-600 dark:text-green-400 font-medium">
+              -{totalDiscount.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
+
         {shippingCost > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-white text-sm">
@@ -163,16 +174,6 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
           </div>
         )}
 
-        {totalDiscount > 0 && (
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 dark:text-white text-sm">
-              {t("Cart.discount")}
-            </span>
-            <span className="text-green-600 dark:text-green-400 font-medium">
-              -{totalDiscount.toLocaleString()} {t("Common.currency")}
-            </span>
-          </div>
-        )}
       </div>
 
       {/* Promocode Section (desktop: visible md+; hidden on mobile because we show mobile-only block above) */}
