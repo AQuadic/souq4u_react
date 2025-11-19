@@ -3,35 +3,25 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ProductCard from "@/features/products/components/ProductCard";
-import { getFavorites } from "../favorites/api/getFavorites";
-import { Product } from "@/features/products/api/getProduct";
-import { getProduct } from "@/features/products/api/getProduct"; // Make sure you have this API
+import { getFavorites, ApiFavoriteItem } from "../favorites/api/getFavorites";
+import { Product, getProduct } from "@/features/products/api/getProduct";
 import FavEmptyState from "./FavEmptyState";
 import BackArrow from "@/features/products/icons/BackArrow";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-export interface ApiFavoriteItem {
-  id: number;
-  user_id: number;
-  favorable_type: string;
-  favorable_id: number;
-  favorable: {
-    id: number;
-    name: { ar: string; en: string };
-    short_description: { ar: string; en: string };
-    image?: { url: string };
-  };
-  created_at: string;
-  updated_at: string;
-}
+// Using ApiFavoriteItem from the favorites API module
 
 const MyFavorites = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const queryClient = useQueryClient();
   const { t } = useTranslation("Profile");
 
-  const { data: favData = [], isLoading, isError } = useQuery<ApiFavoriteItem[]>({
+  const {
+    data: favData = [],
+    isLoading,
+    isError,
+  } = useQuery<ApiFavoriteItem[]>({
     queryKey: ["favorites"],
     queryFn: getFavorites,
   });
@@ -46,10 +36,22 @@ const MyFavorites = () => {
       try {
         const productsData = await Promise.all(
           favData.map(async (favItem) => {
-            const productDetails: Product = await getProduct(favItem.favorable_id);
+            const productDetails: Product = await getProduct(
+              favItem.favorable_id
+            );
+
+            // If the fetched product has no image, fall back to the favorite's `favorable.image` (returned by favorites API)
+            const finalImage =
+              productDetails.image ??
+              (favItem.favorable?.image?.url
+                ? ({
+                    url: favItem.favorable.image.url,
+                  } as unknown as Product["image"])
+                : undefined);
 
             return {
               ...productDetails,
+              image: finalImage,
               is_favorite: true,
             };
           })
@@ -76,12 +78,8 @@ const MyFavorites = () => {
   };
 
   if (isLoading)
-    return (
-      <p className="text-neutral-600">
-        {t("Profile.loadingFav")}
-      </p>
-    );
-        
+    return <p className="text-neutral-600">{t("Profile.loadingFav")}</p>;
+
   if (isError) return <div>Error loading favorites.</div>;
 
   if (!products || products.length === 0) {
@@ -95,9 +93,14 @@ const MyFavorites = () => {
 
   return (
     <section>
-      <h2 className="text-[32px] font-bold mb-6 md:flex hidden">{t("Profile.favorites")}</h2>
+      <h2 className="text-[32px] font-bold mb-6 md:flex hidden">
+        {t("Profile.favorites")}
+      </h2>
 
-      <Link to='/profile/account' className="mb-6 md:hidden flex items-center gap-2">
+      <Link
+        to="/profile/account"
+        className="mb-6 md:hidden flex items-center gap-2"
+      >
         <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
           <BackArrow />
         </div>
