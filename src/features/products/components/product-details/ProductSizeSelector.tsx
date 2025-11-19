@@ -167,6 +167,7 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
               disabled={disabled}
             >
               <SelectTrigger
+                dir={i18n.language === "ar" ? "rtl" : "ltr"} // use i18n.language
                 className={`w-full ${theme.input.height} ${theme.input.rounded} bg-popover text-popover-foreground border-input`}
               >
                 <SelectValue
@@ -174,7 +175,7 @@ export const ProductSizeSelector: React.FC<ProductSizeSelectorProps> = ({
                   className="!placeholder:text-muted-foreground"
                 />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent dir={i18n.language === "ar" ? "rtl" : "ltr"}>
                 {attribute.values.map((val) => (
                   <SelectItem key={val.valueId} value={val.displayValue}>
                     {val.displayValue}
