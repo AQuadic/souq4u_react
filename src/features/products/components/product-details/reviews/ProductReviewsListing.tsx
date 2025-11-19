@@ -12,7 +12,7 @@ const renderStars = (rating?: number) => {
   return (
     <div className="flex items-center gap-2">
       {arr.map((_, i) => (
-        <Star key={`star-${rating ?? "n"}-${i}`} />
+        <Star className="w-6 h-6" key={`star-${rating ?? "n"}-${i}`} />
       ))}
     </div>
   );
