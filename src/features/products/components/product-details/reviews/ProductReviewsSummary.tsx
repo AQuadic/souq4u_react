@@ -10,7 +10,10 @@ type Breakdown = { stars: number; count: number };
 interface Props {
   reviewable_id: number;
   reviewable_type?: string;
-  product?: Product;
+  product?: {
+  images?: Array<{ url?: string; responsive_urls?: string[] }>;
+  name?: string | { ar?: string; en?: string };
+};
 }
 
 const ProductReviewsSummary: React.FC<Props> = ({
