@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import Star from "@/features/products/icons/Star";
 import useProductReviewSummary from "@/features/products/hooks/useProductReviewSummary";
+import { Product } from "@/features/products/api/getProduct";
 
 type Breakdown = { stars: number; count: number };
 
@@ -10,17 +11,9 @@ interface Props {
   reviewable_id: number;
   reviewable_type?: string;
   product?: {
-    image?: {
-      url?: string;
-      responsive_urls?: string[];
-    };
-    name?:
-      | string
-      | {
-          ar?: string;
-          en?: string;
-        };
-  };
+  images?: Array<{ url?: string; responsive_urls?: string[] }>;
+  name?: string | { ar?: string; en?: string };
+};
 }
 
 const ProductReviewsSummary: React.FC<Props> = ({
@@ -64,10 +57,10 @@ const ProductReviewsSummary: React.FC<Props> = ({
     return Math.round((count / total) * 100);
   };
 
-  const productImage =
-    product?.image?.responsive_urls?.slice(-1)[0] ||
-    product?.image?.url ||
-    "/images/products/productIMG.png";
+const productImage =
+  product?.images?.[0]?.responsive_urls?.[0] ||
+  product?.images?.[0]?.url ||
+  "/images/products/productIMG.png";
 
   return (
     <aside
@@ -83,7 +76,7 @@ const ProductReviewsSummary: React.FC<Props> = ({
             <div className="flex-shrink-0">
               <img
                 src={productImage}
-                alt="product image"
+                alt={"product image"}
                 width={48}
                 height={48}
                 className="w-12 h-12 rounded-md object-cover"

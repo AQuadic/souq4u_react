@@ -524,6 +524,7 @@
     "confirm": "Confirm",
     "cancelling": "Cancelling",
     "itemNumber": "Item number",
-    "orderNumber": "Order number"
+    "orderNumber": "Order number",
+    "deliveryExpect": "Expected Delivery Date"
   }
 }

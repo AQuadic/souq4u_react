@@ -37,6 +37,14 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
             {subtotal.toLocaleString()} {t("Common.currency")}
           </span>
         </div>
+        {totalDiscount > 0 && (
+          <div className="flex items-center justify-between">
+            <span className=" text-sm">{t("Cart.discount")}</span>
+            <span className="text-green-600 dark:text-green-400 text-sm">
+              -{totalDiscount.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
         {/* Tax */}
         {tax > 0 && (
           <div className="flex items-center justify-between">
@@ -47,14 +55,6 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
           </div>
         )}
         {/* Discount */}
-        {totalDiscount > 0 && (
-          <div className="flex items-center justify-between">
-            <span className=" text-sm">{t("Cart.discount")}</span>
-            <span className="text-green-600 dark:text-green-400 text-sm">
-              -{totalDiscount.toLocaleString()} {t("Common.currency")}
-            </span>
-          </div>
-        )}
         {/* Total */}
         <div className="flex items-center justify-between pt-2 border-t border-white/10">
           <span className=" text-lg font-semibold uppercase tracking-wider">
