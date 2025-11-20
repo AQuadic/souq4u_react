@@ -4,7 +4,7 @@ import React from "react";
 import { useToast } from "@/shared/components/ui/toast";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { handleApiError } from "@/shared/utils/errorHandler";
+import { handleApiError, getErrorMessage } from "@/shared/utils/errorHandler";
 
 interface CartToastOptions {
   productName: string;
@@ -123,9 +123,16 @@ export const useCartToast = () => {
     toast.success(message, { duration: 3000 });
   };
 
-  const showQuantityUpdateError = (productName: string) => {
-    const message = t("Cart.failedUpdateQuantity", { productName });
-    toast.error(message, { duration: 5000 });
+  const showQuantityUpdateError = (productName: string, error?: unknown) => {
+    const fallbackMessage = t("Cart.failedUpdateQuantity", { productName });
+
+    if (!error) {
+      toast.error(fallbackMessage, { duration: 5000 });
+      return;
+    }
+
+    const apiMessage = getErrorMessage(error);
+    toast.error(apiMessage || fallbackMessage, { duration: 5000 });
   };
 
   const showItemRemoveSuccess = (productName: string) => {

@@ -36,7 +36,7 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
   const total = calculations.total;
 
   const handleUpdateQuantity = (id: number, quantity: number) => {
-    updateItemQuantity(id, quantity);
+    return updateItemQuantity(id, quantity);
   };
 
   const handleRemoveItem = (id: number) => {
@@ -109,8 +109,8 @@ export const CartSlider: React.FC<CartSliderProps> = ({ isOpen, onClose }) => {
                       />
                     ))}
                   </div>
-                  
-            {/* Cart Summary */}
+
+                  {/* Cart Summary */}
                   <div className="mt-4">
                     <CartSummary
                       subtotal={subtotal}

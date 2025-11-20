@@ -5,6 +5,56 @@ import { getTranslatedText } from "../../../shared/utils/translationUtils";
 import type { MultilingualText } from "../../../shared/utils/translationUtils";
 import { cartApi, getCouponFromSession, clearCouponFromSession } from "../api";
 
+type QuantityUpdateTracker = {
+  snapshot: Cart;
+  refCount: number;
+};
+
+const cloneCart = (cart: Cart): Cart => ({
+  ...cart,
+  calculations: { ...cart.calculations },
+  items: cart.items.map((cartItem) => ({
+    ...cartItem,
+    name:
+      cartItem.name && typeof cartItem.name === "object"
+        ? { ...cartItem.name }
+        : cartItem.name,
+    image: cartItem.image ? { ...cartItem.image } : cartItem.image,
+    variant: {
+      ...cartItem.variant,
+      image: cartItem.variant.image
+        ? { ...cartItem.variant.image }
+        : cartItem.variant.image,
+      images: cartItem.variant.images
+        ? cartItem.variant.images.map((image) => ({ ...image }))
+        : cartItem.variant.images,
+      attributes: cartItem.variant.attributes.map((attribute) => ({
+        ...attribute,
+        attribute: attribute.attribute
+          ? {
+              ...attribute.attribute,
+              name:
+                attribute.attribute.name &&
+                typeof attribute.attribute.name === "object"
+                  ? { ...attribute.attribute.name }
+                  : attribute.attribute.name,
+            }
+          : attribute.attribute,
+        value: attribute.value
+          ? {
+              ...attribute.value,
+              value:
+                attribute.value.value &&
+                typeof attribute.value.value === "object"
+                  ? { ...attribute.value.value }
+                  : attribute.value.value,
+            }
+          : attribute.value,
+      })),
+    },
+  })),
+});
+
 interface CartActions {
   setCart: (cart: Cart) => void;
   removeItem: (itemId: number) => Promise<void>;
@@ -25,6 +75,7 @@ interface CartActions {
 interface CartStore extends CartState, CartActions {
   appliedCoupon: string | null;
   isCouponLoading: boolean;
+  pendingQuantityBackups: Record<number, QuantityUpdateTracker>;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -52,6 +103,7 @@ export const useCartStore = create<CartStore>()(
         error: null,
         appliedCoupon: getCouponFromSession(),
         isCouponLoading: false,
+        pendingQuantityBackups: {},
 
         // Actions
         setCart: (cart) => {
@@ -115,27 +167,16 @@ export const useCartStore = create<CartStore>()(
             optimisticUpdateQuantity,
             rollbackOptimisticUpdate,
             removeItem,
+            pendingQuantityBackups,
           } = get();
 
           if (!cart) return;
 
-          const item = cart.items.find((item) => item.id === itemId);
+          const item = cart.items.find((cartItem) => cartItem.id === itemId);
           if (!item) {
             console.error("Item not found in cart");
             return;
           }
-
-          const locale =
-            typeof document === "undefined"
-              ? "en"
-              : document.documentElement.lang ||
-                (navigator.language || "en").split("-")[0];
-          const fallbackName = typeof item.name === "string" ? item.name : "";
-          const itemName = getTranslatedText(
-            item.name as MultilingualText,
-            locale,
-            fallbackName
-          );
 
           // Handle quantity going to 0 as removal
           if (quantity <= 0) {
@@ -143,31 +184,64 @@ export const useCartStore = create<CartStore>()(
             return;
           }
 
-          // Create backup for rollback
-          const cartBackup = { ...cart };
+          const existingTracker = pendingQuantityBackups[itemId];
+          const snapshot = existingTracker?.snapshot ?? cloneCart(cart);
+
+          set((state: CartStore) => ({
+            pendingQuantityBackups: {
+              ...state.pendingQuantityBackups,
+              [itemId]: {
+                snapshot,
+                refCount:
+                  (state.pendingQuantityBackups[itemId]?.refCount ?? 0) + 1,
+              },
+            },
+          }));
+
+          const releasePendingBackup = () => {
+            set((state: CartStore) => {
+              const tracker = state.pendingQuantityBackups[itemId];
+              if (!tracker) {
+                return {};
+              }
+
+              const nextCount = tracker.refCount - 1;
+              if (nextCount <= 0) {
+                const { [itemId]: _removed, ...rest } =
+                  state.pendingQuantityBackups;
+                return { pendingQuantityBackups: rest };
+              }
+
+              return {
+                pendingQuantityBackups: {
+                  ...state.pendingQuantityBackups,
+                  [itemId]: { ...tracker, refCount: nextCount },
+                },
+              };
+            });
+          };
 
           // Optimistic update - update quantity in UI immediately
           optimisticUpdateQuantity(itemId, quantity);
 
           try {
-            // Make API call in background
             await cartApi.addToCart({
               itemable_id: item.itemable_id,
               itemable_type: item.itemable_type,
-              quantity: quantity,
+              quantity,
               variant_id: item.variant.id,
             });
 
-            // Sync with server to get updated totals (silently)
             await get().syncCartSilently();
           } catch (error) {
             console.error("Failed to update item quantity:", error);
-
-            // Rollback optimistic update
-            rollbackOptimisticUpdate(cartBackup);
-
-            // Re-throw error for components to handle
-            throw new Error(`Failed to update "${itemName}" quantity`);
+            const trackerSnapshot =
+              get().pendingQuantityBackups[itemId]?.snapshot ?? snapshot;
+            rollbackOptimisticUpdate(trackerSnapshot);
+            await get().syncCartSilently();
+            throw error;
+          } finally {
+            releasePendingBackup();
           }
         },
 

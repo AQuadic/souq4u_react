@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
-import { getTranslatedText, useTranslatedText } from "@/shared/utils/translationUtils";
-// import type { MultilingualText } from "@/shared/utils/translationUtils";
+import {
+  getTranslatedText,
+  useTranslatedText,
+} from "@/shared/utils/translationUtils";
 import { Minus, Plus, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { CartItem as CartItemType } from "@/features/cart/types";
@@ -27,22 +29,32 @@ export const CartItem: React.FC<CartItemProps> = ({
       const attrName = getTranslatedText(attr.attribute?.name, i18n.language);
       const attrValue = getTranslatedText(attr.value?.value, i18n.language);
       return {
+        id: attr.id,
         name: attrName,
         value: attrValue,
       };
     }) || [];
   const handleQuantityDecrease = () => {
     if (item.quantity > 1) {
-      onUpdateQuantity?.(item.id, item.quantity - 1);
+      const res = onUpdateQuantity?.(item.id, item.quantity - 1);
+      if (res && typeof res.then === "function") {
+        res.catch(() => undefined);
+      }
     }
   };
 
   const handleQuantityIncrease = () => {
-    onUpdateQuantity?.(item.id, item.quantity + 1);
+    const res = onUpdateQuantity?.(item.id, item.quantity + 1);
+    if (res && typeof res.then === "function") {
+      res.catch(() => undefined);
+    }
   };
 
   const handleRemove = () => {
-    onRemove?.(item.id);
+    const res = onRemove?.(item.id);
+    if (res && typeof res.then === "function") {
+      res.catch(() => undefined);
+    }
   };
 
   return (
@@ -74,14 +86,14 @@ export const CartItem: React.FC<CartItemProps> = ({
 
         {/* Size */}
         <div className="flex flex-wrap gap-1 mb-2">
-          {translatedAttributes.map((attr, i) => {
+          {translatedAttributes.map((attr) => {
             const isColorAttr =
               /(color|colour)/i.test(attr.name) ||
               /^#([0-9A-F]{3}){1,2}$/i.test(attr.value);
 
             return (
               <div
-                key={i}
+                key={attr.id}
                 className="flex items-center gap-1 text-xs bg-main/10 text-[var(--color-main)] px-2 py-1 rounded-full"
               >
                 {isColorAttr && (

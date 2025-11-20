@@ -58,6 +58,67 @@ export const axios = Axios.create({
 
 axios.interceptors.request.use(authRequestInterceptor as never);
 
+const isNonEmptyString = (value: unknown): value is string =>
+  typeof value === "string" && value.trim().length > 0;
+
+const extractFromErrorValue = (value: unknown): string | undefined => {
+  if (isNonEmptyString(value)) {
+    return value.trim();
+  }
+
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const candidate = extractFromErrorValue(entry);
+      if (candidate) {
+        return candidate;
+      }
+    }
+  }
+
+  return undefined;
+};
+
+const extractFromErrorsObject = (errors: unknown): string | undefined => {
+  if (!errors || typeof errors !== "object") {
+    return undefined;
+  }
+
+  for (const value of Object.values(errors as Record<string, unknown>)) {
+    const candidate = extractFromErrorValue(value);
+    if (candidate) {
+      return candidate;
+    }
+  }
+
+  return undefined;
+};
+
+const extractServerMessage = (data: unknown): string | undefined => {
+  if (!data) {
+    return undefined;
+  }
+
+  if (isNonEmptyString(data)) {
+    return data.trim();
+  }
+
+  if (typeof data !== "object") {
+    return undefined;
+  }
+
+  const payload = data as Record<string, unknown>;
+
+  if (isNonEmptyString(payload.message)) {
+    return payload.message.trim();
+  }
+
+  if (isNonEmptyString(payload.error)) {
+    return payload.error.trim();
+  }
+
+  return extractFromErrorsObject(payload.errors);
+};
+
 axios.interceptors.response.use(
   (response) => {
     return response;
@@ -78,12 +139,15 @@ axios.interceptors.response.use(
         return Promise.reject(authError);
       }
 
-      // For other errors, create proper Error objects
-      const serverError = new Error(
-        `Server Error ${status}: ${JSON.stringify(data)}`
-      );
-      serverError.cause = error;
-      return Promise.reject(serverError);
+      const messageFromServer =
+        extractServerMessage(data) ||
+        (typeof error.response.statusText === "string" &&
+        error.response.statusText.trim().length > 0
+          ? error.response.statusText
+          : `Request failed with status code ${status}`);
+
+      error.message = messageFromServer;
+      return Promise.reject(error);
     } else if (error.request) {
       // Network error - don't clear auth for network issues
       console.warn("Network error:", error.message);

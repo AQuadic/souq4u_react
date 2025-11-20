@@ -38,15 +38,15 @@ export const useCartOperations = () => {
     const itemName = getTranslatedText(
       item.name as MultilingualText,
       locale || "en",
-      String(item.name || "")
+      typeof item.name === "string" ? item.name : ""
     );
 
     try {
       await updateQuantityStore(itemId, quantity);
       showQuantityUpdateSuccess({ productName: itemName, quantity });
-    } catch (_error) {
-      showQuantityUpdateError(itemName);
-      throw _error;
+    } catch (error) {
+      showQuantityUpdateError(itemName, error);
+      throw error;
     }
   };
 
@@ -57,7 +57,7 @@ export const useCartOperations = () => {
     const itemName = getTranslatedText(
       item.name as MultilingualText,
       locale || "en",
-      String(item.name || "")
+      typeof item.name === "string" ? item.name : ""
     );
 
     try {
