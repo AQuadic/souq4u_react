@@ -74,8 +74,8 @@ export const useCartOperations = () => {
       await applyCouponStore(couponCode);
       showCouponApplySuccess();
     } catch (error) {
-      showCouponApplyError();
-      throw error;
+      showCouponApplyError(error);
+      // Don't rethrow - the error toast has been shown
     }
   };
 
@@ -84,8 +84,8 @@ export const useCartOperations = () => {
       await clearCouponStore();
       showCouponClearSuccess();
     } catch (error) {
-      showCouponClearError();
-      throw error;
+      showCouponClearError(error);
+      // Don't rethrow - the error toast has been shown
     }
   };
 

@@ -4,6 +4,7 @@ import React from "react";
 import { useToast } from "@/shared/components/ui/toast";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { handleApiError } from "@/shared/utils/errorHandler";
 
 interface CartToastOptions {
   productName: string;
@@ -141,16 +142,28 @@ export const useCartToast = () => {
     toast.success(t("Cart.couponAppliedSuccess"), { duration: 3000 });
   };
 
-  const showCouponApplyError = () => {
-    toast.error(t("Cart.couponApplyError"), { duration: 5000 });
+  const showCouponApplyError = (error?: unknown) => {
+    if (error) {
+      // If error is provided, use handleApiError to show backend error message
+      handleApiError(error);
+    } else {
+      // Fallback to generic message
+      toast.error(t("Cart.couponApplyError"), { duration: 5000 });
+    }
   };
 
   const showCouponClearSuccess = () => {
     toast.success(t("Cart.couponRemovedSuccess"), { duration: 3000 });
   };
 
-  const showCouponClearError = () => {
-    toast.error(t("Cart.couponRemoveError"), { duration: 5000 });
+  const showCouponClearError = (error?: unknown) => {
+    if (error) {
+      // If error is provided, use handleApiError to show backend error message
+      handleApiError(error);
+    } else {
+      // Fallback to generic message
+      toast.error(t("Cart.couponRemoveError"), { duration: 5000 });
+    }
   };
 
   const loginRequired = () => {
@@ -162,9 +175,12 @@ export const useCartToast = () => {
   };
 
   const failedToAddToCart = (message?: string) => {
-    toast.error(message || t("Cart.failedToAdd") || "Failed to add item to cart", {
-      duration: 5000,
-    });
+    toast.error(
+      message || t("Cart.failedToAdd") || "Failed to add item to cart",
+      {
+        duration: 5000,
+      }
+    );
   };
 
   return {

@@ -44,15 +44,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
       }
     : summaryData;
 
-  const {
-    totalItems,
-    subtotal,
-    totalProducts,
-    taxes,
-    totalDiscount,
-    total,
-    shipping,
-  } = displayData;
+  const { totalItems, totalProducts, taxes, total, shipping } = displayData;
 
   const handleCheckout = () => {
     onCheckout?.();
@@ -149,17 +141,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
           </span>
         </div>
 
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-600 dark:text-slate-200">
-            {t("Cart.subtotal")}
-          </span>
-          <span className="font-medium text-slate-900 dark:text-white">
-            {subtotal.toLocaleString()} {t("Common.currency")}
-          </span>
-        </div>
-
-        <div className="w-full h-px bg-[#C0C0C0] my-6"></div>
-
+        {/* Total Products (before discount) */}
         <div className="flex justify-between items-center">
           <span className="text-sm text-slate-600 dark:text-slate-200">
             {t("Cart.totalProducts")}
@@ -169,28 +151,21 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
           </span>
         </div>
 
-        {taxes > 0 && (
+        {/* Product Discount */}
+        {cartWithShipping?.data?.calculations?.product_discount > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("Cart.taxes")}
-            </span>
-            <span className="font-medium text-slate-900 dark:text-white">
-              {taxes.toLocaleString()} {t("Common.currency")}
-            </span>
-          </div>
-        )}
-
-        {totalDiscount > 0 && (
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("Cart.discount")}
+              {t("Cart.productDiscount")}
             </span>
             <span className="font-medium text-green-600 dark:text-green-400">
-              -{totalDiscount.toLocaleString()} {t("Common.currency")}
+              -
+              {cartWithShipping.data.calculations.product_discount.toLocaleString()}{" "}
+              {t("Common.currency")}
             </span>
           </div>
         )}
 
+        {/* Shipping */}
         {shipping !== undefined && shipping > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-600 dark:text-slate-200">
@@ -198,6 +173,32 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
             </span>
             <span className="font-medium text-slate-900 dark:text-white">
               {shipping.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
+
+        {/* Coupon Discount (with coupon name) */}
+        {cartWithShipping?.data?.calculations?.discount > 0 &&
+          appliedCoupon && (
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600 dark:text-slate-200">
+                {t("Cart.couponDiscount")} ({appliedCoupon})
+              </span>
+              <span className="font-medium text-green-600 dark:text-green-400">
+                -{cartWithShipping.data.calculations.discount.toLocaleString()}{" "}
+                {t("Common.currency")}
+              </span>
+            </div>
+          )}
+
+        {/* Taxes */}
+        {taxes > 0 && (
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-slate-600 dark:text-slate-200">
+              {t("Cart.taxes")}
+            </span>
+            <span className="font-medium text-slate-900 dark:text-white">
+              {taxes.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}

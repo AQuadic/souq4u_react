@@ -11,6 +11,8 @@ interface CartPageSummaryProps {
   totalProducts?: number;
   shippingCost?: number;
   taxes?: number;
+  productDiscount?: number;
+  couponDiscount?: number;
   totalDiscount?: number;
   total?: number;
   appliedCoupon?: string | null;
@@ -25,6 +27,8 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
   totalProducts = 0,
   shippingCost = 0,
   taxes = 0,
+  productDiscount = 0,
+  couponDiscount = 0,
   totalDiscount = 0,
   total = 0,
   appliedCoupon,
@@ -123,15 +127,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
           </span>
         </div>
 
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600 dark:text-white text-sm">
-            {t("Cart.subtotal")}
-          </span>
-          <span className="text-gray-900 dark:text-white font-medium">
-            {subtotal.toLocaleString()} {t("Common.currency")}
-          </span>
-        </div>
-
+        {/* Total Products (before discount) */}
         <div className="flex justify-between items-center">
           <span className="text-gray-600 dark:text-white text-sm">
             {t("Cart.totalProducts")}
@@ -141,6 +137,19 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
           </span>
         </div>
 
+        {/* Product Discount */}
+        {productDiscount > 0 && (
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 dark:text-white text-sm">
+              {t("Cart.productDiscount")}
+            </span>
+            <span className="text-green-600 dark:text-green-400 font-medium">
+              -{productDiscount.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
+
+        {/* Shipping */}
         {shippingCost > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-white text-sm">
@@ -152,6 +161,19 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
           </div>
         )}
 
+        {/* Coupon Discount (with coupon name) */}
+        {couponDiscount > 0 && appliedCoupon && (
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 dark:text-white text-sm">
+              {t("Cart.couponDiscount")} ({appliedCoupon})
+            </span>
+            <span className="text-green-600 dark:text-green-400 font-medium">
+              -{couponDiscount.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
+
+        {/* Taxes */}
         {taxes > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-white text-sm">
@@ -159,17 +181,6 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
             </span>
             <span className="text-gray-900 dark:text-white font-medium">
               {taxes.toLocaleString()} {t("Common.currency")}
-            </span>
-          </div>
-        )}
-
-        {totalDiscount > 0 && (
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 dark:text-white text-sm">
-              {t("Cart.discount")}
-            </span>
-            <span className="text-green-600 dark:text-green-400 font-medium">
-              -{totalDiscount.toLocaleString()} {t("Common.currency")}
             </span>
           </div>
         )}

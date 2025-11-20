@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { useToastStore } from "@/shared/components/ui/toast";
 
 interface ApiError {
   response?: {
@@ -58,6 +58,7 @@ const ERROR_MESSAGE_MAPPINGS: Record<string, string> = {
   "Max Quantity (0)": "This product is currently out of stock",
   "Max Quantity": "Not enough stock available. Please reduce the quantity.",
   "Product not found": "This product is no longer available",
+  "Coupon is expired or invalid": "Coupon is expired or invalid",
   "The email field must be a valid email address.":
     "There was an issue with the email address. Please try again.",
   "Checkout failed": "Unable to process your order. Please try again.",
@@ -76,6 +77,11 @@ const ERROR_MESSAGE_MAPPINGS: Record<string, string> = {
   Forbidden: "You don't have permission to perform this action",
   "Not Found": "The requested item was not found",
   "Internal Server Error": "Server error occurred. Please try again later.",
+};
+
+const showErrorToast = (message: string) => {
+  const { addToast } = useToastStore.getState();
+  addToast({ type: "error", message, duration: 5000 });
 };
 
 const formatValidationMessage = (msg: string): string => {
@@ -122,91 +128,153 @@ const getUserFriendlyMessage = (serverMessage: string): string => {
   return cleanMessage || "An error occurred. Please try again.";
 };
 
+const unwrapError = (error: unknown): unknown => {
+  if (error && typeof error === "object" && "cause" in error) {
+    console.log("Unwrapping error from cause property");
+    return (error as { cause: unknown }).cause;
+  }
+
+  return error;
+};
+
+const showFieldErrorToasts = (
+  errors?: Record<string, string[] | string | undefined>
+): boolean => {
+  if (!errors) {
+    return false;
+  }
+
+  const entries = Object.values(errors);
+  if (entries.length === 0) {
+    return false;
+  }
+
+  for (const fieldErrors of entries) {
+    if (Array.isArray(fieldErrors)) {
+      for (const message of fieldErrors) {
+        console.log("📢 Showing toast:", message);
+        showErrorToast(message);
+      }
+      continue;
+    }
+
+    if (fieldErrors) {
+      console.log("📢 Showing toast:", fieldErrors);
+      showErrorToast(String(fieldErrors));
+    }
+  }
+
+  return true;
+};
+
+const showServerTextToast = (
+  text?: string,
+  customMessage?: string
+): boolean => {
+  if (!text) {
+    return false;
+  }
+
+  const friendlyMessage = getUserFriendlyMessage(text);
+  console.log("📢 Showing toast from message:", friendlyMessage);
+  showErrorToast(
+    customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
+  );
+  return true;
+};
+
+const showStatusToast = (status?: number, customMessage?: string): boolean => {
+  if (!status) {
+    return false;
+  }
+
+  const message =
+    STATUS_MESSAGES[status] || `Error ${status}: Please try again.`;
+  console.log("📢 Showing toast from status code:", message);
+  showErrorToast(customMessage ? `${customMessage}: ${message}` : message);
+  return true;
+};
+
+const isAxiosError = (error: unknown): error is ApiError => {
+  return Boolean(error && typeof error === "object" && "response" in error);
+};
+
+const handleAxiosError = (
+  axiosError: ApiError,
+  customMessage?: string
+): boolean => {
+  const serverError = axiosError.response?.data;
+
+  if (!serverError) {
+    return showStatusToast(axiosError.response?.status, customMessage);
+  }
+
+  if (showFieldErrorToasts(serverError.errors)) {
+    return true;
+  }
+
+  if (showServerTextToast(serverError.message, customMessage)) {
+    return true;
+  }
+
+  if (showServerTextToast(serverError.error, customMessage)) {
+    return true;
+  }
+
+  return showStatusToast(axiosError.response?.status, customMessage);
+};
+
+const handleGenericError = (
+  error: unknown,
+  customMessage?: string
+): boolean => {
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof (error as { message?: unknown }).message === "string"
+  ) {
+    const messageText = (error as { message: string }).message;
+    const friendlyMessage = messageText.includes("fetch")
+      ? "Network error. Please check your connection and try again."
+      : messageText;
+    console.log("📢 Showing toast from error message:", friendlyMessage);
+    showErrorToast(
+      customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
+    );
+    return true;
+  }
+
+  return false;
+};
+
 /**
  * Handles API errors and displays user-friendly error messages
  * @param error - The error object from API call
  * @param customMessage - Optional custom message prefix
  */
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const handleApiError = (
   error: unknown,
   customMessage?: string
 ): void => {
   console.error("API Error:", error);
 
-  // Check if it's an axios error with response data
-  if (error && typeof error === "object" && "response" in error) {
-    const axiosError = error as ApiError;
-    const serverError = axiosError.response?.data;
+  const actualError = unwrapError(error);
 
-    console.log("🔍 serverError.errors:", serverError?.errors);
-    console.log("🔍 serverError.message:", serverError?.message);
-
-    // PRIORITY 1: If there's an errors object with individual field errors, show them
-    if (serverError?.errors && typeof serverError.errors === "object") {
-      const errorKeys = Object.keys(serverError.errors);
-      console.log("✅ Found errors object with keys:", errorKeys);
-
-      if (errorKeys.length > 0) {
-        // Show each error in a separate toast
-        for (const fieldErrors of Object.values(serverError.errors)) {
-          if (Array.isArray(fieldErrors)) {
-            for (const errorMsg of fieldErrors) {
-              console.log("📢 Showing toast:", errorMsg);
-              toast.error(errorMsg);
-            }
-          } else if (fieldErrors) {
-            console.log("📢 Showing toast:", fieldErrors);
-            toast.error(String(fieldErrors));
-          }
-        }
-        return; // STOP HERE - don't show the message field
-      }
-    }
-
-    console.log("⚠️ No errors array, checking message...");
-
-    // PRIORITY 2: If there's a message, show it
-    if (serverError?.message) {
-      const friendlyMessage = getUserFriendlyMessage(serverError.message);
-      toast.error(
-        customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
-      );
-      return;
-    }
-
-    // PRIORITY 3: If there's an error field
-    if (serverError?.error) {
-      const friendlyMessage = getUserFriendlyMessage(serverError.error);
-      toast.error(
-        customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
-      );
-      return;
-    }
-
-    // PRIORITY 4: Status code based message
-    const statusCode = axiosError.response?.status;
-    if (statusCode) {
-      const message =
-        STATUS_MESSAGES[statusCode] || `Error ${statusCode}: Please try again.`;
-      toast.error(customMessage ? `${customMessage}: ${message}` : message);
+  if (isAxiosError(actualError)) {
+    const handled = handleAxiosError(actualError, customMessage);
+    if (handled) {
       return;
     }
   }
 
-  // Handle non-axios errors
-  if (error && typeof error === "object" && "message" in error) {
-    const err = error as Error;
-    const friendlyMessage = err.message.includes("fetch")
-      ? "Network error. Please check your connection and try again."
-      : err.message;
-    toast.error(
-      customMessage ? `${customMessage}: ${friendlyMessage}` : friendlyMessage
-    );
+  if (handleGenericError(actualError, customMessage)) {
     return;
   }
 
-  // Fallback
-  toast.error(
+  console.log("📢 Showing fallback toast");
+  showErrorToast(
     customMessage || "An unexpected error occurred. Please try again."
   );
 };

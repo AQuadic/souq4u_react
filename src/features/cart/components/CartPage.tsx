@@ -100,6 +100,8 @@ export const CartPage: React.FC = () => {
   const subtotal = calculations.subtotal;
   const taxes = calculations.tax;
   const shippingCost = calculations.delivery_fees;
+  const productDiscount = calculations.product_discount;
+  const couponDiscount = calculations.discount;
   const totalDiscount = calculations.total_discount;
   const total = calculations.total;
 
@@ -116,14 +118,14 @@ export const CartPage: React.FC = () => {
           />
         </div>
 
-      <Link to="/" className="md:hidden flex items-center gap-2 mb-6">
-        <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
-          <BackArrow />
-        </div>
-        <h2 className="text-xl font-semibold text-black">
-          {t("Navigation.cart")}
-        </h2>
-      </Link>
+        <Link to="/" className="md:hidden flex items-center gap-2 mb-6">
+          <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+            <BackArrow />
+          </div>
+          <h2 className="text-xl font-semibold text-black">
+            {t("Navigation.cart")}
+          </h2>
+        </Link>
 
         {/* Main Content */}
         <h1 className="text-gray-900 dark:text-white text-2xl font-bold mb-8 md:block hidden">
@@ -189,6 +191,8 @@ export const CartPage: React.FC = () => {
                   totalProducts={subtotal}
                   shippingCost={shippingCost}
                   taxes={taxes}
+                  productDiscount={productDiscount}
+                  couponDiscount={couponDiscount}
                   totalDiscount={totalDiscount}
                   total={total}
                   appliedCoupon={appliedCoupon}
