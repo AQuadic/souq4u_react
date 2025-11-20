@@ -38,7 +38,10 @@ const OrderTrackingPage = () => {
       <TrackingHeader />
       <OrderStatus order={order} />
       <OrderDetails order={order} refetch={refetch} />
-      <DeliveredAddress address={order.address_details} />
+      <DeliveredAddress
+        address={order.address_details}
+        delivery_expect={order.delivery_expect}
+      />
       <OrderSummary order={order} />
     </div>
   );
