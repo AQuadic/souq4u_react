@@ -7,11 +7,13 @@ import { Link } from "react-router-dom";
 
 interface CartPageSummaryProps {
   totalItems?: number;
+  subtotal?: number;
   totalProducts?: number;
   shippingCost?: number;
   taxes?: number;
   productDiscount?: number;
   couponDiscount?: number;
+  totalDiscount?: number;
   total?: number;
   appliedCoupon?: string | null;
   isCouponLoading?: boolean;
