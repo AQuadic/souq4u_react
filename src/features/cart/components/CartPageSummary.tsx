@@ -87,7 +87,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
               }}
               className="text-gray-700/60 dark:text-white/60 hover:text-gray-900 dark:hover:text-white text-xs px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
             >
-              {t("remove")}
+              {t("Cart.remove")}
             </button>
           </div>
         ) : (
@@ -109,7 +109,7 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
                 {isCouponLoading && (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 )}
-                {t("apply")}
+                {t("Cart.apply")}
               </button>
             )}
           </form>
