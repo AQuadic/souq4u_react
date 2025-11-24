@@ -71,10 +71,88 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
       <h2 className="text-slate-900 text-xl md:text-3xl font-semibold mb-6">
         {t("Checkout.summary")}
       </h2>
-      {/* Promocode - mobile only: placed directly under title on small screens */}
+
+      <div className="w-full h-px bg-slate-200 dark:bg-[#C0C0C0] my-6"></div>
+      {/* Summary Stats */}
+      <div className="space-y-4 mb-6">
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-slate-600 dark:text-slate-200">
+            {t("Cart.totalItem")}
+          </span>
+          <span className="font-medium text-slate-900 dark:text-white">
+            {totalItems}
+          </span>
+        </div>
+
+        {/* Total Products (before discount) */}
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-slate-600 dark:text-slate-200">
+            {t("Cart.totalProducts")}
+          </span>
+          <span className="font-medium text-slate-900 dark:text-white">
+            {totalProducts.toLocaleString()} {t("Common.currency")}
+          </span>
+        </div>
+
+        {/* Product Discount */}
+        {cartWithShipping?.data?.calculations?.product_discount !== undefined &&
+          cartWithShipping.data.calculations.product_discount > 0 && (
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600 dark:text-slate-200">
+                {t("Cart.productDiscount")}
+              </span>
+              <span className="font-medium text-green-600 dark:text-green-400">
+                -
+                {cartWithShipping.data.calculations.product_discount.toLocaleString()}{" "}
+                {t("Common.currency")}
+              </span>
+            </div>
+          )}
+
+        {/* Shipping */}
+        {shipping !== undefined && shipping > 0 && (
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-slate-600 dark:text-slate-200">
+              {t("Cart.shipping")}
+            </span>
+            <span className="font-medium text-slate-900 dark:text-white">
+              {shipping.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
+
+        {/* Coupon Discount (with coupon name) */}
+        {cartWithShipping?.data?.calculations?.discount !== undefined &&
+          cartWithShipping.data.calculations.discount > 0 &&
+          appliedCoupon && (
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600 dark:text-slate-200">
+                {t("Cart.couponDiscount")} ({appliedCoupon})
+              </span>
+              <span className="font-medium text-green-600 dark:text-green-400">
+                -{cartWithShipping.data.calculations.discount.toLocaleString()}{" "}
+                {t("Common.currency")}
+              </span>
+            </div>
+          )}
+
+        {/* Taxes */}
+        {taxes > 0 && (
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-slate-600 dark:text-slate-200">
+              {t("Cart.taxes")}
+            </span>
+            <span className="font-medium text-slate-900 dark:text-white">
+              {taxes.toLocaleString()} {t("Common.currency")}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Promocode - mobile only: placed after summary stats on mobile */}
       <div className="block md:hidden mb-6">
         <label
-          htmlFor="promocode-input"
+          htmlFor="promocode-input-mobile"
           className="block text-gray-900 dark:text-white text-sm font-semibold mb-2"
         >
           {p("Cart.addPromocode")}
@@ -106,7 +184,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         ) : (
           <form onSubmit={handleApplyPromocode} className="flex gap-2">
             <input
-              id="promocode-input"
+              id="promocode-input-mobile"
               type="text"
               value={promocode}
               onChange={(e) => setPromocode(e.target.value)}
@@ -129,82 +207,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         )}
       </div>
 
-      <div className="w-full h-px bg-slate-200 dark:bg-[#C0C0C0] my-6"></div>
-      {/* Summary Stats */}
-      <div className="space-y-4 mb-6">
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-600 dark:text-slate-200">
-            {t("Cart.totalItem")}
-          </span>
-          <span className="font-medium text-slate-900 dark:text-white">
-            {totalItems}
-          </span>
-        </div>
-
-        {/* Total Products (before discount) */}
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-slate-600 dark:text-slate-200">
-            {t("Cart.totalProducts")}
-          </span>
-          <span className="font-medium text-slate-900 dark:text-white">
-            {totalProducts.toLocaleString()} {t("Common.currency")}
-          </span>
-        </div>
-
-        {/* Product Discount */}
-        {cartWithShipping?.data?.calculations?.product_discount > 0 && (
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("Cart.productDiscount")}
-            </span>
-            <span className="font-medium text-green-600 dark:text-green-400">
-              -
-              {cartWithShipping.data.calculations.product_discount.toLocaleString()}{" "}
-              {t("Common.currency")}
-            </span>
-          </div>
-        )}
-
-        {/* Shipping */}
-        {shipping !== undefined && shipping > 0 && (
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("Cart.shipping")}
-            </span>
-            <span className="font-medium text-slate-900 dark:text-white">
-              {shipping.toLocaleString()} {t("Common.currency")}
-            </span>
-          </div>
-        )}
-
-        {/* Coupon Discount (with coupon name) */}
-        {cartWithShipping?.data?.calculations?.discount > 0 &&
-          appliedCoupon && (
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600 dark:text-slate-200">
-                {t("Cart.couponDiscount")} ({appliedCoupon})
-              </span>
-              <span className="font-medium text-green-600 dark:text-green-400">
-                -{cartWithShipping.data.calculations.discount.toLocaleString()}{" "}
-                {t("Common.currency")}
-              </span>
-            </div>
-          )}
-
-        {/* Taxes */}
-        {taxes > 0 && (
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-slate-600 dark:text-slate-200">
-              {t("Cart.taxes")}
-            </span>
-            <span className="font-medium text-slate-900 dark:text-white">
-              {taxes.toLocaleString()} {t("Common.currency")}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Promocode Section (desktop: visible md+; hidden on mobile because we show mobile-only block above) */}
+      {/* Promocode Section (desktop: visible md+) */}
       <div className="hidden md:block mb-6">
         <label
           htmlFor="promocode-input"

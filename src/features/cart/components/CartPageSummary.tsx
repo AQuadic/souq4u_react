@@ -7,13 +7,11 @@ import { Link } from "react-router-dom";
 
 interface CartPageSummaryProps {
   totalItems?: number;
-  subtotal?: number;
   totalProducts?: number;
   shippingCost?: number;
   taxes?: number;
   productDiscount?: number;
   couponDiscount?: number;
-  totalDiscount?: number;
   total?: number;
   appliedCoupon?: string | null;
   isCouponLoading?: boolean;
@@ -23,13 +21,11 @@ interface CartPageSummaryProps {
 
 export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
   totalItems = 0,
-  subtotal = 0,
   totalProducts = 0,
   shippingCost = 0,
   taxes = 0,
   productDiscount = 0,
   couponDiscount = 0,
-  totalDiscount = 0,
   total = 0,
   appliedCoupon,
   isCouponLoading = false,
@@ -57,64 +53,6 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
       <h2 className="text-gray-900 dark:text-white text-xl font-semibold mb-6">
         {t("Cart.summary")}
       </h2>
-
-      {/* Promocode - mobile only: placed directly under title on small screens */}
-      <div className="block md:hidden mb-6">
-        <label
-          htmlFor="promocode-input"
-          className="block text-gray-900 dark:text-white text-sm font-semibold mb-2"
-        >
-          {t("Cart.addPromocode")}
-        </label>
-
-        {appliedCoupon ? (
-          <div className="flex items-center justify-between bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded px-3 py-2">
-            <div className="flex items-center gap-2">
-              <span className="text-[var(--color-main)] text-sm font-medium">
-                {appliedCoupon}
-              </span>
-              <span className="text-green-600 dark:text-green-400 text-xs">
-                ✓
-              </span>
-            </div>
-            <button
-              onClick={async () => {
-                try {
-                  await onClearPromocode?.();
-                } catch (error) {
-                  console.error("Failed to clear promocode:", error);
-                }
-              }}
-              className="text-gray-700/60 dark:text-white/60 hover:text-gray-900 dark:hover:text-white text-xs px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
-            >
-              {t("Cart.remove")}
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={handleApplyPromocode} className="flex gap-2">
-            <input
-              id="promocode-input"
-              type="text"
-              value={promocode}
-              onChange={(e) => setPromocode(e.target.value)}
-              placeholder={t("Cart.promocodePlaceholder")}
-              className="flex-1 bg-transparent border border-gray-200 dark:border-white/20 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus:border-[var(--color-main)] transition-colors text-sm"
-            />
-            {promocode.trim() && (
-              <button
-                type="submit"
-                disabled={isCouponLoading}
-                className="bg-[var(--color-main)] hover:bg-main/50 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-4 py-2 rounded text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-2"
-              >
-                {isCouponLoading && (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                )}
-                {t("Cart.apply")}
-              </button>
-            )}
-          </form>
-        )}
-      </div>
 
       {/* Summary Stats */}
       <div className="space-y-4 mb-6">
@@ -186,7 +124,65 @@ export const CartPageSummary: React.FC<CartPageSummaryProps> = ({
         )}
       </div>
 
-      {/* Promocode Section (desktop: visible md+; hidden on mobile because we show mobile-only block above) */}
+      {/* Promocode - mobile only: placed after summary stats on mobile */}
+      <div className="block md:hidden mb-6">
+        <label
+          htmlFor="promocode-input-mobile"
+          className="block text-gray-900 dark:text-white text-sm font-semibold mb-2"
+        >
+          {t("Cart.addPromocode")}
+        </label>
+
+        {appliedCoupon ? (
+          <div className="flex items-center justify-between bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded px-3 py-2">
+            <div className="flex items-center gap-2">
+              <span className="text-[var(--color-main)] text-sm font-medium">
+                {appliedCoupon}
+              </span>
+              <span className="text-green-600 dark:text-green-400 text-xs">
+                ✓
+              </span>
+            </div>
+            <button
+              onClick={async () => {
+                try {
+                  await onClearPromocode?.();
+                } catch (error) {
+                  console.error("Failed to clear promocode:", error);
+                }
+              }}
+              className="text-gray-700/60 dark:text-white/60 hover:text-gray-900 dark:hover:text-white text-xs px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+            >
+              {t("Cart.remove")}
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleApplyPromocode} className="flex gap-2">
+            <input
+              id="promocode-input-mobile"
+              type="text"
+              value={promocode}
+              onChange={(e) => setPromocode(e.target.value)}
+              placeholder={t("Cart.promocodePlaceholder")}
+              className="flex-1 bg-transparent border border-gray-200 dark:border-white/20 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus:border-[var(--color-main)] transition-colors text-sm"
+            />
+            {promocode.trim() && (
+              <button
+                type="submit"
+                disabled={isCouponLoading}
+                className="bg-[var(--color-main)] hover:bg-main/50 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-4 py-2 rounded text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-2"
+              >
+                {isCouponLoading && (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                )}
+                {t("Cart.apply")}
+              </button>
+            )}
+          </form>
+        )}
+      </div>
+
+      {/* Promocode Section (desktop: visible md+) */}
       <div className="hidden md:block mb-6">
         <label
           htmlFor="promocode-input"
