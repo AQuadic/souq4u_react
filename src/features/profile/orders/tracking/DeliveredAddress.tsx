@@ -69,8 +69,8 @@ const DeliveredAddress: React.FC<DeliveredAddressProps> = ({ address, delivery_e
         {address}
       </p>
       {delivery_expect && (
-        <p className="md:text-base text-sm font-normal leading-[100%] mt-4">
-          {t("Orders.deliveryExpect")}: {formatDate(delivery_expect)}
+        <p className="md:text-base text-sm leading-[100%] mt-4">
+          <span className="font-medium">{t("Orders.deliveryExpect")}:</span> {formatDate(delivery_expect)}
         </p>
       )}
     </div>
