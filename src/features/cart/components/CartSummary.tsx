@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 interface CartSummaryProps {
+  totalItems?: number;
   subtotal: number;
   tax: number;
   totalDiscount: number;
@@ -13,6 +14,7 @@ interface CartSummaryProps {
 }
 
 export const CartSummary: React.FC<CartSummaryProps> = ({
+  totalItems = 0,
   subtotal,
   tax,
   totalDiscount,
@@ -30,6 +32,14 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
     <div className="border-t border-white/10 p-4 space-y-4">
       {/* Breakdown */}
       <div className="space-y-2">
+        {/* Total Items */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm">{t("Cart.totalItem")}</span>
+          <span className="text-sm font-medium">
+            {totalItems}
+          </span>
+        </div>
+        
         {/* Subtotal */}
         <div className="flex items-center justify-between">
           <span className=" text-sm">{t("Cart.subtotal")}</span>
@@ -80,7 +90,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
         <Link
           to="/cart"
           onClick={handleViewCart}
-          className="block w-full border border-[var(--color-main)] text-[var(--color-main)] hover:bg-main/50 hover: font-semibold py-3 px-4 rounded transition-all duration-200 uppercase tracking-wide text-center"
+          className="block w-full border border-[var(--color-main)] text-[var(--color-main)] hover:bg-main/50  font-semibold py-3 px-4 rounded transition-all duration-200 uppercase tracking-wide text-center"
         >
           {t("Cart.viewCart")}
         </Link>
