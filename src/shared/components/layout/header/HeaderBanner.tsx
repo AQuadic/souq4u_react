@@ -5,7 +5,7 @@ import { getStoreSetting } from "../api/store";
 import FreeDelivery from "./icons/FreeDelivery";
 
 const HeaderBanner = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["storeSetting"],
     queryFn: () => getStoreSetting(),
@@ -13,8 +13,8 @@ const HeaderBanner = () => {
 
   if (isLoading)
     return (
-      <section className="text-center py-2 bg-main text-white max-sm:text-sm">
-        {t('Common.loading')}
+      <section className="flex items-center justify-center py-3 bg-main">
+        <div className="w-4 h-4 border-4 border-white rounded-full animate-spin"></div>
       </section>
     );
 
