@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import AddressEmpty from "./AddressEmpty";
 import Phone from "../icons/Phone";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 const SaveAddress: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -64,6 +65,22 @@ const SaveAddress: React.FC = () => {
   const [addressToDelete, setAddressToDelete] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
+  const AddressSkeleton = () => (
+      <div className="relative w-full py-4 h-full bg-[#f3f3f3] rounded-2xl px-3 my-4">
+        <div className="flex items-end justify-between">
+          <div className="flex items-center h-full gap-2">
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-3/4" /> 
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-1/3" />
+            </div>
+          </div>
+          <Skeleton className="h-4 w-20" />
+        </div>
+      </div>
+  );
+
   return (
     <section>
       <h2 className="text-neutral-900 dark:text-white text-[32px] font-bold leading-[100%] mb-8 md:flex hidden">
@@ -83,19 +100,18 @@ const SaveAddress: React.FC = () => {
       </Link>
 
       {isLoading && (
-        <p className="text-neutral-600 dark:text-neutral-400">
-          {t('Profile.loadingAddressess')}
-        </p>
+        <>
+          {[...Array(3)].map((_, i) => (
+            <AddressSkeleton key={i} />
+          ))}
+        </>
       )}
       {error && <p className="text-red-500">{error}</p>}
 
-      {!isLoading && addresses.length === 0 && (
-        <div className="">
-          <AddressEmpty />
-        </div>
-      )}
+      {!isLoading && addresses.length === 0 && <AddressEmpty />}
 
-      {addresses.map((addr) => (
+      {!isLoading &&
+        addresses.map((addr) => (
         <button
           key={addr.id}
           type="button"
