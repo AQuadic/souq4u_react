@@ -226,7 +226,7 @@ const ProductsGrid: React.FC = () => {
           <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
             <SheetContent
               side="bottom"
-              className="inset-0 h-screen flex flex-col rounded-none"
+              className="inset-0 h-screen flex flex-col rounded-none z-99"
             >
               <SheetHeader className="flex flex-row items-center justify-between">
                 <SheetTitle>{t("Products.filters")}</SheetTitle>
