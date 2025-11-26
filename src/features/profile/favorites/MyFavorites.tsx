@@ -9,6 +9,7 @@ import FavEmptyState from "./FavEmptyState";
 import BackArrow from "@/features/products/icons/BackArrow";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 // Using ApiFavoriteItem from the favorites API module
 
@@ -77,12 +78,18 @@ const MyFavorites = () => {
     });
   };
 
-  if (isLoading)
-    return <p className="text-neutral-600">{t("Profile.loadingFav")}</p>;
-
+  if (isLoading) {
+    return (
+      <div className="grid lg:grid-cols-3 grid-cols-2 gap-4">
+        {[...Array(6)].map((_, i) => (
+          <Skeleton key={i} className="w-full h-[250px]" />
+        ))}
+      </div>
+    );
+  }
   if (isError) return <div>Error loading favorites.</div>;
 
-  if (!products || products.length === 0) {
+  if (!isLoading && favData.length === 0) {
     return (
       <div>
         <h2 className="text-[32px] font-bold mb-6">{t("Profile.favorites")}</h2>

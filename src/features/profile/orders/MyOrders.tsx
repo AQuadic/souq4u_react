@@ -11,11 +11,29 @@ import BackArrow from "@/features/products/icons/BackArrow";
 import { formatOrderStatus } from "@/features/order/utils";
 import ProductsPagination from "@/shared/components/pagenation/ProductsPagenation";
 import { getTranslatedText } from "@/shared/utils/translationUtils";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 interface MyOrdersProps {
   showHeader?: boolean;
   statusFilter?: string[];
 }
+
+const OrderItemSkeleton = () => (
+  <div className="relative w-full py-4 h-full bg-[#F7F7F7] shadow-md rounded-2xl px-3 my-4">
+    <div className="flex items-end justify-between">
+      <div className="flex items-center h-full gap-2">
+        <Skeleton className="md:w-[156px] w-20 md:h-[156px] h-20 rounded-lg" />
+        <div className="flex-1 space-y-2">
+          <Skeleton className="h-4 w-3/4" /> 
+          <Skeleton className="h-6 w-full" />
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-1/3" />
+        </div>
+      </div>
+      <Skeleton className="h-4 w-20" />
+    </div>
+  </div>
+);
 
 const MyOrders: React.FC<MyOrdersProps> = ({
   showHeader = true,
@@ -43,12 +61,36 @@ const MyOrders: React.FC<MyOrdersProps> = ({
     setCurrentPage(1);
   }, [statusFilter]);
 
-  if (isLoading)
+  if (isLoading) {
     return (
-      <p className="text-neutral-600">
-        {t("Profile.loadingOrders")}
-      </p>
-  );
+      <section>
+        {showHeader && (
+          <>
+            <h2 className="text-[32px] font-bold leading-[100%] mb-4 md:flex hidden">
+              {t("Profile.orders")}
+            </h2>
+
+            <Link
+              to="/profile/account"
+              className="flex items-center gap-2 mb-4 md:hidden"
+            >
+              <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+                <BackArrow />
+              </div>
+              <h2 className="text-[32px] font-bold leading-[100%]">
+                {t("Profile.orders")}
+              </h2>
+            </Link>
+          </>
+        )}
+
+        {[...Array(5)].map((_, i) => (
+          <OrderItemSkeleton key={i} />
+        ))}
+      </section>
+    );
+  }
+
   if (isError) return <p className="text-red-500">Something went wrong.</p>;
 
   const itemsToShow = statusFilter
