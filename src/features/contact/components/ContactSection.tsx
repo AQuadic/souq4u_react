@@ -40,13 +40,7 @@ const ContactSection = () => {
       <div className="md:mt-12 flex lg:flex-row flex-col-reverse items-center justify-between gap-4">
         <div className="flex flex-col md:w-[592px] w-full">
           <div className="md:h-[562px] h-[530px] rounded-2xl overflow-hidden shadow-lg">
-            {isLoading ? (
-              <div className="flex items-center justify-center h-full text-gray-500">
-                {t("Common.loadingMap")}
-              </div>
-            ) : (
               <MapWithSkeleton lat={lat} lng={lng} className="w-full h-full" />
-            )}
           </div>
         </div>
 
