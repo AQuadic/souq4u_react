@@ -205,7 +205,7 @@ const ProductCardListing: React.FC<ProductCardProps> = ({
             <p className=" text-sm font-medium leading-3 font-Poppins">
               {product.rating}
             </p>
-            <Star />
+            <Star className="w-6 h-6" />
           </div>
 
           {/* <p className=" text-base font-normal leading-[160%] mt-4 max-h-12 overflow-y-hidden">
