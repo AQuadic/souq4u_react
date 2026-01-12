@@ -182,7 +182,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
           {/* Dropdown */}
           <div
-            className={`absolute top-full right-0 mt-2 min-w-[170px] ${themeClasses.dropdown} z-50 overflow-hidden`}
+            className={`absolute top-full ltr:right-0 rtl:-left-4 mt-2 min-w-[170px] ${themeClasses.dropdown} z-50 overflow-hidden`}
           >
             <div className="py-2">
               <div className={themeClasses.header}>
