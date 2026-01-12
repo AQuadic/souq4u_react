@@ -216,7 +216,7 @@ export default function NotificationDropdown() {
                             }`}
                           />
                           {!n.read_at && (
-                            <span className="absolute top-5 -right-3 h-2 w-2 rounded-full bg-main" />
+                            <span className="absolute top-5 rtl:-right-3 ltr:-left-3 h-2 w-2 rounded-full bg-main" />
                           )}
                         </div>
 
