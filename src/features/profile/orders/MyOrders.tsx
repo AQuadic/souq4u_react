@@ -71,7 +71,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
             </h2>
 
             <Link
-              to="/profile/account"
+              to="/profile/myAccount"
               className="flex items-center gap-2 mb-4 md:hidden"
             >
               <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
