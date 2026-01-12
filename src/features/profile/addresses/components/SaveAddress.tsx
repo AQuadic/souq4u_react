@@ -88,7 +88,7 @@ const SaveAddress: React.FC = () => {
       </h2>
 
       <Link
-        to="/profile/addresses"
+        to="/profile/mobileAccount"
         className="flex items-center gap-2 mb-8 md:hidden"
       >
         <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
