@@ -120,23 +120,23 @@ export default function NotificationsPage() {
                   <div
                     key={n.id}
                     onClick={() => handleNotificationClick(n)}
-                    className={`flex items-center gap-3 md:p-4 p-2 border-b border-[#C5C5C5] cursor-pointer transition
+                    className={`flex flex-wrap items-center gap-3 md:p-4 p-2 border-b border-[#C5C5C5] cursor-pointer transition
                       ${
                         n.read_at
                           ? "bg-transparent text-black"
                           : "bg-[#F1F1F1] border-[#D7D7D7] hover:bg-[#cfcfcf] text-black"
                       }`}
                   >
-                    <div className="relative md:px-4">
+                    <div className="relative md:px-4 px-2">
                       <img
                         src={n.image?.url || "/logo.png"}
                         alt={n.title?.en || "Notification"}
-                        className={`w-[50px] h-[50px] object-cover rounded-full ${
+                        className={`md:w-[50px] w-10 md:h-[50px] h-10 object-cover rounded-full ${
                           n.read_at ? "" : ""
                         }`}
                       />
                       {!n.read_at && (
-                        <span className="absolute top-5 ltr:left-0 rtl:right-0 h-2 w-2 rounded-full bg-main" />
+                        <span className="absolute top-5 ltr:left-0 rtl:-right-1 h-2 w-2 rounded-full bg-main" />
                       )}
                     </div>
 
@@ -176,7 +176,7 @@ export default function NotificationsPage() {
                           : "bg-[#F1F1F1] hover:bg-[#cfcfcf] text-black"
                       }`}
                   >
-                    <div className="relative px-2">
+                    <div className="relative md:px-4 px-2">
                       <img
                         src={n.image?.url || "/logo.png"}
                         alt={n.title?.en || "Notification"}
@@ -185,7 +185,7 @@ export default function NotificationsPage() {
                         }`}
                       />
                       {!n.read_at && (
-                        <span className="absolute top-5 left-0 h-2 w-2 rounded-full bg-main" />
+                        <span className="absolute top-5 ltr:left-0 rtl:-right-1 h-2 w-2 rounded-full bg-main" />
                       )}
                     </div>
 
