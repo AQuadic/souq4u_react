@@ -1,14 +1,31 @@
-"use client";
 import {
   PhoneInput,
   PhoneValue,
 } from "@/shared/components/compound/PhoneInput";
 import React, { useState } from "react";
-
 import { useToast } from "@/shared/components/ui/toast/toast-store";
 import { DialogClose } from "@/shared/components/ui/dialog";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Google from "./icons/Google";
+import Apple from "./icons/Apple";
+import { auth, googleProvider } from "@/lib/firebase";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { socialLogin } from "../api/socialLogin";
+import { useAuthStore } from "../stores/auth-store";
+import { getErrorMessage } from "@/shared/utils/errorHandler";
+
+// Apple Sign In types
+declare global {
+  interface Window {
+    AppleID?: {
+      auth: {
+        init: (config: any) => void;
+        signIn: () => Promise<any>;
+      };
+    };
+  }
+}
 
 // Define proper error types
 interface ApiError {
@@ -17,17 +34,6 @@ interface ApiError {
     phone?: string[];
   };
 }
-
-// Define config type
-// interface Config {
-//   icon?: {
-//     url: string;
-//   };
-//   name?: {
-//     ar?: string;
-//     en?: string;
-//   };
-// }
 
 interface LoginFormProps {
   onSubmit: (payload: {
@@ -44,6 +50,122 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language;
   const toast = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuthStore();
+  const [isSocialLoading, setIsLoading] = useState(false);
+
+  // Initialize Apple Sign In when component mounts
+  React.useEffect(() => {
+    if (window.AppleID) {
+      try {
+        window.AppleID.auth.init({
+          clientId: "com.souq4u.apple",
+          scope: "email name",
+          redirectURI: "https://souq4u.com/auth/apple/callback",
+          usePopup: true,
+        });
+      } catch (error) {
+        console.error("Failed to initialize Apple Sign In:", error);
+      }
+    }
+  }, []);
+
+  const handleAppleLogin = async () => {
+    setIsLoading(true);
+    try {
+      if (!window.AppleID) {
+        throw new Error("Apple Sign In SDK not loaded");
+      }
+
+      // Add event listener for Apple Sign In response
+      const handleAppleResponse = async (event: any) => {
+        try {
+          const response = event.detail;
+          const { id_token } = response.authorization;
+
+          if (!id_token) {
+            throw new Error("No id_token returned from Apple");
+          }
+
+          const responseData = await socialLogin({
+            provider: "apple",
+            access_token: id_token,
+          });
+
+          const authedUser = responseData.user;
+
+          if (authedUser) {
+            login(authedUser, responseData.token);
+            const from =
+              (location.state as { from?: Location } | null)?.from?.pathname ||
+              "/";
+            navigate(from, { replace: true });
+          }
+        } catch (error) {
+          console.error(error);
+          toast.error(getErrorMessage(error));
+        } finally {
+          setIsLoading(false);
+          document.removeEventListener(
+            "AppleIDSignInOnSuccess",
+            handleAppleResponse
+          );
+        }
+      };
+
+      const handleAppleError = (event: any) => {
+        console.error("Apple Sign In error:", event.detail);
+        toast.error("Apple Sign In failed. Please try again.");
+        setIsLoading(false);
+        document.removeEventListener(
+          "AppleIDSignInOnFailure",
+          handleAppleError
+        );
+      };
+
+      document.addEventListener("AppleIDSignInOnSuccess", handleAppleResponse);
+      document.addEventListener("AppleIDSignInOnFailure", handleAppleError);
+
+      await window.AppleID.auth.signIn();
+    } catch (error) {
+      console.error(error);
+      toast.error(getErrorMessage(error));
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+
+      if (!token) {
+        throw new Error("No access token returned from Google");
+      }
+
+      const response = await socialLogin({
+        provider: "google",
+        access_token: token,
+      });
+
+      const authedUser = response.user;
+
+      if (authedUser) {
+        login(authedUser, response.token);
+        const from =
+          (location.state as { from?: Location } | null)?.from?.pathname || "/";
+        navigate(from, { replace: true });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(getErrorMessage(error));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     // prevent default form submission when triggered by Enter
@@ -177,11 +299,38 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
         {loading ? t("Auth.signingIn") : t("Auth.signIn")}
       </button>
 
+      <div className="flex items-center gap-4 mt-8">
+        <div className="flex-1 h-[1px] bg-[#E0E0E0]"></div>
+        <span className="text-[#5D5D5D] text-sm md:text-base font-medium whitespace-nowrap">
+          {t("Auth.orSignInWith")}
+        </span>
+        <div className="flex-1 h-[1px] bg-[#E0E0E0]"></div>
+      </div>
+
+      <div className="flex justify-center gap-6 mt-6">
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          disabled={isSocialLoading}
+          className="hover:opacity-80 transition-opacity disabled:opacity-50"
+        >
+          <Google />
+        </button>
+        <button
+          type="button"
+          onClick={handleAppleLogin}
+          disabled={isSocialLoading}
+          className="hover:opacity-80 transition-opacity disabled:opacity-50"
+        >
+          <Apple />
+        </button>
+      </div>
+
       {isInDialog ? (
         <DialogClose asChild>
           <Link
             to="/"
-            className="w-full h-12 md:h-14 mt-4 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg font-medium leading-[100%] transition-colors hover:bg-main/10"
+            className="w-full mt-6 flex items-center justify-center text-main text-base md:text-lg font-medium transition-colors hover:underline"
           >
             {t("Auth.continueAsGuest")}
           </Link>
@@ -189,7 +338,7 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
       ) : (
         <Link
           to="/"
-          className="w-full h-12 md:h-14 border border-main mt-6 md:mt-8 rounded-full md:rounded-[112px] flex items-center justify-center text-main text-base md:text-lg font-bold leading-[100%] transition-colors hover:bg-main/10"
+          className="w-full mt-6 flex items-center justify-center text-main text-base md:text-lg font-medium transition-colors hover:underline"
         >
           {t("Auth.continueAsGuest")}
         </Link>

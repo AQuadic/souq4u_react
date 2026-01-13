@@ -3,6 +3,7 @@ export * from "./hooks";
 export * from "./api/checkOtp";
 export * from "./api/postLogin";
 export * from "./api/resend";
+export * from "./api/socialLogin";
 export * from "./api/getCurrentUser";
 export * from "./components/MainAuth";
 export * from "./components/LoginForm";

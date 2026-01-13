@@ -36,7 +36,7 @@ export const CartItem: React.FC<CartItemProps> = ({
     }) || [];
   const handleQuantityDecrease = () => {
     if (item.quantity > 1) {
-      const res = onUpdateQuantity?.(item.id, item.quantity - 1);
+      const res = onUpdateQuantity?.(item.id, item.quantity - 1) as any;
       if (res && typeof res.then === "function") {
         res.catch(() => undefined);
       }
@@ -44,14 +44,14 @@ export const CartItem: React.FC<CartItemProps> = ({
   };
 
   const handleQuantityIncrease = () => {
-    const res = onUpdateQuantity?.(item.id, item.quantity + 1);
+    const res = onUpdateQuantity?.(item.id, item.quantity + 1) as any;
     if (res && typeof res.then === "function") {
       res.catch(() => undefined);
     }
   };
 
   const handleRemove = () => {
-    const res = onRemove?.(item.id);
+    const res = onRemove?.(item.id) as any;
     if (res && typeof res.then === "function") {
       res.catch(() => undefined);
     }

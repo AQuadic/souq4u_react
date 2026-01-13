@@ -152,14 +152,16 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         </div>
 
         {/* Product Discount */}
-        {cartWithShipping?.data?.calculations?.product_discount > 0 && (
+        {(cartWithShipping?.data?.calculations?.product_discount ?? 0) > 0 && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-600 dark:text-slate-200">
               {t("Cart.productDiscount")}
             </span>
             <span className="font-medium text-green-600 dark:text-green-400">
               -
-              {cartWithShipping.data.calculations.product_discount.toLocaleString()}{" "}
+              {(
+                cartWithShipping?.data?.calculations?.product_discount ?? 0
+              ).toLocaleString()}{" "}
               {t("Common.currency")}
             </span>
           </div>
@@ -178,14 +180,17 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
         )}
 
         {/* Coupon Discount (with coupon name) */}
-        {cartWithShipping?.data?.calculations?.discount > 0 &&
+        {(cartWithShipping?.data?.calculations?.discount ?? 0) > 0 &&
           appliedCoupon && (
             <div className="flex justify-between items-center">
               <span className="text-sm text-slate-600 dark:text-slate-200">
                 {t("Cart.couponDiscount")} ({appliedCoupon})
               </span>
               <span className="font-medium text-green-600 dark:text-green-400">
-                -{cartWithShipping.data.calculations.discount.toLocaleString()}{" "}
+                -
+                {(
+                  cartWithShipping?.data?.calculations?.discount ?? 0
+                ).toLocaleString()}{" "}
                 {t("Common.currency")}
               </span>
             </div>
