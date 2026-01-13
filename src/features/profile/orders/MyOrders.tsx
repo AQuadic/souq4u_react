@@ -342,7 +342,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
 
       <Tabs
           value={activeTab}
-          onValueChange={(value) => {
+          onValueChange={(value: string) => {
             if (value === "current" || value === "last") {
               setActiveTab(value);
             }
