@@ -528,6 +528,7 @@
     "deliveryExpect": "موعد التسليم المتوقع",
     "currentOrders": "الطلبات الحالية",
     "lastOrders": "الطلبات السابقة",
-    "orderAgain": "إعادة الطلب"
+    "orderAgain": "إعادة الطلب",
+    "adding": "جار الاضافة"
   }
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { getOrders, GetOrdersResponse, OrderItem } from "./api/getOrders";
 import OrdersEmpty from "./OrdersEmpty";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,7 @@ import ProductsPagination from "@/shared/components/pagenation/ProductsPagenatio
 import { getTranslatedText } from "@/shared/utils/translationUtils";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { cartApi } from "@/features/cart/api";
 
 interface MyOrdersProps {
   showHeader?: boolean;
@@ -42,8 +44,12 @@ const MyOrders: React.FC<MyOrdersProps> = ({
 }) => {
   const { t, i18n } = useTranslation("Orders");
   const locale = i18n.language;
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState("current");
+  const [activeTab, setActiveTab] = useState<"current" | "last">("current");
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   const itemsPerPage = 5;
 
   const { data, isLoading, isError } = useQuery<GetOrdersResponse, Error>({
@@ -58,13 +64,86 @@ const MyOrders: React.FC<MyOrdersProps> = ({
     },
   });
 
+  const addToCartMutation = useMutation({
+    mutationFn: cartApi.addToCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (error) => {
+      console.error("Failed to add item to cart:", error);
+    },
+  });
 
   useEffect(() => {
     setCurrentPage(1);
   }, [statusFilter, activeTab]);
 
-  const handleOrderAgain = (item: OrderItem) => {
-    console.log("Order again:", item);
+  const handleOrderAgain = async (orderId: number) => {
+    if (isAddingToCart) return;
+    const orderItems = data?.items?.data?.filter(
+      (item) => item.order_id === orderId
+    );
+
+    if (!orderItems || orderItems.length === 0) {
+      toast.error(t("Orders.noItemsFound") || "No items found in this order");
+      return;
+    }
+
+    setIsAddingToCart(true);
+    let successCount = 0;
+    let failCount = 0;
+    const errorMessages: string[] = [];
+    for (const item of orderItems) {
+      if (!item.productable?.id) {
+        failCount++;
+        const productName = locale === "ar" ? item.product_name?.ar : item.product_name?.en;
+        errorMessages.push(`${productName || 'Unknown product'}: Product not available`);
+        continue;
+      }
+
+      try {
+        await addToCartMutation.mutateAsync({
+          itemable_id: item.productable.id,
+          itemable_type: item.productable_type || "Product",
+          quantity: item.quantity || 1,
+          variant_id: item.variant?.id,
+        });
+        successCount++;
+      } catch (error: any) {
+        failCount++;
+        const productName = locale === "ar" ? item.product_name?.ar : item.product_name?.en;
+        let errorMsg = "Failed to add to cart";
+        if (error?.response?.data?.message) {
+          errorMsg = error.response.data.message;
+        } else if (error?.message) {
+          errorMsg = error.message;
+        }
+        
+        errorMessages.push(`${productName || 'Unknown product'}: ${errorMsg}`);
+      }
+    }
+
+    setIsAddingToCart(false);
+
+    if (successCount > 0 && failCount === 0) {
+      toast.success(
+        t("Orders.allItemsAdded") || `All ${successCount} items added to cart`
+      );
+      navigate("/cart");
+    } else if (successCount > 0 && failCount > 0) {
+      toast.success(
+        t("Orders.someItemsAdded") ||
+          `${successCount} items added, ${failCount} items unavailable`
+      );
+      errorMessages.forEach((msg) => {
+        toast.error(msg, { duration: 4000 });
+      });
+      navigate("/cart");
+    } else {
+      errorMessages.forEach((msg) => {
+        toast.error(msg, { duration: 4000 });
+      });
+    }
   };
 
   if (isLoading) {
@@ -216,11 +295,22 @@ const MyOrders: React.FC<MyOrdersProps> = ({
             <button
               onClick={(e) => {
                 e.preventDefault();
-                handleOrderAgain(item);
+                handleOrderAgain(item.order_id);
               }}
-              className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white px-6 py-2 w-full h-14 rounded-lg text-sm font-medium transition-colors"
+              disabled={isAddingToCart}
+              className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white px-6 py-2 w-full h-14 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {t('Orders.orderAgain') || 'Order Again'}
+              {isAddingToCart ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  {t('Orders.adding') || 'Adding...'}
+                </span>
+              ) : (
+                t('Orders.orderAgain') || 'Order Again'
+              )}
             </button>
           </div>
         )}
@@ -250,7 +340,15 @@ const MyOrders: React.FC<MyOrdersProps> = ({
         </>
       )}
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs
+          value={activeTab}
+          onValueChange={(value) => {
+            if (value === "current" || value === "last") {
+              setActiveTab(value);
+            }
+          }}
+          className="w-full"
+        >
         <TabsList className="bg-transparent mb-4">
           <TabsTrigger value="current" className="md:w-[446px] h-14">
             {t('Orders.currentOrders') || 'Current Orders'}

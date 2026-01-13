@@ -7,6 +7,7 @@ export interface GetOrdersParams {
 }
 
 export interface OrderItem {
+  productable_type: string;
   id: number;
   order_id: number;
   product_name?: {

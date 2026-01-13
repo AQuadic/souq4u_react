@@ -528,6 +528,7 @@
     "deliveryExpect": "Expected Delivery Date",
     "currentOrders": "Current orders",
     "lastOrders": "Last orders",
-    "orderAgain": "Order again"
+    "orderAgain": "Order again",
+    "adding": "Adding..."
   }
 }
