@@ -525,6 +525,9 @@
     "cancelling": "جار الإلغاء",
     "itemNumber": "رقم العنصر",
     "orderNumber": "رقم الطلب",
-    "deliveryExpect": "موعد التسليم المتوقع"
+    "deliveryExpect": "موعد التسليم المتوقع",
+    "currentOrders": "الطلبات الحالية",
+    "lastOrders": "الطلبات السابقة",
+    "orderAgain": "إعادة الطلب"
   }
 }

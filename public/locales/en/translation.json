@@ -525,6 +525,9 @@
     "cancelling": "Cancelling",
     "itemNumber": "Item number",
     "orderNumber": "Order number",
-    "deliveryExpect": "Expected Delivery Date"
+    "deliveryExpect": "Expected Delivery Date",
+    "currentOrders": "Current orders",
+    "lastOrders": "Last orders",
+    "orderAgain": "Order again"
   }
 }

@@ -12,6 +12,7 @@ import { formatOrderStatus } from "@/features/order/utils";
 import ProductsPagination from "@/shared/components/pagenation/ProductsPagenation";
 import { getTranslatedText } from "@/shared/utils/translationUtils";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 
 interface MyOrdersProps {
   showHeader?: boolean;
@@ -42,6 +43,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({
   const { t, i18n } = useTranslation("Orders");
   const locale = i18n.language;
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState("current");
   const itemsPerPage = 5;
 
   const { data, isLoading, isError } = useQuery<GetOrdersResponse, Error>({
@@ -55,11 +57,15 @@ const MyOrders: React.FC<MyOrdersProps> = ({
       }
     },
   });
-  
+
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter]);
+  }, [statusFilter, activeTab]);
+
+  const handleOrderAgain = (item: OrderItem) => {
+    console.log("Order again:", item);
+  };
 
   if (isLoading) {
     return (
@@ -93,18 +99,134 @@ const MyOrders: React.FC<MyOrdersProps> = ({
 
   if (isError) return <p className="text-red-500">Something went wrong.</p>;
 
-  const itemsToShow = statusFilter
+  const allOrders = statusFilter
     ? data?.items?.data?.filter((item) =>
         item.status ? statusFilter.includes(item.status) : false
       )
     : data?.items?.data;
 
+  const currentOrders = allOrders?.filter((item) => item.status !== "completed") ?? [];
+  const completedOrders = allOrders?.filter((item) => item.status === "completed") ?? [];
+  const itemsToShow = activeTab === "current" ? currentOrders : completedOrders;
+
   // Calculate pagination
-  const totalItems = itemsToShow?.length ?? 0;
+  const totalItems = itemsToShow.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems = itemsToShow?.slice(startIndex, endIndex) ?? [];
+  const currentItems = itemsToShow.slice(startIndex, endIndex);
+
+  const renderOrderItem = (item: OrderItem) => {
+    const fmt = item.status ? formatOrderStatus(item.status) : null;
+    const label = fmt ? t(`Orders.${fmt.labelKey}`) ?? fmt.labelKey : item.status;
+    const bgLight = fmt?.bgLight ?? "";
+    const bgDark = fmt?.bgDark ?? "";
+    const colorClass = fmt?.color ?? "";
+
+    const productName =
+      locale === "ar" ? item.product_name?.ar : item.product_name?.en;
+
+    const isCompleted = activeTab === "last";
+
+    return (
+      <div
+        key={item.id}
+        className="relative w-full py-4 h-full bg-[#F7F7F7] shadow-md rounded-2xl px-3 my-4"
+      >
+        <Link to={`/profile/orders/tracking/${item.order_id}`}>
+          <div className="flex items-end justify-between">
+            <div className="flex items-center cursor-pointer h-full">
+              <img
+                src={
+                  item.productable?.image?.url || "/placeholder-image.jpg"
+                }
+                alt={productName ?? "Product"}
+                width={156}
+                height={156}
+                className="md:w-[156px] w-20 md:h-[156px] h-20"
+              />
+              <div className="px-2">
+                <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
+                  {t('Orders.itemNumber')} : <span dir="ltr">#{item.code}</span>
+                </p>
+                <h1 className="md:text-2xl text-base font-semibold leading-tight md:mt-6 mt-4 line-clamp-2">
+                  {productName}
+                </h1>
+                {Array.isArray(item.variant?.attributes) && item.variant.attributes.length > 0 && (
+                  <div className="flex flex-wrap gap-1 my-4">
+                    {item.variant.attributes.map((attr, index) => {
+                      const attrName = getTranslatedText(attr.attribute?.name, locale);
+                      const attrValue = getTranslatedText(attr.value?.value, locale);
+
+                      const isColorAttr =
+                        attr.attribute?.type === "Color" ||
+                        /(color|colour|لون)/i.test(attrName);
+
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-center gap-1 text-xs bg-main/10 text-[var(--color-main)] px-2 py-1 rounded-full"
+                        >
+                          {isColorAttr && attr.value?.special_value && (
+                            <span
+                              className="inline-block w-3 h-3 rounded-full border border-gray-300"
+                              style={{ backgroundColor: attr.value.special_value }}
+                            />
+                          )}
+                          <span>
+                            {attrName}: {attrValue}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+                <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%] md:mt-6 mt-3">
+                  {item.created_at
+                    ? (() => {
+                        const dateLocale =
+                          locale === "ar" ? "ar-EG" : "en-GB";
+                        return new Intl.DateTimeFormat(dateLocale, {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }).format(new Date(item.created_at));
+                      })()
+                    : "N/A"}
+                </p>
+              </div>
+            </div>
+            <div>
+              <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]" dir="ltr">{t('Orders.orderNumber')} : {item.order_code}</p>
+            </div>
+          </div>
+        </Link>
+        {item.status && fmt && (
+          <div className="absolute md:top-4 top-8 ltr:right-6">
+            <div
+              className={`w-full px-2 h-7 rounded-[8px] text-xs flex items-center justify-center ${colorClass} ${bgLight} dark:${bgDark}`}
+            >
+              {label}
+            </div>
+          </div>
+        )}
+        {isCompleted && (
+          <div className="mt-4 flex">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                handleOrderAgain(item);
+              }}
+              className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white px-6 py-2 w-full h-14 rounded-lg text-sm font-medium transition-colors"
+            >
+              {t('Orders.orderAgain') || 'Order Again'}
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <section>
@@ -128,116 +250,50 @@ const MyOrders: React.FC<MyOrdersProps> = ({
         </>
       )}
 
-      {currentItems?.length ? (
-        <>
-          {currentItems.map((item: OrderItem) => {
-            const fmt = item.status ? formatOrderStatus(item.status) : null;
-            const label = fmt ? t(`Orders.${fmt.labelKey}`) ?? fmt.labelKey : item.status;
-            const bgLight = fmt?.bgLight ?? "";
-            const bgDark = fmt?.bgDark ?? "";
-            const colorClass = fmt?.color ?? "";
-
-            const productName =
-              locale === "ar" ? item.product_name?.ar : item.product_name?.en;
-
-            return (
-              <div
-                key={item.id}
-                className="relative w-full py-4 h-full bg-[#F7F7F7] shadow-md rounded-2xl px-3 my-4"
-              >
-                <Link to={`/profile/orders/tracking/${item.order_id}`}>
-                  <div className="flex items-end justify-between">
-                    <div className="flex items-center cursor-pointer h-full">
-                      <img
-                        src={
-                          item.productable?.image?.url || "/placeholder-image.jpg"
-                        }
-                        alt={productName ?? "Product"}
-                        width={156}
-                        height={156}
-                        className="md:w-[156px] w-20 md:h-[156px] h-20"
-                      />
-                      <div className="px-2">
-                        <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]">
-                          {t('Orders.itemNumber')} : <span dir="ltr">#{item.code}</span>
-                        </p>
-                        <h1 className="md:text-2xl text-base font-semibold leading-tight md:mt-6 mt-4 line-clamp-2">
-                          {productName}
-                        </h1>
-                        {Array.isArray(item.variant?.attributes) && item.variant.attributes.length > 0 && (
-                          <div className="flex flex-wrap gap-1 my-4">
-                            {item.variant.attributes.map((attr, index) => {
-                              const attrName = getTranslatedText(attr.attribute?.name, locale);
-                              const attrValue = getTranslatedText(attr.value?.value, locale);
-
-                              const isColorAttr =
-                                attr.attribute?.type === "Color" ||
-                                /(color|colour|لون)/i.test(attrName);
-
-                              return (
-                                <div
-                                  key={index}
-                                  className="flex items-center gap-1 text-xs bg-main/10 text-[var(--color-main)] px-2 py-1 rounded-full"
-                                >
-                                  {isColorAttr && attr.value?.special_value && (
-                                    <span
-                                      className="inline-block w-3 h-3 rounded-full border border-gray-300"
-                                      style={{ backgroundColor: attr.value.special_value }}
-                                    />
-                                  )}
-                                  <span>
-                                    {attrName}: {attrValue}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                        <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%] md:mt-6 mt-3">
-                          {item.created_at
-                            ? (() => {
-                                const dateLocale =
-                                  locale === "ar" ? "ar-EG" : "en-GB";
-                                return new Intl.DateTimeFormat(dateLocale, {
-                                  weekday: "long",
-                                  day: "2-digit",
-                                  month: "2-digit",
-                                  year: "numeric",
-                                }).format(new Date(item.created_at));
-                              })()
-                            : "N/A"}
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                        <p className="text-[#C0C0C0] md:text-sm text-xs font-normal leading-[100%]" dir="ltr">{t('Orders.orderNumber')} : {item.order_code}</p>
-                      </div>
-                  </div>
-                </Link>
-                {item.status && fmt && (
-                  <div className="absolute md:top-4 top-8 ltr:right-6 rtl:left-6">
-                    <div
-                      className={`w-full px-2 h-7 rounded-[8px] text-xs flex items-center justify-center ${colorClass} ${bgLight} dark:${bgDark}`}
-                    >
-                      {label}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-
-          {totalPages > 1 && (
-            <ProductsPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="bg-transparent mb-4">
+          <TabsTrigger value="current" className="md:w-[446px] h-14">
+            {t('Orders.currentOrders') || 'Current Orders'}
+          </TabsTrigger>
+          <TabsTrigger value="last" className="md:w-[446px] h-14">
+            {t('Orders.lastOrders') || 'Last Orders'}
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="current">
+          {currentItems.length ? (
+            <>
+              {currentItems.map(renderOrderItem)}
+              {totalPages > 1 && (
+                <ProductsPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              )}
+            </>
+          ) : (
+            <OrdersEmpty />
           )}
-        </>
-      ) : (
-        <OrdersEmpty />
-      )}
+        </TabsContent>
+        
+        <TabsContent value="last">
+          {currentItems.length ? (
+            <>
+              {currentItems.map(renderOrderItem)}
+              {totalPages > 1 && (
+                <ProductsPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              )}
+            </>
+          ) : (
+            <OrdersEmpty />
+          )}
+        </TabsContent>
+      </Tabs>
     </section>
   );
 };
