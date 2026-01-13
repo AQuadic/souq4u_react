@@ -2,6 +2,7 @@
 // import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Skeleton } from "./skeleton";
 
 type Props = {
   lat?: number | null;
@@ -10,7 +11,7 @@ type Props = {
 };
 
 const MapWithSkeleton: React.FC<Props> = ({ lat, lng, className }) => {
-  const {t} = useTranslation("Common");
+  const { t } = useTranslation("Common");
   const [loaded, setLoaded] = useState(false);
 
   // Fallback: if iframe doesn't fire onLoad (some browsers or CSPs), hide skeleton after timeout
@@ -32,10 +33,8 @@ const MapWithSkeleton: React.FC<Props> = ({ lat, lng, className }) => {
     <div className={`relative ${className}`}>
       {/* skeleton overlay */}
       {!loaded && (
-        <div className="absolute inset-0 w-full h-full animate-pulse rounded-2xl flex items-center justify-center z-20">
-          <div className="w-3/4 h-3/4 rounded-lg flex items-center justify-center">
-            <div className="text-[#4a4a4a] text-sm">{t('Common.loadingMap')}</div>
-          </div>
+        <div className="absolute inset-0 z-20">
+          <Skeleton className="w-full h-full rounded-2xl" />
         </div>
       )}
 

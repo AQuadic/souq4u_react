@@ -8,6 +8,7 @@ import {
   Category,
   getCategories,
 } from "@/features/categories/api/getCategories";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 const ProductsCategoryFilter = ({
   setCategory,
@@ -55,7 +56,13 @@ const ProductsCategoryFilter = ({
 
       <div className="p-2">
         {isLoading && (
-          <p className="text-sm text-gray-400">{t("Common.loading")}</p>
+          <div className="space-y-3 p-2">
+            <Skeleton className="h-6 w-32 mb-2" />
+
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-5 w-full rounded-md" />
+            ))}
+          </div>
         )}
         {isError && <p className="text-sm text-red-400">{error.message}</p>}
 

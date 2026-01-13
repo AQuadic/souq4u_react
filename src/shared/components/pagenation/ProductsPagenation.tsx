@@ -84,9 +84,9 @@ const ProductsPagination: React.FC<ProductsPaginationProps> = ({
         aria-label="Previous page"
       >
         {isRTL ? (
-          <RightArrow className={`w-6 h-6 ${currentPage === 1 ? 'opacity-50' : ''}`} />
+          <RightArrow className={`w-6 h-6 transform ltr:scale-x-100 rtl:scale-x-[-1] ${currentPage === 1 ? 'opacity-50' : ''}`} />
         ) : (
-          <LeftArrow className={`w-6 h-6 ${currentPage === 1 ? 'opacity-50' : ''}`} />
+          <LeftArrow className={`w-6 h-6 transform ltr:scale-x-100 rtl:scale-x-[-1] ${currentPage === 1 ? 'opacity-50' : ''}`} />
         )}
       </button>
 
@@ -123,9 +123,9 @@ const ProductsPagination: React.FC<ProductsPaginationProps> = ({
         aria-label="Next page"
       >
         {isRTL ? (
-          <LeftArrow className={`w-6 h-6 ${currentPage === totalPages ? 'opacity-50' : ''}`} />
+          <LeftArrow className={`w-6 h-6 transform ltr:scale-x-100 rtl:scale-x-[-1] ${currentPage === totalPages ? 'opacity-50' : ''}`} />
         ) : (
-          <RightArrow className={`w-6 h-6 ${currentPage === totalPages ? 'opacity-50' : ''}`} />
+          <RightArrow className={`w-6 h-6 transform ltr:scale-x-100 rtl:scale-x-[-1] ${currentPage === totalPages ? 'opacity-50' : ''}`} />
         )}
       </button>
     </div>

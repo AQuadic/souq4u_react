@@ -8,6 +8,7 @@ import type { AddressFormData } from "@/features/address/types";
 import { getAddress } from "@/features/address/api";
 import BackArrow from "@/features/products/icons/BackArrow";
 import { useTranslation } from "react-i18next";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 const EditAddress = () => {
   const { t } = useTranslation("Profile.Breadcrumbs");
@@ -81,7 +82,24 @@ const EditAddress = () => {
   };
 
   if (loading)
-    return <p className="text-[#C0C0C0]">{t("Profile.loadingAddressess")}</p>;
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-6 w-40 rounded-md" />
+        <Skeleton className="h-10 w-64 rounded-md" />
+        <div className="space-y-3 mt-6">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <Skeleton className="h-12 w-32 mt-4" />
+      </div>
+    );
+
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (

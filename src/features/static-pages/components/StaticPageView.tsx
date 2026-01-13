@@ -19,7 +19,9 @@ export const StaticPageView: React.FC<StaticPageViewProps> = ({
       </h1>
 
       <Link to="/" className="md:hidden flex items-center gap-2 mb-6">
-        <BackArrow />
+        <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+          <BackArrow />
+        </div>
         <h2 className="text-foreground text-xl font-semibold leading-[100%]">
           {page.title[lang]}
         </h2>

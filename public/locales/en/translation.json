@@ -500,7 +500,7 @@
     "id": "ID:",
     "tracking": "Tracking Order",
     "itemSummary": "Item Summary",
-    "deliverdAddress": "Delivered Address",
+    "deliverdAddress": "Delivery Address",
     "orderSummary": "Order Summary",
     "totalItems": "Total Items",
     "item": "Item",
@@ -525,6 +525,10 @@
     "cancelling": "Cancelling",
     "itemNumber": "Item number",
     "orderNumber": "Order number",
-    "deliveryExpect": "Expected Delivery Date"
+    "deliveryExpect": "Expected Delivery Date",
+    "currentOrders": "Current orders",
+    "lastOrders": "Last orders",
+    "orderAgain": "Order again",
+    "adding": "Adding..."
   }
 }

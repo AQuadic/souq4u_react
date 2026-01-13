@@ -12,8 +12,9 @@ import type { CartItem as CartItemType } from "@/features/cart/types";
 
 export interface CartItemProps {
   item: CartItemType;
-  onUpdateQuantity?: (id: number, quantity: number) => void;
-  onRemove?: (id: number) => void;
+  // callbacks can be synchronous or return a Promise
+  onUpdateQuantity?: (id: number, quantity: number) => Promise<void> | void;
+  onRemove?: (id: number) => Promise<void> | void;
 }
 
 export const CartItem: React.FC<CartItemProps> = ({
@@ -36,24 +37,24 @@ export const CartItem: React.FC<CartItemProps> = ({
     }) || [];
   const handleQuantityDecrease = () => {
     if (item.quantity > 1) {
-      const res = onUpdateQuantity?.(item.id, item.quantity - 1) as any;
-      if (res && typeof res.then === "function") {
-        res.catch(() => undefined);
+      const res = onUpdateQuantity?.(item.id, item.quantity - 1);
+      if (res && typeof (res as any).then === "function") {
+        (res as any).catch(() => undefined);
       }
     }
   };
 
   const handleQuantityIncrease = () => {
-    const res = onUpdateQuantity?.(item.id, item.quantity + 1) as any;
-    if (res && typeof res.then === "function") {
-      res.catch(() => undefined);
+    const res = onUpdateQuantity?.(item.id, item.quantity + 1);
+    if (res && typeof (res as any).then === "function") {
+      (res as any).catch(() => undefined);
     }
   };
 
   const handleRemove = () => {
-    const res = onRemove?.(item.id) as any;
-    if (res && typeof res.then === "function") {
-      res.catch(() => undefined);
+    const res = onRemove?.(item.id);
+    if (res && typeof (res as any).then === "function") {
+      (res as any).catch(() => undefined);
     }
   };
 

@@ -10,10 +10,11 @@ import { getOrderById, Order } from "@/features/profile/orders/api/getOrdersById
 import DeliveredAddress from "@/features/profile/orders/tracking/DeliveredAddress";
 import OrderSummary from "@/features/profile/orders/tracking/OrderSummary";
 import { useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
+import OrderTrackingSkeleton from "./OrderTrackingSkeleton";
 
 const OrderTrackingPage = () => {
-  const { t } = useTranslation("");
+  // const { t } = useTranslation("");
   const { id } = useParams();
 
   const {
@@ -27,7 +28,7 @@ const OrderTrackingPage = () => {
     enabled: !!id,
   });
 
-  if (isLoading) return <p>{t('Common.loading')}</p>;
+  if (isLoading) return <OrderTrackingSkeleton />;
   if (isError || !order) {
     toast.error("Failed to load order details");
     return <p>Error loading order</p>;

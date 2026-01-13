@@ -87,7 +87,9 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
       </h2> */}
 
       <Link to="/profile/orders" className="flex items-center gap-2 md:hidden">
-        <BackArrow />
+        <div className="transform ltr:scale-x-100 rtl:scale-x-[-1]">
+          <BackArrow />
+        </div>
         <h2 className="text-xl font-bold leading-[100%]">
           {t("Orders.tracking")}
         </h2>
