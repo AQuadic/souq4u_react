@@ -30,18 +30,32 @@ const HomeTryApp = () => {
           ))}
         </p>
         <div className="flex gap-4 max-sm:justify-center">
-          <img
-            src="/try-app/google-play.png"
-            alt={googlePlayAlt}
-            width={145}
-            height={56}
-          />
-          <img
-            src="/try-app/app-store.png"
-            alt={appStoreAlt}
-            width={145}
-            height={56}
-          />
+          <a
+            href="https://play.google.com/store/apps/details?id=com.souq4u.user"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:opacity-85 transition-opacity"
+          >
+            <img
+              src="/try-app/google-play.png"
+              alt={googlePlayAlt}
+              width={145}
+              height={56}
+            />
+          </a>
+          <a
+            href="https://apps.apple.com/app/id6756974410"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:opacity-85 transition-opacity"
+          >
+            <img
+              src="/try-app/app-store.png"
+              alt={appStoreAlt}
+              width={145}
+              height={56}
+            />
+          </a>
         </div>
       </div>
       <img
