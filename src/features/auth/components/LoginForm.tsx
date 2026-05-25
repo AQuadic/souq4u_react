@@ -263,9 +263,9 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
         <img
           src={"/logo.png"}
           alt="logo"
-          width={64}
-          height={33}
-          className=" object-cover"
+          width={40}
+          height={40}
+          className="object-contain"
         />
         <h1 className="text-2xl lg:text-[40px] font-semibold text-main font-anton-sc">
           Souq<span className="text-main-orange">4</span>U

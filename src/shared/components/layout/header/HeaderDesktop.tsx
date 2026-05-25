@@ -42,7 +42,7 @@ const HeaderDesktop = () => {
         <div className="flex items-center justify-between">
           <div className="sm:w-[212px]">
             <Link to="/">
-              <img src="/logo.png" width={80} height={40} alt="souq4u" />
+              <img src="/logo.png" width={40} height={40} className="object-contain" alt="souq4u" />
             </Link>
           </div>
 

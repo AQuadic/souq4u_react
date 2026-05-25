@@ -53,7 +53,7 @@ const MobileHeader = () => {
   return (
     <header className="p-4 md:hidden flex items-center justify-between overflow-scroll">
       <Link to="/" className="w-full">
-        <img src="/logo.png" width={80} height={40} alt="souq4u" />
+        <img src="/logo.png" width={40} height={40} className="object-contain" alt="souq4u" />
       </Link>
       <div className="flex items-center gap-5 relative">
         {/* <button onClick={openCart} className="relative">
