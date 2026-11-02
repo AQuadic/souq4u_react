@@ -458,8 +458,8 @@ const Footer = () => {
               <img
                 src="/logo.png"
                 alt="Logo"
-                width={48}
-                height={48}
+                width={144}
+                height={144}
                 className="object-contain py-2"
               />
             </div>
