@@ -18,7 +18,7 @@ const HomeTryApp = () => {
       <div>
         <h1 className="text-lg lg:text-[40px] font-bold font-anton-sc flex items-center gap-2">
           {titleBefore && <>{titleBefore} </>}
-          <p className="text-main">Souq<span className="text-main-orange">4</span>U</p>
+          <p className="text-[#021E55]">Souq<span className="text-[#FD6907]">4</span>U</p>
           {titleAfter && <> {titleAfter}</>}
         </h1>
         <p className="max-w-[545px] text-sm sm:text-2xl my-3 sm:my-10 text-main-gray">

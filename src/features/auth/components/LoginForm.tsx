@@ -263,8 +263,8 @@ const LoginForm = ({ onSubmit, isInDialog = true }: LoginFormProps) => {
         <img
           src={"/logo.png"}
           alt="logo"
-          width={40}
-          height={40}
+          width={120}
+          height={120}
           className="object-contain"
         />
         <h1 className="text-2xl lg:text-[40px] font-semibold text-main font-anton-sc">
